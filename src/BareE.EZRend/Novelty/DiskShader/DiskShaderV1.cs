@@ -110,10 +110,10 @@ namespace BareE.EZRend
                 switch(VertOverflowBehaviour)
                 {
                     case VertexOverflowBehaviour.EXCEPTION:
-                        LibrarySettings.RaiseEZRendException(this, new Exception($"Vertex List exceeded {MaximumVerts} Maximum"));
+                        new Exception($"Vertex List exceeded {MaximumVerts} Maximum");
                         return;
                     case VertexOverflowBehaviour.IGNORE:
-                        LibrarySettings.RaiseEZRendWarning(this, new Exception($"Vertex List exceeded {MaximumVerts} Maximum"));
+                        //LibrarySettings.RaiseEZRendWarning(this, new Exception($"Vertex List exceeded {MaximumVerts} Maximum"));
                         return;
                     case VertexOverflowBehaviour.EXPAND:
                         MaximumVerts = MaximumVerts + (int)Math.Ceiling(MaximumVerts * ExpansionFactor);
@@ -155,7 +155,7 @@ namespace BareE.EZRend
                 PalletSize = 8
             };
             ConfigBuffer = factory.CreateBuffer(new BufferDescription(NextMultipleOf16(DiskShaderConfig.Instance.SizeInBytes), BufferUsage.UniformBuffer));
-            PalletTexture = EmbeddedImage.ByName("EZRend.palletts.rng1.png").CreateDeviceTexture(device, factory);
+            PalletTexture = AssetManager.LoadTexture("BareE.EZRend.palletts.rng1.png",device, true);
             PalletTextureView = factory.CreateTextureView(PalletTexture);
             
             PalletSampler = factory.CreateSampler(new SamplerDescription()
@@ -179,7 +179,7 @@ namespace BareE.EZRend
 
 
             //Create and Compile the Shaders.
-            DiskShaders = EmbeddedShader.CreateShaderSet(device.ResourceFactory, "EZRend.Novelty.DiskShader.DiskShader_V1");
+            DiskShaders = EmbeddedShader.CreateShaderSet(device.ResourceFactory, "BareE.EZRend.Novelty.DiskShader.DiskShader_V1");
             var DiskShadersDescription = new ShaderSetDescription(
                 vertexLayouts: new VertexLayoutDescription[] { DiskShaderVertex.Instance.GetVertexLayoutDescription() },
                 shaders: DiskShaders

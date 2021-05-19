@@ -55,7 +55,7 @@ namespace BareE.EZRend.Novelty.SDLText
         public String UnknownGlyphKey { get; set; }
         private float CharacterUvWidth { get; set; }
 
-        public SDLTextShader() : base("EZRend.Novelty.SDLText.SDLText")
+        public SDLTextShader() : base("BareE.EZRend.Novelty.SDLText.SDLText")
         {
             BlendState = BlendStateDescription.SingleAlphaBlend;
 

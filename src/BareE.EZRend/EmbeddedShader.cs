@@ -9,7 +9,7 @@ using Veldrid;
 using Veldrid.ImageSharp;
 using Veldrid.SPIRV;
 
-namespace EZRend
+namespace BareE.EZRend
 {
     public class EZRendExceptionEventArgs
     {

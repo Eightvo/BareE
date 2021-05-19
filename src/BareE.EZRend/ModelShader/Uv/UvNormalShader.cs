@@ -112,7 +112,7 @@ namespace BareE.EZRend.ModelShader.Color
     }
     public class Triplanar:VertexTextureShader<Float3_Float2_Float3>
     {
-        public Triplanar() : base("EZRend.ModelShader.Uv.TriplanarP") { }
+        public Triplanar() : base("BareE.EZRend.ModelShader.Uv.TriplanarP") { }
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get => new DepthStencilStateDescription(
@@ -125,7 +125,7 @@ namespace BareE.EZRend.ModelShader.Color
     }
     public class UvNormalBump:VertexTextureShader<Float3_Float3_Float3_Float3_Float2>
     {
-        public UvNormalBump() : base("EZRend.ModelShader.Uv.UvNormalBump") { }
+        public UvNormalBump() : base("BareE.EZRend.ModelShader.Uv.UvNormalBump") { }
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get => new DepthStencilStateDescription(
@@ -141,7 +141,7 @@ namespace BareE.EZRend.ModelShader.Color
     }
     public class TriplanarPBump : VertexTextureShader<Float3_Float2_Float3>
     {
-        public TriplanarPBump() : base("EZRend.ModelShader.Uv.TriplanarPBump") { }
+        public TriplanarPBump() : base("BareE.EZRend.ModelShader.Uv.TriplanarPBump") { }
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get => new DepthStencilStateDescription(
@@ -155,7 +155,7 @@ namespace BareE.EZRend.ModelShader.Color
 
     public class UvNormalShader:VertexTextureShader<Float3_Float2_Float3>
     {
-        public UvNormalShader() : base("EZRend.ModelShader.Uv.UvNormal") { }
+        public UvNormalShader() : base("BareE.EZRend.ModelShader.Uv.UvNormal") { }
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get => new DepthStencilStateDescription(

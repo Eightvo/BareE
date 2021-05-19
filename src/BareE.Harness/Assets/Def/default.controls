@@ -1,0 +1,99 @@
+//Define Control Groups.
+//Game(scenes) can obtain an InputHandler via InputHandler.Build("Group1","Group2"). Etc.
+//Two controls may share a name. The first control with a value outside the deadzone is returned otherwise 0.
+//Two controls may not share a button/axis. No axis may share a button
+//There are two types of Controls:
+// Button
+// Axis.
+//
+//Button defines a pressable button (Keyboard,Mouse,Gamepad). Returns values ranging [0,1]
+//Axis defines an axis, either Two buttons for a keyboard, or an axis on a gamepad. Returns values ranging [-1,1]
+//Prefix the Def with - to invert an axis.
+//A button can not be inverted.
+[
+  {
+    "Group": "System",
+    "Controls": [
+      {
+        "Title": "Accept/Confirm",
+        "Alias": "Accept",
+        "Src": "Keyboard",
+        "Type": "Button",
+        "Def": "Enter"
+      },
+      {
+        "Title": "Accept/Confirm",
+        "Alias": "Accept",
+        "Src": "Gamepad",
+        "Type": "Button",
+        "Def": "Start"
+      },
+      {
+        "Title": "Quit/Cancel",
+        "Alias": "Cancel",
+        "Src": "Keyboard",
+        "Type": "Button",
+        "Def": "Esc"
+      }
+    ]
+  },
+  {
+    "Group": "Cam",
+    "Controls": [
+      {
+        "Alias": "Truck",
+        "Src": "Keyboard",
+        "Type": "Axis",
+        "Def": "[A][D]"
+      },
+      {
+        "Alias": "Dolly",
+        "Src": "Keyboard",
+        "Type": "Axis",
+        "Def": "[S][W]"
+      },
+      {
+        "Alias": "Dolly",
+        "Src": "Gamepad",
+        "Type": "Axis",
+        "Def": "-LeftY",
+        "DZMin": "0.25",
+        "DZMax": "0.75"
+      },
+      {
+        "Alias": "Truck",
+        "Src": "Gamepad",
+        "Type": "Axis",
+        "Def": "RightX",
+        "DZMin": "0.25",
+        "DZMax": "0.75"
+      },
+      {
+        "Alias": "Tilt",
+        "Src": "Mouse",
+        "Type": "Axis",
+        "Def": "Y"
+      },
+      {
+        "Alias": "Pan",
+        "Src": "Mouse",
+        "Type": "Axis",
+        "Def": "X"
+      }
+    ]
+  },
+  {
+    "Group": "Test",
+    "Controls": [
+      {
+        "Alias": "CycleMode",
+        "Src": "Keyboard",
+        "Type": "Button",
+        "Def": "[tab]"
+      },
+
+    ]
+  }
+
+
+]

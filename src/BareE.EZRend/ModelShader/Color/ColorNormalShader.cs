@@ -34,7 +34,7 @@ namespace BareE.EZRend.ModelShader.Color
 
     public class ColorNormalShader:VertexOnlyShader<Float3_Float4_Float3>
     {
-        public ColorNormalShader() : base("EZRend.ModelShader.Color.ColorNormal") { }
+        public ColorNormalShader() : base("BareE.EZRend.ModelShader.Color.ColorNormal") { }
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get => new DepthStencilStateDescription(

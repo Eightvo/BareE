@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE", "BareE\BareE.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.EZRend", "BareE.EZRend\BareE.EZRend.csproj", "{2AA2BC04-7CCE-461E-898A-A8D4FCC0C813}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.Harness", "BareE.Harness\BareE.Harness.csproj", "{04121B2A-93FF-4933-936C-6AB22E350593}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2AA2BC04-7CCE-461E-898A-A8D4FCC0C813}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AA2BC04-7CCE-461E-898A-A8D4FCC0C813}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AA2BC04-7CCE-461E-898A-A8D4FCC0C813}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04121B2A-93FF-4933-936C-6AB22E350593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04121B2A-93FF-4933-936C-6AB22E350593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04121B2A-93FF-4933-936C-6AB22E350593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04121B2A-93FF-4933-936C-6AB22E350593}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

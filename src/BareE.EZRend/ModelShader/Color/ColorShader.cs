@@ -29,7 +29,7 @@ namespace BareE.EZRend.ModelShader.Color
     }
     public class ColorShader:VertexOnlyShader<Float3_Float4>
     {
-        public ColorShader():base("EZRend.ModelShader.Color.Color")
+        public ColorShader():base("BareE.EZRend.ModelShader.Color.Color")
         {
             
         }

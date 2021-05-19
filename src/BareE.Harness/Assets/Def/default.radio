@@ -1,0 +1,30 @@
+{
+  "Stations": {
+    "AlexanderEhlers": {
+
+      "PlayOrder": "Shuffle",
+      "SongDelay": "3000",
+      "PlayList": [
+        "Assets/Music/AlexanderEhlers/Doomed.mp3",
+        "Assets/Music/AlexanderEhlers/Flags.mp3",
+        "Assets/Music/AlexanderEhlers/GreatMission.mp3",
+        "Assets/Music/AlexanderEhlers/Spacetime.mp3",
+        "Assets/Music/AlexanderEhlers/Twists.mp3",
+        "Assets/Music/AlexanderEhlers/WakingTheDevil.mp3",
+        "Assets/Music/AlexanderEhlers/Warped.mp3"
+      ]
+    },
+    "RoppyChop": {
+      "PlayOrder": "Shuffle",
+      "SongDelay": "0",
+      "PlayList": [
+        "Assets/Music/RoppyChop/BrokenArm.mp3",
+        "Assets/Music/RoppyChop/CasualAfternoon.mp3",
+        "Assets/Music/RoppyChop/IcyGarden.mp3",
+        "Assets/Music/RoppyChop/JourneyForgotten.mp3",
+        "Assets/Music/RoppyChop/StandardizedAnxiety.mp3",
+        "Assets/Music/RoppyChop/WithoutTime.mp3"
+      ]
+    }
+  }
+}

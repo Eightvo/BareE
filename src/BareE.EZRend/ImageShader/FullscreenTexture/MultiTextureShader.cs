@@ -55,7 +55,7 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
 
         public SamplerFilter ColorTextureFilter = SamplerFilter.Anisotropic;
 
-        public MultiTextureShader(int textureCount) : this("EZRend.ModelShader.Uv.UvNormalBump", textureCount) { }
+        public MultiTextureShader(int textureCount) : this("BareE.EZRend.ModelShader.Uv.UvNormalBump", textureCount) { }
         public MultiTextureShader(String partial, int textureCount):base(partial){
             textureDescriptions = new TextureDescData[textureCount];
             Textures = new TextureData[textureCount];

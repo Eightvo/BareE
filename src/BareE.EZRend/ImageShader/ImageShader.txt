@@ -1,0 +1,2 @@
+﻿An Image shader is a shader that is meant to render a scene.
+I.E: A fully composed image passed the the shader as input.

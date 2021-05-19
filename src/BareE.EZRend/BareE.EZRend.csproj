@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.56</Version>
+    <PackageTags>a</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Camera.cs" />
+    <Compile Remove="IRenderUnit.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="fonts\Natural Mono Alt-Regular.ttf" />
+    <None Remove="fonts\Natural Mono-Regular.ttf" />
+    <None Remove="images\EZRend_BIG.png" />
+    <None Remove="images\Veldrid.png" />
+    <None Remove="ModelShader\Color\Color.frag.spv" />
+    <None Remove="ModelShader\Color\Color.vert.spv" />
+    <None Remove="ModelShader\Color\ColorNormal.frag.spv" />
+    <None Remove="ModelShader\Color\ColorNormal.vert.spv" />
+    <None Remove="ModelShader\Uv\TriplanarP.frag.spv" />
+    <None Remove="ModelShader\Uv\TriplanarP.vert.spv" />
+    <None Remove="ModelShader\Uv\TriplanarPBump.frag.spv" />
+    <None Remove="ModelShader\Uv\TriplanarPBump.vert.spv" />
+    <None Remove="ModelShader\Uv\UvNormal.frag.spv" />
+    <None Remove="ModelShader\Uv\UvNormal.vert.spv" />
+    <None Remove="ModelShader\Uv\uvnormalbump.frag.spv" />
+    <None Remove="ModelShader\Uv\UvNormalBump.vert.spv" />
+    <None Remove="Novelty\DiskShader\DiskShader_V1.frag.spv" />
+    <None Remove="Novelty\DiskShader\DiskShader_V1.vert.spv" />
+    <None Remove="Novelty\SDLText\SDLFonts\Times New Roman.png" />
+    <None Remove="Novelty\SDLText\SDLFonts\Times New Roman.txt" />
+    <None Remove="Novelty\SDLText\SDLFonts\Wingdings.png" />
+    <None Remove="Novelty\SDLText\SDLFonts\Wingdings.txt" />
+    <None Remove="Novelty\SDLText\SDLText.frag.spv" />
+    <None Remove="Novelty\SDLText\SDLText.vert.spv" />
+    <None Remove="palletts\rng1.png" />
+    <None Remove="palletts\rng2.png" />
+    <None Remove="palletts\rng3.png" />
+    <None Remove="palletts\rng4.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="fonts\Natural Mono Alt-Regular.ttf" />
+    <EmbeddedResource Include="fonts\Natural Mono-Regular.ttf" />
+    <EmbeddedResource Include="images\EZRend_BIG.png" />
+    <EmbeddedResource Include="images\Veldrid.png" />
+    <EmbeddedResource Include="ModelShader\Color\Color.frag.spv" />
+    <EmbeddedResource Include="ModelShader\Color\Color.vert.spv" />
+    <EmbeddedResource Include="ModelShader\Color\ColorNormal.frag.spv" />
+    <EmbeddedResource Include="ModelShader\Color\ColorNormal.vert.spv" />
+    <EmbeddedResource Include="ModelShader\Uv\TriplanarP.frag.spv" />
+    <EmbeddedResource Include="ModelShader\Uv\TriplanarP.vert.spv" />
+    <EmbeddedResource Include="ModelShader\Uv\TriplanarPBump.frag.spv" />
+    <EmbeddedResource Include="ModelShader\Uv\TriplanarPBump.vert.spv" />
+    <EmbeddedResource Include="ModelShader\Uv\UvNormal.frag.spv" />
+    <EmbeddedResource Include="ModelShader\Uv\UvNormal.vert.spv" />
+    <EmbeddedResource Include="ModelShader\Uv\UvNormalBump.frag.spv" />
+    <EmbeddedResource Include="ModelShader\Uv\UvNormalBump.vert.spv" />
+    <EmbeddedResource Include="Novelty\DiskShader\DiskShader_V1.frag.spv" />
+    <EmbeddedResource Include="Novelty\DiskShader\DiskShader_V1.vert.spv" />
+    <EmbeddedResource Include="Novelty\SDLText\SDLFonts\Times New Roman.png" />
+    <EmbeddedResource Include="Novelty\SDLText\SDLFonts\Times New Roman.txt" />
+    <EmbeddedResource Include="Novelty\SDLText\SDLFonts\Wingdings.png" />
+    <EmbeddedResource Include="Novelty\SDLText\SDLFonts\Wingdings.txt" />
+    <EmbeddedResource Include="Novelty\SDLText\SDLText.frag.spv" />
+    <EmbeddedResource Include="Novelty\SDLText\SDLText.vert.spv" />
+    <EmbeddedResource Include="palletts\rng1.png" />
+    <EmbeddedResource Include="palletts\rng2.png" />
+    <EmbeddedResource Include="palletts\rng3.png" />
+    <EmbeddedResource Include="palletts\rng4.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Veldrid" Version="4.9.0-ga769c2971c" />
+    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-ga769c2971c" />
+    <PackageReference Include="Veldrid.ImGui" Version="5.72.0-ga769c2971c" />
+    <PackageReference Include="Veldrid.SPIRV" Version="1.0.14" />
+    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-ga769c2971c" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BareE\BareE.csproj" />
+  </ItemGroup>
+
+</Project>

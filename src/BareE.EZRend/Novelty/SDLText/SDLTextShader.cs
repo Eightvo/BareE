@@ -1,0 +1,176 @@
+﻿using BareE.Rendering;
+
+using BareE.EZRend.ImageShader.FullscreenTexture;
+using BareE.EZRend.ModelShader.Color;
+
+using System;
+using System.Collections.Generic;
+using System.Numerics;
+
+using Veldrid;
+
+namespace BareE.EZRend.Novelty.SDLText
+{
+
+    public struct SDLTextSettings
+    {
+        public float OutlineThreshold { get; set; }
+        public float BlurOutDist { get; set; }
+        public Vector2 DropShadow { get; set; }
+        public float GlowDist { get; set; }
+        public Vector4 GlowColor { get; set; }
+        public static SDLTextSettings Default
+        {
+            get
+            {
+                return new SDLTextSettings()
+                {
+                    OutlineThreshold = 0.01f,
+                    BlurOutDist = 0.0f,
+                    DropShadow = new Vector2(0, 0),
+                    GlowDist = 0.0f,
+                    GlowColor = new Vector4(0, 0, 0, 1)
+                };
+            }
+        }
+    }
+
+    public class SDLTextShader:VertexTextureShader<Float3_Float2_Float3_Float3>
+    {
+        struct glyphInfo
+        {
+            public Vector2 UvBL { get; set; }
+            public Vector2 UvTR { get; set; }
+            public int CursorAdvance { get; set; }
+        }
+        Dictionary<String, glyphInfo> _glyphCache;
+        Texture _glyphSheet;
+
+        bool SettingsDirty = true;
+        SDLTextSettings Settings = SDLTextSettings.Default;
+        DeviceBuffer SettingsBuffer;
+        ResourceLayout SettingsLayout;
+        ResourceSet SettingsResourceSet;
+
+        public String UnknownGlyphKey { get; set; }
+        private float CharacterUvWidth { get; set; }
+
+        public SDLTextShader() : base("EZRend.Novelty.SDLText.SDLText")
+        {
+            BlendState = BlendStateDescription.SingleAlphaBlend;
+
+        }
+        public override DepthStencilStateDescription DepthStencilDescription
+        {
+            get => new DepthStencilStateDescription(
+                        depthTestEnabled: true,
+                        depthWriteEnabled: true,
+                        comparisonKind: ComparisonKind.LessEqual
+                        );
+        }
+        public void LoadFont(GraphicsDevice device, String fontname)
+        {
+            var descFile = fontname;
+            var textureFile = System.IO.Path.ChangeExtension(descFile, ".png");
+            System.Text.RegularExpressions.Regex sdfRegex = new System.Text.RegularExpressions.Regex(@"^(?<char>.)(?<style>[:/_!]) (?<charLeft>\d+),(?<charTop>\d+),(?<charWid>\d+),(?<charHeight>\d+).*$");
+
+
+            var gIndx = 0;
+            int i = 0;
+            using (var rdr = UTIL.FindStreamReader(descFile))
+            {
+                _glyphCache = new Dictionary<string, glyphInfo>();
+
+                _glyphSheet = UTIL.FindTexture(device, textureFile);
+                base.SetTexture(device, _glyphSheet);
+                //CharacterUvWidth = (float)i / (float)_glyphSheet.Width;
+
+                while (!rdr.EndOfStream)
+                {
+                    var line = rdr.ReadLine();
+                    Console.WriteLine(line);
+                    var m = sdfRegex.Match(line);
+                    if (!m.Success) continue;
+
+
+                    glyphInfo gI = new glyphInfo()
+                    {
+                        UvBL = new Vector2((float)(i*32)/ (float)_glyphSheet.Width, 1),
+                        UvTR = new Vector2((float)((i+1)*(32))/(float)_glyphSheet.Width, 0),
+                        CursorAdvance = int.Parse(m.Groups["charWid"].Value)
+                    };
+                    _glyphCache.Add($"{m.Groups["char"].Value}{m.Groups["style"].Value}", gI);
+                    i += 1;
+                }
+            }
+        }
+        public void AddCharacter(char c, char style, Vector3 Tint1, Vector3 Tint2,Vector2 pos, float scale)
+        {
+            //var key = $"{c}{style}";
+            var gI = GetInfo(c, style);
+            Vector3 cp = new Vector3(0, 0, 0);
+            Matrix4x4 transformMatrix = Matrix4x4.CreateScale(scale)*Matrix4x4.CreateTranslation(new Vector3(pos,1));
+            
+            
+            
+            
+
+            //Close Face
+            AddVertex(new Float3_Float2_Float3_Float3(Vector3.Transform(new Vector3(-0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(gI.UvBL.X, gI.UvBL.Y), Tint1, Tint2));
+            AddVertex(new Float3_Float2_Float3_Float3(Vector3.Transform(new Vector3( 0.5f,  0.5f, 0.5f), transformMatrix), new Vector2(gI.UvTR.X, gI.UvTR.Y), Tint1, Tint2));
+            AddVertex(new Float3_Float2_Float3_Float3(Vector3.Transform(new Vector3( 0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(gI.UvTR.X, gI.UvBL.Y), Tint1, Tint2));
+
+            AddVertex(new Float3_Float2_Float3_Float3(Vector3.Transform(new Vector3(-0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(gI.UvBL.X, gI.UvBL.Y), Tint1, Tint2));
+            AddVertex(new Float3_Float2_Float3_Float3(Vector3.Transform(new Vector3(-0.5f,  0.5f, 0.5f), transformMatrix), new Vector2(gI.UvBL.X, gI.UvTR.Y), Tint1, Tint2));
+            AddVertex(new Float3_Float2_Float3_Float3(Vector3.Transform(new Vector3( 0.5f,  0.5f, 0.5f), transformMatrix), new Vector2(gI.UvTR.X, gI.UvTR.Y), Tint1, Tint2));
+        }
+        private glyphInfo GetInfo(Char glyph, Char style = ':')
+        {
+            String key = $"{glyph}{style}";
+            if (_glyphCache.ContainsKey(key))
+                return _glyphCache[key];
+            if (!String.IsNullOrEmpty(UnknownGlyphKey))
+                return _glyphCache[UnknownGlyphKey];
+            return default(glyphInfo);
+        }
+
+        public override void CreateResources(GraphicsDevice device)
+        {
+
+            SettingsBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
+            SettingsLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(
+                    new ResourceLayoutElementDescription("SettingsUniform",ResourceKind.UniformBuffer, ShaderStages.Fragment)
+                )
+            );
+            SettingsResourceSet = device.ResourceFactory.CreateResourceSet(
+                new ResourceSetDescription(SettingsLayout,
+                SettingsBuffer
+                ));
+            base.CreateResources(device);
+        }
+
+        public override void UpdateBuffers(CommandList cmds)
+        {
+            if (SettingsDirty)
+            {
+                cmds.UpdateBuffer(SettingsBuffer, 0, Settings);
+                SettingsDirty = false;
+            }
+            base.UpdateBuffers(cmds);
+        }
+
+        protected override IEnumerable<ResourceLayout> CreateResourceLayout()
+        {
+            foreach (var v in base.CreateResourceLayout())
+                yield return v;
+            yield return SettingsLayout;
+        }
+        public override IEnumerable<ResourceSet> GetResourceSets()
+        {
+            foreach (var v in base.GetResourceSets())
+                yield return v;
+            yield return SettingsResourceSet;
+        }
+
+    }
+}

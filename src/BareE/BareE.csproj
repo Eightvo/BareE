@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <Version>0.0.1</Version>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>A source first game engine framework.</Description>
+    <Authors>Greg Freedline</Authors>
+    <Company>Greg Freedline</Company>
+    <Copyright>Copyright 2021 (c) Greg Freedline. All rights reserved.</Copyright>
+    <PackageTags>Game</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="GameDev\environmentdefault.json" />
+    <None Remove="Rendering\FullScreenTexture.frag.spv" />
+    <None Remove="Rendering\FullScreenTexture.vert.spv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="GameDev\environmentdefault.json" />
+    <EmbeddedResource Include="Rendering\FullScreenTexture.frag.spv" />
+    <EmbeddedResource Include="Rendering\FullScreenTexture.vert.spv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
+    <PackageReference Include="NetCoreAudio" Version="1.6.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="sdl2" Version="2.0.5" />
+    <PackageReference Include="System.Windows.Extensions" Version="5.0.0" />
+    <PackageReference Include="Veldrid" Version="4.9.0-ga769c2971c" />
+    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-ga769c2971c" />
+    <PackageReference Include="Veldrid.ImGui" Version="5.72.0-ga769c2971c" />
+    <PackageReference Include="Veldrid.RenderDoc" Version="1.0.1-ga769c2971c" />
+    <PackageReference Include="Veldrid.SPIRV" Version="1.0.14" />
+    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-ga769c2971c" />
+    <PackageReference Include="Veldrid.VirtualReality" Version="1.0.1-ga769c2971c" />
+  </ItemGroup>
+
+</Project>

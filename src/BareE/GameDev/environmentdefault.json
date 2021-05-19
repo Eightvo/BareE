@@ -1,0 +1,20 @@
+{
+  "PrefferedBackend": "OpenGL",
+  "DisplayMode": "MonitorOnly",
+  "TargetFramerate": "75",
+  "Window": {
+    "Title": "BareE [{BACKEND}-{DISPLAYMODE}]",
+    "Width": "1280",
+    "Height": "720",
+    "Left": "10",
+    "Top": "10",
+    "Resolution": {
+      "Width": "1280",
+      "Height": "720"
+    }
+
+  },
+  "VR": {
+    "MirrorTextureEyeSource": "BothEyes"
+  }
+}

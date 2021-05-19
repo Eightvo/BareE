@@ -1,8 +1,8 @@
-﻿#BareE
+﻿# BareE
 
 BareE is a Code First Game Development Framework. 
 
-#Features
+# Features
 
 Prebuilt Engine, Developers need only implement game specific logic by creating child classes of the Game and GameSceneBase classes.
 
@@ -14,6 +14,7 @@ Easily create new Component and Message Types using Component and Message Type a
 
 Supports VR.
 
+***
 
 This project is Multi-Licensed.
 CopyRight Greg Freedline 2021

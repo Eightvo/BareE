@@ -37,3 +37,14 @@ CopyRight Greg Freedline 2021
 The PolyForm Noncommercial Licenses 1.0.0 is available. 
 Additional Licenses will be available in the future.
 https://polyformproject.org/licenses/noncommercial/1.0.0/
+
+Planned Future Licenses:
+
+**Contributor License** - A future free license that allows contributors to use this software for Commercial purposes
+
+**Developer License** - A future paid license covering one year of use in development per developer
+
+**Commercial License** - A future license allowing useage of software in exchange for royalties
+
+Planning a future license type does not guarentee that such a license will be actuated in the future. Planned Licenses are dependent on addtional Research and Legal Advice. There is currently no defined timeline regaurding the implementation and availablitiy of future licenses. Future Licenses are listed for informational purposes only.
+

@@ -5,6 +5,9 @@ using System.Reflection;
 
 namespace BareE.DataStructures
 {
+    /// <summary>
+    /// Maintains Entity->Component Relationships.
+    /// </summary>
     public class ComponentCache
     {
         #region ComponentSystemMaint
@@ -12,6 +15,9 @@ namespace BareE.DataStructures
         private static Dictionary<Type, ComponentAttribute> _componetTypeData;
         private static AliasMap<ComponentAttribute> _componentAliasMap;
 
+        /// <summary>
+        /// Obtain Information Regarding Components by Name.
+        /// </summary>
         public static AliasMap<ComponentAttribute> ComponentAliasMap
         {
             get
@@ -22,6 +28,9 @@ namespace BareE.DataStructures
             }
         }
 
+        /// <summary>
+        /// Obtain Information Regardign Components by Type.
+        /// </summary>
         public static Dictionary<Type, ComponentAttribute> ComponentTypeData
         {
             get
@@ -32,7 +41,8 @@ namespace BareE.DataStructures
             }
         }
 
-        public static void LoadComponentData()
+
+        internal static void LoadComponentData()
         {
             _componetTypeData = new Dictionary<Type, ComponentAttribute>();
             _componentAliasMap = new AliasMap<ComponentAttribute>();
@@ -61,15 +71,24 @@ namespace BareE.DataStructures
 
         #endregion ComponentSystemMaint
 
-        public object SyncRoot = new object();
+        private object SyncRoot = new object();
 
         private Dictionary<int, Dictionary<int, object>> _components = new Dictionary<int, Dictionary<int, object>>();
 
+        /// <summary>
+        /// Iterate all Components By Name.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<String> ListComponents()
         {
             return ComponentAliasMap.Keys();
         }
 
+        /// <summary>
+        /// Get number of existing Components By name.
+        /// </summary>
+        /// <param name="componentName"></param>
+        /// <returns></returns>
         public int CountComponents(String componentName)
         {
             int i = ComponentAliasMap[componentName].CTypeID;
@@ -78,6 +97,11 @@ namespace BareE.DataStructures
             return (_components[i].Count);
         }
 
+        /// <summary>
+        /// Remove a component from an Entity.
+        /// </summary>
+        /// <param name="componentType"></param>
+        /// <param name="e"></param>
         public void RemoveComponent(String componentType, Entity e)
         {
             int i = ComponentAliasMap[componentType].CTypeID;
@@ -94,7 +118,9 @@ namespace BareE.DataStructures
         }
 
         /// <summary>
-        /// Does not cause accumulation.
+        /// Get the Component associated with an entity.
+        /// A default instance of the compeont type will be returned if no Component of that type exists for the entity.
+        /// Does not cause accumulation through parent.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="e"></param>
@@ -107,18 +133,30 @@ namespace BareE.DataStructures
             if (!_components.ContainsKey(i))
                 return default(T);
 
-            //Getting a Component Cumulatively should be a different Function Call.
             object ret = GetComponent(e, tDat.CTypeID);
             if (ret != null)
                 return (T)ret;
             return default(T);
         }
 
+        /// <summary>
+        /// Get a component for an entity by name.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sType"></param>
+        /// <returns></returns>
         public object GetComponent(Entity e, String sType)
         {
             return GetComponent(e, ComponentAliasMap[sType].CTypeID);
         }
 
+        /// <summary>
+        /// Get a component for an Entity by ComponentID.
+        /// A componentID is static only though the lifetime of the application.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="cAttribId"></param>
+        /// <returns></returns>
         public object GetComponent(Entity e, int cAttribId)
         {
             /* Done in calling func
@@ -138,6 +176,11 @@ namespace BareE.DataStructures
             return null;
         }
 
+        /// <summary>
+        /// Associate a Component with an Entity overwriting an existing component of that type currently associated with the entity.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="component"></param>
         public void SetComponent(Entity e, object component)
         {
             SetComponent(e, component, ComponentTypeData[component.GetType()]);
@@ -156,6 +199,12 @@ namespace BareE.DataStructures
                 _components[cAttrib.CTypeID][e.Id] = component;
         }
 
+        /// <summary>
+        /// Hide a component on an entity.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="componentTypeId"></param>
+        /// <param name="mask"></param>
         private void MaskComponent(Entity e, int componentTypeId, bool mask = true)
         {
             if (!_components.ContainsKey(componentTypeId))
@@ -194,7 +243,8 @@ namespace BareE.DataStructures
         }
 
         /// <summary>
-        /// Checks component Directly.
+        /// Returns true if the component or the ideal of a component contains this type of component.
+        /// Returns false if a component has been masked.
         /// </summary>
         /// <param name="componentName"></param>
         /// <param name="ent"></param>
@@ -206,13 +256,26 @@ namespace BareE.DataStructures
             int i = ComponentAliasMap[componentName].CTypeID;
             return HasComponent(i, ent);
         }
+        /// <summary>
+        /// Returns true if the component or the ideal of a component contains this type of component.
+        /// Returns false if a component has been masked.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ent"></param>
+        /// <returns></returns>
 
         public bool HasComponent<T>(Entity ent)
         {
             int i = ComponentTypeData[typeof(T)].CTypeID;
             return HasComponent(i, ent);
         }
-
+        /// <summary>
+        /// Returns true if the component or the ideal of a component contains this type of component.
+        /// Returns false if a component has been masked.
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="ent"></param>
+        /// <returns></returns>
         private bool HasComponent(int i, Entity ent)
         {
             if (!_components.ContainsKey(i)) return false;
@@ -222,6 +285,13 @@ namespace BareE.DataStructures
             || _components.ContainsKey(ent.Ideal);
         }
 
+        /// <summary>
+        /// Enumerates a collection of KeyValuePairs.
+        /// The Key is the EntityId
+        /// The Value is the Component Value for that Entity.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public IEnumerable<KeyValuePair<int, T>> GetEntitiesByComponentType<T>()
         {
             int i = ComponentTypeData[typeof(T)].CTypeID;
@@ -232,6 +302,10 @@ namespace BareE.DataStructures
                 yield return new KeyValuePair<int, T>(v.Key, (T)v.Value);
         }
 
+        /// <summary>
+        /// Removes all components from the cache by EntityId.
+        /// </summary>
+        /// <param name="iD"></param>
         public void RemoveByEntityID(int iD)
         {
             foreach (var v in _components)
@@ -240,7 +314,11 @@ namespace BareE.DataStructures
                 v.Value.Remove(-iD);
             }
         }
-
+        /// <summary>
+        /// Enumerates all Components Associated with an Entity.
+        /// </summary>
+        /// <param name="ent"></param>
+        /// <returns></returns>
         public IEnumerable<object> GetComponentsByEntity(Entity ent)
         {
             foreach (var v in _components)

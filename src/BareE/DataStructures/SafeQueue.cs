@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace BareE.DataStructures
 {
+    /// <summary>
+    /// Wraps a queue to ensure locks are used to Enque and Dequeue.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class SafeQueue<T> :IEnumerable
     {
         Queue<T> _queue;

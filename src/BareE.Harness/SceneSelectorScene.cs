@@ -14,7 +14,7 @@ namespace BareE.Harness
             IG.Begin("Scenes");
             if (IG.Button("Very Simple Scene"))
             {
-                State.Messages.AddMsg<TransitionScene>(new TransitionScene()
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
                 {
                     Preloaded = false,
                     Scene = new VerySimpleScene(),
@@ -23,7 +23,7 @@ namespace BareE.Harness
             }
             if (IG.Button("Lighting Test Scene"))
             {
-                State.Messages.AddMsg<TransitionScene>(new TransitionScene()
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
                 {
                     Preloaded = false,
                     Scene = new TestGameScene(),
@@ -32,7 +32,7 @@ namespace BareE.Harness
             }
             if (IG.Button("Transvoxel Test Scene"))
             {
-                State.Messages.AddMsg<TransitionScene>(new TransitionScene()
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
                 {
                     Preloaded = false,
                     Scene = new TransvoxelScene(),

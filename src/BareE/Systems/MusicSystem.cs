@@ -49,6 +49,13 @@ namespace BareE.Systems
         }
     }
 
+    /// <summary>
+    /// A built in class allowing the use of Audio via a radio like interface.
+    /// Responds to PlaySong Messages in the following manner:
+    /// If station and song is specified then the station will be set and that specific song will be played.
+    /// If a station is specified, the station will be set and a song from that station will be played.
+    /// If neither a station nor a song is specifed a song from the current station will be played.
+    /// </summary>
     public class MusicSystem : GameDev.GameSystem
     {
         private NetCoreAudio.Player player;

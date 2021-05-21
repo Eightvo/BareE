@@ -120,12 +120,22 @@ namespace BareE.GameDev
         }
     }
 
+    /// <summary>
+    /// Maps Input to numeric values for actionability via alias.
+    /// Multiple Keys may map to the same alias, however multiple aliases can not map to the same key(s).
+    /// The values returned depend on the type of Input as defined in the InputConfiguration.
+    /// An Axis Input will return a value between [-1,1] while a button will return a value between [0,1]
+    /// </summary>
     public class InputHandler
     {
         #region Static
 
         public static Dictionary<String, ControlGroupModel> ControlGroupDefs = new Dictionary<string, ControlGroupModel>();
 
+        /// <summary>
+        /// Append a set of Control definitions from a file to existing control definitions.
+        /// </summary>
+        /// <param name="filename"></param>
         public static void LoadFromConfig(String filename)
         {
             ControlGroupModel[] groups;
@@ -135,7 +145,11 @@ namespace BareE.GameDev
                 ControlGroupDefs.Add(v.Group, v);
             }
         }
-
+        /// <summary>
+        /// Construct an InputHandler instance that maps aliases to values according to the specified definition groups.
+        /// </summary>
+        /// <param name="groups"></param>
+        /// <returns></returns>
         public static InputHandler Build(params string[] groups)
         {
             InputHandler ret = new InputHandler();
@@ -326,6 +340,7 @@ namespace BareE.GameDev
         private Dictionary<InputSource, Dictionary<int, InputAlias>> AliasedControls = new Dictionary<InputSource, Dictionary<int, InputAlias>>();
         private Dictionary<String, List<InputControl>> Controls = new Dictionary<string, List<InputControl>>();
         //HashSet<String> __NO_AUTO_UNSET_EVENT_ALIASES = new HashSet<string>();
+        
 
         public bool AddControl(String controlName, InputControl cntrl, bool overwrite = false)
         {
@@ -353,6 +368,11 @@ namespace BareE.GameDev
             return true;
         }
 
+        /// <summary>
+        /// Get the value of a control by alias.
+        /// </summary>
+        /// <param name="alias"></param>
+        /// <returns></returns>
         public float this[string alias]
         {
             get
@@ -404,7 +424,12 @@ namespace BareE.GameDev
             }
         }
 */
-
+        /// <summary>
+        /// Get a 2D vector from a pair of aliases.
+        /// </summary>
+        /// <param name="aliasX"></param>
+        /// <param name="aliasY"></param>
+        /// <returns></returns>
         public Vector2 this[string aliasX, string aliasY]
         {
             get
@@ -412,14 +437,23 @@ namespace BareE.GameDev
                 return new Vector2(this[aliasX], this[aliasY]);
             }
         }
-
+        /// <summary>
+        /// Read a value and ensure the value is not consumed again until the input is triggered again.
+        /// </summary>
+        /// <param name="alias"></param>
+        /// <returns></returns>
         public float ReadOnce(String alias)
         {
             var r = this[alias];
             CurrentValues[alias] = 0;
             return r;
         }
-
+        /// <summary>
+        /// Read a 2D vector from a pair of Values and ensure that value is not consumed again until the input is triggered again.
+        /// </summary>
+        /// <param name="alias1"></param>
+        /// <param name="alias2"></param>
+        /// <returns></returns>
         public Vector2 ReadOnce(String alias1, String alias2)
         {
             var r = this[alias1, alias2];
@@ -445,6 +479,9 @@ namespace BareE.GameDev
         #region TrackingInput
 
         //int ANYKEY = 0;
+        /// <summary>
+        /// Returns true if any input was pressed. This includes non-aliased inputs.
+        /// </summary>
         public bool ANYKEY
         {
             get
@@ -566,12 +603,17 @@ namespace BareE.GameDev
         #endregion Instance
     }
 
+    /// <summary>
+    /// Used for serialization
+    /// </summary>
     public class ControlGroupModel
     {
         public String Group { get; set; }
         public ControlDefModel[] Controls { get; set; }
     }
-
+    /// <summary>
+    /// Used for serialization
+    /// </summary>
     public class ControlDefModel
     {
         public String Title { get; set; }

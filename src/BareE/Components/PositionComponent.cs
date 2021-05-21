@@ -6,6 +6,9 @@ using System.Numerics;
 
 namespace BareE.Components
 {
+    /// <summary>
+    /// Defines a position in 3D space including Rotation and Scale.
+    /// </summary>
     [Component("Pos")]
     public class Pos
     {
@@ -28,7 +31,6 @@ namespace BareE.Components
         {
             get
             {
-                //if (LockUp) return Vector3.UnitY;
                 return Vector3.Transform(Vector3.UnitY, RotationMatrix);
             }
         }
@@ -41,11 +43,16 @@ namespace BareE.Components
             }
         }
 
+        /// <summary>
+        /// Define the position in terms of where the entity is, where the entity is looking, and which direction is up.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="lookat"></param>
+        /// <param name="up"></param>
         public void Set(Vector3 position, Vector3 lookat, Vector3 up)
         {
             this.Position = position;
             this.RotationMatrix = CreateRotationMatrixFromForwardAndUp(lookat - position, up);
-            //throw new NotImplementedException();
         }
 
         public Matrix4x4 CreateRotationMatrixFromForwardAndUp(Vector3 fwrd, bool lockUp = true)

@@ -7,6 +7,9 @@ using System;
 
 namespace BareE.Components
 {
+    /// <summary>
+    /// Defines a set of Console Commands.
+    /// </summary>
     [Component("ConsoleCommandSet")]
     public struct ConsoleCommandSet
     {
@@ -15,9 +18,11 @@ namespace BareE.Components
         public ConsoleCommand[] Commands;
     }
 
+    /// <summary>
+    /// Defines a console Command.
+    /// </summary>
     public struct ConsoleCommand
     {
-        //Action<object[], object[]>
         public String Cmd { get; set; }
 
         [JsonProperty]

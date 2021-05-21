@@ -15,6 +15,10 @@ using Veldrid;
 
 namespace BareE.Systems
 {
+    /// <summary>
+    /// A build in System providing some terminal like functionality such
+    /// as basic text output, input and allowing the use of ConsoleCommand
+    /// </summary>
     public partial class ConsoleSystem : GameSystem
     {
         private bool Echo = true;
@@ -210,7 +214,7 @@ namespace BareE.Systems
             ImGui.SetWindowSize(new Vector2(ImGui.GetWindowSize().X, cellSize.Y * 30.5f));
             for (int i = 0; i < _outputBuffer.Capacity - _outputBuffer.Count; i++)
                 ImGui.Text("");
-            foreach (String s in _outputBuffer.SafeEnumerate())
+            foreach (String s in _outputBuffer.Enumerate())
                 ImGui.Text($"{s}");
 
             ImGui.PushItemWidth(-1);
@@ -233,7 +237,7 @@ namespace BareE.Systems
             {
                 _history.Push(cmdText);
                 currHistPtr = 0;
-                State.Messages.AddMsg(new ConsoleInput() { Text = cmdText });
+                State.Messages.EmitMsg(new ConsoleInput() { Text = cmdText });
                 cmdText = String.Empty;
             }
             if (ImGui.IsWindowFocused(ImGuiFocusedFlags.RootWindow) && !ImGui.GetIO().WantCaptureKeyboard)
@@ -252,7 +256,7 @@ namespace BareE.Systems
         public bool ProcessConsoleInput(ConsoleInput msg, GameState state, Instant instant)
         {
             if (Echo && !msg.System)
-                _outputBuffer.SafePush($"  >{msg.Text}");
+                _outputBuffer.Push($"  >{msg.Text}");
 
             if (String.Compare(msg.Text, "BOOT", true) == 0 && msg.System)
             {

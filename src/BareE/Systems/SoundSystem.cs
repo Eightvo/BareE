@@ -17,6 +17,10 @@ namespace BareE.Systems
         public String Resource;
     }
 
+    /// <summary>
+    /// A built in system allowing the use of sound effects. 
+    /// Responds to PlaySFX messages.
+    /// </summary>
     public class SoundSystem : GameDev.GameSystem
     {
         private Dictionary<String, System.Media.SoundPlayer> soundboard;
@@ -24,7 +28,7 @@ namespace BareE.Systems
 
         private bool doEmitSound(PlaySFX req, GameState state, Instant instant)
         {
-            state.Messages.AddMsg(new ConsoleInput($"Playing {req.Resource}"));
+            state.Messages.EmitMsg(new ConsoleInput($"Playing {req.Resource}"));
             if (!soundboard.ContainsKey(req.Resource))
                 soundboard.Add(req.Resource, new System.Media.SoundPlayer(AssetManager.FindFileStream(req.Resource)));
             soundboard[req.Resource].Play();

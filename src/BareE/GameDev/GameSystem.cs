@@ -4,6 +4,9 @@ using Veldrid;
 
 namespace BareE.GameDev
 {
+    /// <summary>
+    /// Allows extensibility of reusable Game Systems.
+    /// </summary>
     public abstract class GameSystem
     {
         public virtual void Load(Instant Instant, GameState State, GameEnvironment Env)

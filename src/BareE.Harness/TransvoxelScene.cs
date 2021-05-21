@@ -83,7 +83,7 @@ namespace BareE.Harness
                 Env.WorldCamera.Yaw((State.Input.ReadOnce("Pan")) * -(Instant.TickDelta / (1000.0f / turnspeed)));
             }
             if (State.Input.ReadOnce("Cancel") > 0)
-                State.Messages.AddMsg<ExitGame>(new ExitGame());
+                State.Messages.EmitMsg<ExitGame>(new ExitGame());
 
             if (State.Input.ReadOnce("CycleMode") > 0)
             {
@@ -114,7 +114,7 @@ namespace BareE.Harness
             }
             if (IG.Button("Home"))
             {
-                State.Messages.AddMsg<TransitionScene>(new TransitionScene()
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
                 {
                     Scene = new SceneSelectorScene(),
                     State = new GameState()

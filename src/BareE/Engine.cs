@@ -52,7 +52,10 @@ namespace BareE
             isRunning = false;
             return true;
         }
-
+        /// <summary>
+        /// Runs a Game.
+        /// </summary>
+        /// <param name="game"></param>
         public void Run(Game game)
         {
             //ImGuiNET.ImGui.GetIO().ConfigFlags = ImGuiNET.ImGuiConfigFlags.

@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace BareE.Messages
 {
+    /// <summary>
+    /// Allows messages to be dispatched.
+    /// </summary>
     public class MessageQueue : IDisposable
     {
         private static Dictionary<Type, MessageAttribute> _messageTypeData;
@@ -35,22 +38,41 @@ namespace BareE.Messages
 
         public delegate bool ProcessMessage<T>(T msg, GameState state, Instant instant);
 
+        /// <summary>
+        /// Wait delay milliseconds from the insant provided not counting paused time then emit the specified message.
+        /// </summary>
+        /// <param name="delay"></param>
+        /// <param name="m"></param>
+        /// <param name="delayedFrom"></param>
         public void EmitEffectiveTimeDelayedMessage(long delay, object m, Instant delayedFrom)
         {
             _delayedMessages_Effective.Push(m, delay + delayedFrom.EffectiveDuration);
         }
-
+        /// <summary>
+        /// Wait delay milliseconds from the instant provided including paused time, then emit the specified message.
+        /// </summary>
+        /// <param name="delay"></param>
+        /// <param name="m"></param>
+        /// <param name="delayedFrom"></param>
         public void EmitRealTimeDelayedMessage(long delay, object m, Instant delayedFrom)
         {
             _delayedMessages_Realtime.Push(m, delay + delayedFrom.SessionDuration);
         }
-
+        /// <summary>
+        /// Wait delay turn from the instant provided, then emit the specified message. 
+        /// </summary>
+        /// <param name="delay"></param>
+        /// <param name="m"></param>
+        /// <param name="delayedFrom"></param>
         public void EmitTurnDelayedMessage(long delay, object m, Instant delayedFrom)
         {
             _delayedMessages_Turn.Push(m, delay + delayedFrom.Turn);
         }
-
-        public void AddMsg(object m)
+        /// <summary>
+        /// Emit a message immediately.
+        /// </summary>
+        /// <param name="m"></param>
+        public void EmitMsg(object m)
         {
             if (m as IMessageGenerator != null)
             {
@@ -61,23 +83,33 @@ namespace BareE.Messages
             }
             var tDat = MessageTypeData[m.GetType()];
             int i = tDat.MTypeID;
-            AddMsg(i, m);
+            EmitMsg(i, m);
         }
-
-        public void AddMsg<T>(T msg)
+        /// <summary>
+        /// Emit a message immediately.
+        /// </summary>
+        /// <param name="m"></param>
+        public void EmitMsg<T>(T msg)
         {
             var tDat = MessageTypeData[typeof(T)];
             int i = tDat.MTypeID;
-            AddMsg(i, msg);
+            EmitMsg(i, msg);
         }
-
-        private void AddMsg(int i, object m)
+        /// <summary>
+        /// Emit a message immediately.
+        /// </summary>
+        /// <param name="m"></param>
+        private void EmitMsg(int i, object m)
         {
             if (!_messages.ContainsKey(i))
                 _messages.Add(i, new SafeQueue<object>());
             _messages[i].SafeEnqueue(m);
         }
-
+        /// <summary>
+        /// Add a handler to listen for a specific type of message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="msgresp"></param>
         public void AddListener<T>(ProcessMessage<T> msgresp)
         {
             var tDat = MessageTypeData[typeof(T)];
@@ -86,14 +118,19 @@ namespace BareE.Messages
                 _listeners.Add(i, new List<object>());
             _listeners[i].Add(msgresp);
         }
-
+        /// <summary>
+        /// Enumerate the currently queued messages calling the specified handlers for each.
+        /// The first handler to return true will be the last handler to handle the message.
+        /// </summary>
+        /// <param name="snapshot"></param>
+        /// <param name="state"></param>
         public void ProcessMessages(Instant snapshot, GameState state)
         {
             /*Effective time Delay*/
             while (!_delayedMessages_Effective.IsEmpty() &&
                   _delayedMessages_Effective.PeekWeight() <= snapshot.EffectiveDuration)
             {
-                AddMsg(_delayedMessages_Effective.Pop());
+                EmitMsg(_delayedMessages_Effective.Pop());
                 // AddMsg(new ConsoleInput() { Text = $"ED={snapshot.EffectiveDuration}" });
             }
 
@@ -101,7 +138,7 @@ namespace BareE.Messages
             while (!_delayedMessages_Realtime.IsEmpty() &&
                   _delayedMessages_Realtime.PeekWeight() <= snapshot.SessionDuration)
             {
-                AddMsg(_delayedMessages_Realtime.Pop());
+                EmitMsg(_delayedMessages_Realtime.Pop());
                 // AddMsg(new ConsoleInput() { Text = $"SD={snapshot.SessionDuration}" });
             }
 
@@ -109,7 +146,7 @@ namespace BareE.Messages
             while (!_delayedMessages_Turn.IsEmpty() &&
                   _delayedMessages_Turn.PeekWeight() <= snapshot.Turn)
             {
-                AddMsg(_delayedMessages_Turn.Pop());
+                EmitMsg(_delayedMessages_Turn.Pop());
                 // AddMsg(new ConsoleInput() { Text = $"Turn={snapshot.Turn}" });
             }
 

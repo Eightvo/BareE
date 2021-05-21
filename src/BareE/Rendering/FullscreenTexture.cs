@@ -8,6 +8,9 @@ using Veldrid;
 
 namespace BareE.Rendering
 {
+    /// <summary>
+    /// Represents a vertex data of vec3; vec2
+    /// </summary>
     public struct Pos3_Uv2 : IProvideVertexLayoutDescription
     {
         public Vector3 Position;
@@ -30,6 +33,9 @@ namespace BareE.Rendering
         }
     }
 
+    /// <summary>
+    /// Draws a specified texture to cover the entire output window.
+    /// </summary>
     public class FullScreenTexture : VertexTextureShader<Pos3_Uv2>
     {
         public override bool UseDepthStencil { get => true; }
@@ -46,6 +52,9 @@ namespace BareE.Rendering
         }
     }
 
+    /// <summary>
+    /// Draws a specified Framebuffer to cover the entire output window.
+    /// </summary>
     public class FramebufferToScreen : VertexTextureShader<Pos3_Uv2>
     {
         public override bool UseDepthStencil { get => false; }
@@ -62,6 +71,10 @@ namespace BareE.Rendering
         }
     }
 
+    /// <summary>
+    /// a baseclass to extend for shaders that accept a Vertex data and a single texture.
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
     public class VertexTextureShader<V> : VertexOnlyShader<V>
         where V : unmanaged, IProvideVertexLayoutDescription
     {

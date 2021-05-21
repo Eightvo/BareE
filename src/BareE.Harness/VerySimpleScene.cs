@@ -26,7 +26,7 @@ namespace BareE.Harness
             //if (Instant.EffectiveDuration-p>1000)
             //{
             //    p = Instant.EffectiveDuration;
-            State.Messages.AddMsg<ConsoleInput>(new ConsoleInput($"{p++}"));
+            State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput($"{p++}"));
             //}
         }
 
@@ -40,7 +40,7 @@ namespace BareE.Harness
             IG.Text("Text");
             if (IG.Button("Home"))
             {
-                State.Messages.AddMsg<Messages.TransitionScene>(new Messages.TransitionScene()
+                State.Messages.EmitMsg<Messages.TransitionScene>(new Messages.TransitionScene()
                 {
                     Preloaded = false,
                     Scene = new SceneSelectorScene(),

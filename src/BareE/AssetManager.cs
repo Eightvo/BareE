@@ -8,6 +8,10 @@ using Veldrid.ImageSharp;
 
 namespace BareE
 {
+    /// <summary>
+    /// Allows access to Resources.
+    /// Resources can be Packaged into an assembly or a file in a specified asset repository.
+    /// </summary>
     public static class AssetManager
     {
         private static List<String> _assetRepositories;
@@ -23,33 +27,60 @@ namespace BareE
                 _knownAssemblies.Add(Assembly.Load(asmN));
         }
 
+        /// <summary>
+        /// Add a new folder to search for assets within.
+        /// </summary>
+        /// <param name="location"></param>
         public static void AddAssetRepository(String location)
         {
             _assetRepositories.Add(location);
         }
 
+        /// <summary>
+        /// remove all non default asset repositories.
+        /// </summary>
         public static void ResetAssetRepositories()
         {
             _assetRepositories.Clear();
             _assetRepositories.Add(Environment.CurrentDirectory);
         }
-
+        /// <summary>
+        /// Return a Veldird Device Texture from asset
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="device"></param>
+        /// <param name="mipmap"></param>
+        /// <returns></returns>
         public static Texture LoadTexture(String resource, GraphicsDevice device, bool mipmap = false)
         {
             return LoadTexture(LoadImageSharpTexture(resource, mipmap), device);
         }
-
+        /// <summary>
+        /// Return a Veldrid device texture from ImageSharpTexture.
+        /// </summary>
+        /// <param name="imgSharpTexture"></param>
+        /// <param name="device"></param>
+        /// <returns></returns>
         public static Texture LoadTexture(ImageSharpTexture imgSharpTexture, GraphicsDevice device)
         {
             return imgSharpTexture.CreateDeviceTexture(device, device.ResourceFactory);
         }
-
+        /// <summary>
+        /// Return an Image SharpTexture from asset.
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <param name="mipmap"></param>
+        /// <returns></returns>
         public static ImageSharpTexture LoadImageSharpTexture(String resource, bool mipmap = false)
         {
             var strm = new MemoryStream(FindFileData(resource));
             return (new Veldrid.ImageSharp.ImageSharpTexture(strm, mipmap));
         }
-
+        /// <summary>
+        /// Get a file stream from resource/Asset
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static Stream FindFileStream(String name)
         {
             if (Path.IsPathRooted(name))
@@ -92,6 +123,11 @@ namespace BareE
             throw new FileNotFoundException("File not found", name);
         }
 
+        /// <summary>
+        /// Get raw byte data from a Resource/Asset
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static Byte[] FindFileData(String name)
         {
             if (Path.IsPathRooted(name))
@@ -133,7 +169,11 @@ namespace BareE
             }
             throw new FileNotFoundException($"File not found: {name}", name);
         }
-
+        /// <summary>
+        /// Read an Entire asset into a string.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static String ReadFile(string name)
         {
             return new StreamReader(new MemoryStream(FindFileData(name))).ReadToEnd();

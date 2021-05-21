@@ -48,6 +48,9 @@ namespace BareE.Rendering
         }
     }
 
+    /// <summary>
+    /// An interface representing a GPU pipeline to execute a set of shaders.
+    /// </summary>
     public interface IRenderUnit
     {
         void CreateResources(GraphicsDevice device);
@@ -58,7 +61,9 @@ namespace BareE.Rendering
 
         void SetOutputDescription(OutputDescription odesc);
     }
-
+    /// <summary>
+    /// An interface representing a structure to be used as a vertex buffer element.
+    /// </summary>
     public interface IProvideVertexLayoutDescription
     {
         uint SizeInBytes { get; }

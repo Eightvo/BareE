@@ -3,8 +3,15 @@ using System.Collections.Generic;
 
 namespace BareE.DataStructures
 {
+    /// <summary>
+    /// A buffer that maintains only the last N elements provided where N is the Ring Buffers capacity.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class RingBuffer<T>
     {
+        /// <summary>
+        /// Maximum number of elements.
+        /// </summary>
         public int Capacity;
         private object _lockObj = new object();
 
@@ -20,19 +27,20 @@ namespace BareE.DataStructures
             Capacity = capacity;
         }
 
-        public void Push(T value)
-        {
-            _data[(head) % _data.Length] = value;
-            if (head < this.Capacity)
-                head++;
-            else
-            {
-                head++;
-                ptr++;
-            }
-        }
 
-        public void SafePush(T value)
+        //public void Push(T value)
+        //{
+        //    _data[(head) % _data.Length] = value;
+        //    if (head < this.Capacity)
+        //        head++;
+        //    else
+        //    {
+        //        head++;
+        //        ptr++;
+        //    }
+        //}
+
+        public void Push(T value)
         {
             lock (_lockObj)
             {
@@ -47,7 +55,7 @@ namespace BareE.DataStructures
             }
         }
 
-        public IEnumerable<T> SafeEnumerate(bool reversed = false)
+        public IEnumerable<T> Enumerate(bool reversed = false)
         {
             lock (_lockObj)
             {

@@ -2,6 +2,7 @@
 
 namespace BareE.Messages
 {
+
     [MessageAttribute("ConsoleInput")]
     public struct ConsoleInput
     {

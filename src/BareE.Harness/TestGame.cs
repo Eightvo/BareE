@@ -69,7 +69,7 @@ namespace BareE.Harness
             this.Systems.Push(new BareE.Systems.ConsoleSystem(), 1);
             this.Systems.Push(new BareE.Systems.SoundSystem(), 2);
             this.Systems.Push(new BareE.Systems.MusicSystem("BareE.Harness.Assets.Def.default.radio"), 3);
-            State.Messages.AddMsg<ConsoleInput>(new ConsoleInput() { System = true, Text = "BOOT" });
+            State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput() { System = true, Text = "BOOT" });
 
             Env.WorldCamera.LockUp = true;
 
@@ -225,7 +225,7 @@ namespace BareE.Harness
                 Env.WorldCamera.Yaw((State.Input.ReadOnce("Pan")) * -(Instant.TickDelta / (1000.0f / turnspeed)));
             }
             if (State.Input.ReadOnce("Cancel") > 0)
-                State.Messages.AddMsg<ExitGame>(new ExitGame());
+                State.Messages.EmitMsg<ExitGame>(new ExitGame());
 
             if (State.Input.ReadOnce("CycleMode") > 0)
             {
@@ -399,36 +399,36 @@ namespace BareE.Harness
 
             if (ImGuiNET.ImGui.Button("Send Immediate message"))
             {
-                State.Messages.AddMsg<ConsoleInput>(new ConsoleInput() { Text = "Immediately sent message" });
+                State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput() { Text = "Immediately sent message" });
             }
             if (ImGuiNET.ImGui.Button("Send message in 5 seconds"))
             {
-                State.Messages.AddMsg(new ConsoleInput($"Message Emitted at SD:{Instant.SessionDuration}"));
+                State.Messages.EmitMsg(new ConsoleInput($"Message Emitted at SD:{Instant.SessionDuration}"));
                 State.Messages.EmitRealTimeDelayedMessage(5000, new ConsoleInput() { Text = "5 sec realtime delay" }, Instant);
             }
             if (ImGuiNET.ImGui.Button("Send message in 5 unpaused seconds"))
             {
-                State.Messages.AddMsg(new ConsoleInput() { Text = $"Message Emitted at ED:{Instant.EffectiveDuration}" });
+                State.Messages.EmitMsg(new ConsoleInput() { Text = $"Message Emitted at ED:{Instant.EffectiveDuration}" });
                 State.Messages.EmitEffectiveTimeDelayedMessage(5000, new ConsoleInput() { Text = "5 sec effective delay" }, Instant);
             }
             if (ImGuiNET.ImGui.Button("Send message in 5 turns"))
             {
-                State.Messages.AddMsg(new ConsoleInput($"Message Dispatched At Turn: {Instant.Turn}"));
+                State.Messages.EmitMsg(new ConsoleInput($"Message Dispatched At Turn: {Instant.Turn}"));
                 State.Messages.EmitTurnDelayedMessage(5, new ConsoleInput() { Text = "5 turn delay" }, Instant);
             }
 
             if (ImGuiNET.ImGui.Button("Press [Esc] to Quit."))
             {
-                State.Messages.AddMsg(new ExitGame());
+                State.Messages.EmitMsg(new ExitGame());
             }
 
             if (ImGuiNET.ImGui.Button("Cylce Mode"))
             {
-                State.Messages.AddMsg(new ConsoleInput("CycleMode"));
+                State.Messages.EmitMsg(new ConsoleInput("CycleMode"));
             }
             if (IG.Button("Home"))
             {
-                State.Messages.AddMsg<Messages.TransitionScene>(new Messages.TransitionScene()
+                State.Messages.EmitMsg<Messages.TransitionScene>(new Messages.TransitionScene()
                 {
                     Preloaded = false,
                     Scene = new SceneSelectorScene(),

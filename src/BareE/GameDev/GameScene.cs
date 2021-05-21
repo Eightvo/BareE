@@ -10,6 +10,9 @@ using Veldrid.VirtualReality;
 
 namespace BareE.GameDev
 {
+    /// <summary>
+    /// Represents a distinct unit of Gameplay. 
+    /// </summary>
     public abstract class GameSceneBase : IDisposable
     {
         public PriorityQueue<GameSystem> Systems = new PriorityQueue<GameSystem>();

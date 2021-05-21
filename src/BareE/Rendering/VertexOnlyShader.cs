@@ -8,6 +8,10 @@ using Veldrid.SPIRV;
 
 namespace BareE.Rendering
 {
+    /// <summary>
+    /// An extensible class for shaders that do not accept any textures.
+    /// </summary>
+    /// <typeparam name="V"></typeparam>
     public class VertexOnlyShader<V> : IRenderUnit
          where V : unmanaged, IProvideVertexLayoutDescription
     {

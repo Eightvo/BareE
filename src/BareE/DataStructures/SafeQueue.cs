@@ -9,7 +9,7 @@ namespace BareE.DataStructures
     /// <typeparam name="T"></typeparam>
     public class SafeQueue<T> :IEnumerable
     {
-        Queue<T> _queue;
+        Queue<T> _queue=new Queue<T>();
         object SyncRoot=new object();
         public void SafeEnqueue(T item)
         {

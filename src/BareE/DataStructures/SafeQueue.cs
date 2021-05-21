@@ -3,24 +3,32 @@ using System.Collections.Generic;
 
 namespace BareE.DataStructures
 {
-    public class SafeQueue<T> : Queue<T>
+    public class SafeQueue<T> :IEnumerable
     {
+        Queue<T> _queue;
+        object SyncRoot;
         public void SafeEnqueue(T item)
         {
-            ICollection ic = (ICollection)this;
-            lock (ic.SyncRoot)
+            lock (SyncRoot)
             {
-                this.Enqueue(item);
+                _queue.Enqueue(item);
             }
         }
 
         public T SafeDequeue()
         {
-            ICollection ic = (ICollection)this;
-            lock (ic.SyncRoot)
+            lock (SyncRoot)
             {
-                return this.Dequeue();
+                return _queue.Dequeue();
             }
+        }
+        public void Clear()
+        {
+            _queue.Clear();
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return (IEnumerator) _queue.GetEnumerator();
         }
     }
 }

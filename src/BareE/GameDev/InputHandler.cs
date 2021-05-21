@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-
 using Veldrid.Sdl2;
+
 namespace BareE.GameDev
 {
     public enum InputSource
@@ -26,23 +26,28 @@ namespace BareE.GameDev
         public String Alias { get; set; }
         public bool Invert { get; set; } = false;
         public Vector2 DeadZoneBounds { get; set; } = new Vector2(0.1f, 0.9f);
+
         public abstract IEnumerable<InputAlias> GetChildAliases();
+
         public abstract float GetControlValue(ref Dictionary<String, float> currentValues);
     }
 
     public class SoloControl : InputControl
     {
-        InputAlias alias;
+        private InputAlias alias;
+
         public SoloControl(InputAlias btn)
         {
             alias = btn;
             Alias = btn.Alias;
         }
+
         public override IEnumerable<InputAlias> GetChildAliases()
         {
             yield return alias;
             yield break;
         }
+
         public override float GetControlValue(ref Dictionary<String, float> currentValues)
         {
             if (!currentValues.ContainsKey(alias.Alias))
@@ -50,14 +55,17 @@ namespace BareE.GameDev
             return currentValues[alias.Alias] * (Invert ? -1 : 1);
         }
     }
+
     public class MouseWheelAxis : InputControl
     {
-        InputAlias iAlias;
+        private InputAlias iAlias;
+
         public MouseWheelAxis(InputAlias alias)
         {
             Alias = alias.Alias;
             iAlias = alias;
         }
+
         public override float GetControlValue(ref Dictionary<string, float> currentValues)
         {
             float posV = 0.0f;
@@ -67,19 +75,23 @@ namespace BareE.GameDev
             //currentValues[Alias] = 0;
             return posV;
         }
+
         public override IEnumerable<InputAlias> GetChildAliases()
         {
             yield return iAlias;
             yield break;
         }
     }
+
     public class PairControl : InputControl
     {
-        InputAlias negativeAlias;
-        InputAlias positiveAlias;
+        private InputAlias negativeAlias;
+        private InputAlias positiveAlias;
 
-        String NegAlias { get { return $"{Alias}_Neg"; } }
-        String PosAlias { get { return $"{Alias}_Pos"; } }
+        private String NegAlias
+        { get { return $"{Alias}_Neg"; } }
+        private String PosAlias
+        { get { return $"{Alias}_Pos"; } }
 
         public PairControl(InputAlias neg, InputAlias pos)
         {
@@ -89,11 +101,13 @@ namespace BareE.GameDev
             negativeAlias = neg;
             positiveAlias = pos;
         }
+
         public override IEnumerable<InputAlias> GetChildAliases()
         {
             yield return negativeAlias;
             yield return positiveAlias;
         }
+
         public override float GetControlValue(ref Dictionary<string, float> currentValues)
         {
             float posV = 0.0f;
@@ -105,7 +119,6 @@ namespace BareE.GameDev
             return (posV - negV) * (Invert ? -1 : 1);
         }
     }
-
 
     public class InputHandler
     {
@@ -122,6 +135,7 @@ namespace BareE.GameDev
                 ControlGroupDefs.Add(v.Group, v);
             }
         }
+
         public static InputHandler Build(params string[] groups)
         {
             InputHandler ret = new InputHandler();
@@ -149,10 +163,10 @@ namespace BareE.GameDev
                 ));
                 */
 
-
             return ret;
         }
-        static void AddFromDef(InputHandler hndlr, ControlDefModel def)
+
+        private static void AddFromDef(InputHandler hndlr, ControlDefModel def)
         {
             InputControl cntrl = null;
             var isInverted = false;
@@ -188,9 +202,11 @@ namespace BareE.GameDev
                                 new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = ReadKeyFromConfig(def.Src, k2) }
                                 );
                             break;
+
                         case InputSource.Gamepad:
                             cntrl = new SoloControl(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = ReadKeyFromConfig(def.Src, defStr) });
                             break;
+
                         case InputSource.Mouse:
                             if (String.Compare(defStr, "wheel", true) == 0)
                             {
@@ -204,7 +220,8 @@ namespace BareE.GameDev
                             {
                                 cntrl = new MouseWheelAxis(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = MouseMoveYID });
                             }
-                            else {
+                            else
+                            {
                                 throw new NotImplementedException("Only mouse wheel for mouse axises");
                             }
 
@@ -221,8 +238,7 @@ namespace BareE.GameDev
             hndlr.AddControl(def.Alias, cntrl);
         }
 
-
-        static int ReadKeyFromConfig(InputSource src, String def)
+        private static int ReadKeyFromConfig(InputSource src, String def)
         {
             String d = def;
             int s = 0;
@@ -237,12 +253,13 @@ namespace BareE.GameDev
                 case InputSource.Keyboard:
                     switch (d.ToLower())
                     {
-
                         case "esc":
                             return (int)SDL_Scancode.SDL_SCANCODE_ESCAPE;
+
                         case "ret":
                         case "enter":
                             return (int)SDL_Scancode.SDL_SCANCODE_RETURN;
+
                         default:
                             {
                                 SDL_Scancode SC;
@@ -267,7 +284,6 @@ namespace BareE.GameDev
                                 SDL_GameControllerButton btn;
                                 if (Enum.TryParse<SDL_GameControllerButton>(d, true, out btn))
                                 {
-
                                     return (int)SDL_GameControllerAxis.Max + (int)(btn);
                                 }
                                 Log.EmitError(new Exception($"Could not parse gamepad source {d}"));
@@ -275,14 +291,17 @@ namespace BareE.GameDev
                             break;
                     }
                     break;
+
                 case InputSource.Mouse:
                     {
                         switch (d.ToLower())
                         {
                             case "1":
                                 return (int)SDL_MouseButton.X1;
+
                             case "2":
                                 return (int)SDL_MouseButton.X2;
+
                             default:
                                 SDL_MouseButton btn;
                                 if (Enum.TryParse<SDL_MouseButton>(d, true, out btn))
@@ -294,18 +313,18 @@ namespace BareE.GameDev
                         }
                     }
                     break;
-
             }
             return 0;
         }
 
-        #endregion
+        #endregion Static
+
         #region Instance
 
-        Dictionary<String, uint> CurrentSince = new Dictionary<string, uint>();
-        Dictionary<String, float> CurrentValues = new Dictionary<string, float>();
-        Dictionary<InputSource, Dictionary<int, InputAlias>> AliasedControls = new Dictionary<InputSource, Dictionary<int, InputAlias>>();
-        Dictionary<String, List<InputControl>> Controls = new Dictionary<string, List<InputControl>>();
+        private Dictionary<String, uint> CurrentSince = new Dictionary<string, uint>();
+        private Dictionary<String, float> CurrentValues = new Dictionary<string, float>();
+        private Dictionary<InputSource, Dictionary<int, InputAlias>> AliasedControls = new Dictionary<InputSource, Dictionary<int, InputAlias>>();
+        private Dictionary<String, List<InputControl>> Controls = new Dictionary<string, List<InputControl>>();
         //HashSet<String> __NO_AUTO_UNSET_EVENT_ALIASES = new HashSet<string>();
 
         public bool AddControl(String controlName, InputControl cntrl, bool overwrite = false)
@@ -317,7 +336,8 @@ namespace BareE.GameDev
                 AddAlias(v);
             return true;
         }
-        bool AddAlias(InputAlias alias, bool overwrite = false)
+
+        private bool AddAlias(InputAlias alias, bool overwrite = false)
         {
             if (!AliasedControls.ContainsKey(alias.Source))
                 AliasedControls.Add(alias.Source, new Dictionary<int, InputAlias>());
@@ -332,11 +352,11 @@ namespace BareE.GameDev
             AliasedControls[alias.Source][alias.SourceKey] = alias;
             return true;
         }
+
         public float this[string alias]
         {
             get
             {
-                
                 if (!Controls.ContainsKey(alias))
                     return 0;
                 foreach (var c in Controls[alias])
@@ -353,10 +373,9 @@ namespace BareE.GameDev
                     }
                 }
                 return 0;
-                
             }
-
         }
+
         /*
         public float this[string alias, uint time]
         {
@@ -370,7 +389,6 @@ namespace BareE.GameDev
                     return 0;
                 foreach (var c in Controls[alias])
                 {
-                    
                     var v = c.GetControlValue(ref CurrentValues);
                     var cV = Math.Abs(v);
                     if (Math.Abs(cV) > c.DeadZoneBounds.X)
@@ -384,9 +402,9 @@ namespace BareE.GameDev
                 }
                 return 0;
             }
-
         }
 */
+
         public Vector2 this[string aliasX, string aliasY]
         {
             get
@@ -401,6 +419,7 @@ namespace BareE.GameDev
             CurrentValues[alias] = 0;
             return r;
         }
+
         public Vector2 ReadOnce(String alias1, String alias2)
         {
             var r = this[alias1, alias2];
@@ -409,8 +428,7 @@ namespace BareE.GameDev
             return r;
         }
 
-
-        IEnumerable<InputAlias> GetAliases()
+        private IEnumerable<InputAlias> GetAliases()
         {
             foreach (var Src in AliasedControls.Values)
             {
@@ -423,7 +441,9 @@ namespace BareE.GameDev
         }
 
         //Handles Events and puts the values in the proper alias
+
         #region TrackingInput
+
         //int ANYKEY = 0;
         public bool ANYKEY
         {
@@ -432,9 +452,10 @@ namespace BareE.GameDev
                 return downHashes.Count > 0;
             }
         }
-        object __LOCKOBJ__ = new object();
 
-        HashSet<int> downHashes = new HashSet<int>();
+        private object __LOCKOBJ__ = new object();
+
+        private HashSet<int> downHashes = new HashSet<int>();
 
         private void SetAliasValue(InputAlias alias, float value, uint timestamp)
         {
@@ -466,6 +487,7 @@ namespace BareE.GameDev
             var alias = AliasedControls[InputSource.Keyboard][(int)wEvent.keysym.scancode];
             SetAliasValue(alias, wEvent.state, wEvent.timestamp);
         }
+
         internal void HandleGamepadButtonEvent(SDL_ControllerButtonEvent wEvent)
         {
             var dHIndx = 5000 + (int)(wEvent.button) + (int)SDL_GameControllerAxis.Max;
@@ -480,6 +502,7 @@ namespace BareE.GameDev
             var alias = AliasedControls[InputSource.Gamepad][(int)(wEvent.button) + (int)SDL_GameControllerAxis.Max];
             SetAliasValue(alias, wEvent.state, wEvent.timestamp);
         }
+
         internal void HandleGamepadAxisEvent(SDL_ControllerAxisEvent wEvent)
         {
             if (!AliasedControls.ContainsKey(InputSource.Gamepad)) return;
@@ -487,6 +510,7 @@ namespace BareE.GameDev
             var alias = AliasedControls[InputSource.Gamepad][((int)wEvent.axis)];
             SetAliasValue(alias, Normalize(wEvent.value), wEvent.timestamp);
         }
+
         internal void HandleMouseButtonEvent(SDL_MouseButtonEvent wEvent)
         {
             var dHIndx = 1000 + (int)(wEvent.button);
@@ -499,27 +523,27 @@ namespace BareE.GameDev
             var alias = AliasedControls[InputSource.Mouse][((int)wEvent.button)];
             SetAliasValue(alias, wEvent.state, wEvent.timestamp);
         }
-        const int MouseWheelID = 1000;
-        const int MouseMoveXID = 1500;
-        const int MouseMoveYID = 1501;
+
+        private const int MouseWheelID = 1000;
+        private const int MouseMoveXID = 1500;
+        private const int MouseMoveYID = 1501;
 
         internal void HandleMouseMove(SDL_MouseMotionEvent mEvent)
         {
             if (!AliasedControls.ContainsKey(InputSource.Mouse)) return;
             var MDelta = new Vector2(mEvent.xrel, mEvent.yrel);
-            
-            if (Math.Abs(MDelta.X) >0 && AliasedControls[InputSource.Mouse].ContainsKey(MouseMoveXID)) {
+
+            if (Math.Abs(MDelta.X) > 0 && AliasedControls[InputSource.Mouse].ContainsKey(MouseMoveXID))
+            {
                 var alias = AliasedControls[InputSource.Mouse][MouseMoveXID];
                 SetAliasValue(alias, Math.Sign(MDelta.X), mEvent.timestamp);
             }
             if (Math.Abs(MDelta.Y) > 0 && AliasedControls[InputSource.Mouse].ContainsKey(MouseMoveYID))
             {
                 var alias = AliasedControls[InputSource.Mouse][MouseMoveYID];
-                
 
                 SetAliasValue(alias, Math.Sign(MDelta.Y), mEvent.timestamp);
             }
-
         }
 
         internal void HandleMouseWheelAxis(SDL_MouseWheelEvent wEvent)
@@ -528,7 +552,6 @@ namespace BareE.GameDev
             if (!AliasedControls[InputSource.Mouse].ContainsKey(MouseWheelID)) return;
             var alias = AliasedControls[InputSource.Mouse][MouseWheelID];
             SetAliasValue(alias, Math.Sign(wEvent.y), wEvent.timestamp);
-
         }
 
         private float Normalize(short value)
@@ -537,8 +560,10 @@ namespace BareE.GameDev
                 ? -(value / (float)short.MinValue)
                 : (value / (float)short.MaxValue);
         }
-        #endregion
-        #endregion
+
+        #endregion TrackingInput
+
+        #endregion Instance
     }
 
     public class ControlGroupModel
@@ -552,12 +577,13 @@ namespace BareE.GameDev
         public String Title { get; set; }
         public String Alias { get; set; }
         public InputSource Src { get; set; }
+
         [Newtonsoft.Json.JsonProperty(PropertyName = "Type")]
         public String ControlType { get; set; }
+
         public String Def { get; set; }
 
         public float DZMin { get; set; }
         public float DZMax { get; set; }
-
     }
 }

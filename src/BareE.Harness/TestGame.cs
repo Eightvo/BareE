@@ -1,29 +1,25 @@
-﻿
-using BareE.Components;
+﻿using BareE.Components;
 using BareE.DataStructures;
-using BareE.GameDev;
-using BareE.Messages;
-
 using BareE.EZRend;
 using BareE.EZRend.ModelShader.Color;
-using BareE.EZRend.ImageShader.FullscreenTexture;
+using BareE.GameDev;
+using BareE.Messages;
+using BareE.Rendering;
 
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-using IG = ImGuiNET.ImGui;
 using Veldrid;
 
+using IG = ImGuiNET.ImGui;
 using Matrix4x4 = System.Numerics.Matrix4x4;
-using BareE.Rendering;
-using System.Threading.Tasks;
 
 namespace BareE.Harness
 {
     public class TestGame : GameDev.Game
     {
-        public TestGame(GameState initialState, GameEnvironment env) : base(new SceneSelectorScene(),initialState, env)
+        public TestGame(GameState initialState, GameEnvironment env) : base(new SceneSelectorScene(), initialState, env)
         {
             InputHandler.LoadFromConfig("BareE.Harness.Assets.Def.default.controls");
         }
@@ -31,27 +27,27 @@ namespace BareE.Harness
 
     public class TestGameScene : GameDev.GameSceneBase
     {
-        EZRend.ModelShader.Color.ColorNormalShader clrNrml;
-        ISceneDataProvider LightData = new DefaultSceneDataProvider();
+        private EZRend.ModelShader.Color.ColorNormalShader clrNrml;
+        private ISceneDataProvider LightData = new DefaultSceneDataProvider();
 
-        Dictionary<String, Texture> _loadedTextures = new Dictionary<string, Texture>();
+        private Dictionary<String, Texture> _loadedTextures = new Dictionary<string, Texture>();
 
-        bool isMouseLook = false;
-        float speed = 10.0f;
-        float turnspeed = 8.0f;
-        float modelTurnSpeed = 0.0f;
-        float modelSpeed = 0.0f;
-        RenderDoc rd;
-        Entity cat;
+        private bool isMouseLook = false;
+        private float speed = 10.0f;
+        private float turnspeed = 8.0f;
+        private float modelTurnSpeed = 0.0f;
+        private float modelSpeed = 0.0f;
+        private RenderDoc rd;
+        private Entity cat;
 
-        String pText = "Pause";
+        private String pText = "Pause";
 
-        float ali;
-        Vector3 alc;
-        Vector3 dlp = new Vector3(0, 0, 0);
+        private float ali;
+        private Vector3 alc;
+        private Vector3 dlp = new Vector3(0, 0, 0);
 
-        ambientLightData ambientLD = new ambientLightData();
-        CommonData comDat = new CommonData();
+        private ambientLightData ambientLD = new ambientLightData();
+        private CommonData comDat = new CommonData();
 
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
@@ -69,7 +65,6 @@ namespace BareE.Harness
                     HelpText = "Put Camera back at origin."
                     },
                 }
-
             });
             this.Systems.Push(new BareE.Systems.ConsoleSystem(), 1);
             this.Systems.Push(new BareE.Systems.SoundSystem(), 2);
@@ -94,8 +89,7 @@ namespace BareE.Harness
 
                         State.ECC.SpawnEntity("adventurer",
                             Pos.Create(0.5f,new Vector3(0,0,-15)),
-                            BareE.Harness.Components.EZModel.CreateTextured(@"Assets/Models/BlockyCharacters/Models/advancedCharacter.fbx", @"Assets/Models/BlockyCharacters/Skins/Advanced/skin_adventurer.png")); 
-
+                            BareE.Harness.Components.EZModel.CreateTextured(@"Assets/Models/BlockyCharacters/Models/advancedCharacter.fbx", @"Assets/Models/BlockyCharacters/Skins/Advanced/skin_adventurer.png"));
 
                         State.ECC.SpawnEntity("orc",
                             Pos.Create(0.5f, new Vector3(20, 0, -15)),
@@ -127,7 +121,7 @@ namespace BareE.Harness
                         State.ECC.SpawnEntity("Barrel",
                         Pos.Create(0.025f, new Vector3(-20, 0, 000)),
                         BareE.Harness.Components.EZModel.CreateTextured(@"Assets/Models/wood_barrels/big_wood_barrel.obj",
-                         @"/Assets/Models/wood_barrels/big_diffus.png", @"/Assets/Models/wood_barrels/big_normal.png", 
+                         @"/Assets/Models/wood_barrels/big_diffus.png", @"/Assets/Models/wood_barrels/big_normal.png",
                          @"/Assets/Models/wood_barrels/big_specular.png")
                         );
             */
@@ -137,8 +131,6 @@ namespace BareE.Harness
             //    @"/Assets/Models/statue/Statue_dDo03_d.png"
             //));
 
-
-
             State.ECC.SpawnEntity("StatueADN",
             Pos.Create(0.025f, new Vector3(00, 0, 000)),
             BareE.Harness.Components.EZModel.CreateTextured(@"Assets/Models/Statue/Statue_With_Lamp_LP.obj",
@@ -146,15 +138,13 @@ namespace BareE.Harness
               @"/Assets/Models/statue/Statue_dDo03_n.png"
             ));
 
-
             //            State.ECC.SpawnEntity("StatueADNS",
             //            Pos.Create(0.025f, new Vector3(20, 0, 000)),
             //            BareE.Harness.Components.EZModel.CreateTextured(@"Assets/Models/Statue/Statue_With_Lamp_LP.obj",
             //              @"/Assets/Models/statue/Statue_dDo03_d.png",
             //              @"/Assets/Models/statue/Statue_dDo03_n.png",
-            //              @"/Assets/Models/statue/Statue_dDo03_s.png"              
+            //              @"/Assets/Models/statue/Statue_dDo03_s.png"
             //            ));
-
 
             State.ECC.SpawnEntity("StatueADNSE1",
                 Pos.Create(0.025f, new Vector3(0, -10, 0)),
@@ -175,7 +165,6 @@ namespace BareE.Harness
                   @"/Assets/Models/statue/Statue_dDo03_s.png",
                   @"/Assets/Models/statue/Emissive_Map.png"
                 ));
-
 
             State.ECC.SpawnEntity("StatueADNSE3",
             Pos.Create(0.025f, new Vector3(0, 0, -10)),
@@ -225,7 +214,6 @@ namespace BareE.Harness
             return _loadedTextures[v];
         }
 
-
         public void UpdateFromControls(Instant Instant, GameState State, GameEnvironment Env)
         {
             Env.WorldCamera.Move(new Vector3(State.Input["Truck"] * (Instant.TickDelta / (1000.0f / speed)),
@@ -245,6 +233,7 @@ namespace BareE.Harness
                 Veldrid.Sdl2.Sdl2Native.SDL_SetRelativeMouseMode(isMouseLook);
             }
         }
+
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
             UpdateFromControls(Instant, State, Env);
@@ -260,7 +249,6 @@ namespace BareE.Harness
                     {
                         if (v.HasNormalMap)
                         {
-
                             List<Texture> textures = new List<Texture>();
                             textures.Add(LoadTexture(v.Skin, Env.Window.Device));
 
@@ -272,7 +260,6 @@ namespace BareE.Harness
 
                             if (!String.IsNullOrEmpty(v.EmmissiveMap))
                                 textures.Add(LoadTexture(v.EmmissiveMap, Env.Window.Device));
-
 
                             if (v.isStatic)
                             {
@@ -287,9 +274,7 @@ namespace BareE.Harness
                                                                        Env.GetBackbufferOutputDescription(),
                                                                        Env.Window.Device,
                                                                        textures.ToArray());
-
                             }
-
                         }
                         else
                         {
@@ -299,11 +284,9 @@ namespace BareE.Harness
                                                                        Env.GetBackbufferOutputDescription(),
                                                                        Env.Window.Device,
                                                                        LoadTexture(v.Skin, Env.Window.Device));
-
                             }
                             else
                             {
-
                                 v.Model = ModelHelper.LoadTexturedMesh(v.Root, ModelHelper.DefaultSteps,
                                                                        Env.GetBackbufferOutputDescription(),
                                                                        Env.Window.Device,
@@ -324,9 +307,7 @@ namespace BareE.Harness
                                                                 Env.Window.Device, v.ClrMap);
                         }
                     }
-
                 }
-
 
                 var pos = State.ECC.Components.GetComponent<Pos>(ent);
                 pos.RotationMatrix = pos.RotationMatrix * Matrix4x4.CreateFromYawPitchRoll(1 / (1000 / modelTurnSpeed), 0, 0);
@@ -335,7 +316,6 @@ namespace BareE.Harness
                 foreach (var m in v.Model.Meshes.Values)
                     m.Update(Env.Window.Device);
             }
-
         }
 
         public override void RenderEye(Instant Instant, GameState State, GameEnvironment env, Matrix4x4 eyeMat, Framebuffer outbuffer, CommandList cmds)
@@ -354,7 +334,6 @@ namespace BareE.Harness
             }
             clrNrml.Render(outbuffer, cmds, LightData, eyeMat, Matrix4x4.Identity);
         }
-
 
         public override void RenderHud(Instant Instant, GameState State, GameEnvironment env, Framebuffer outbuffer, CommandList cmds)
         {
@@ -378,7 +357,6 @@ namespace BareE.Harness
             comDat.flags = 0;
 
             LightData.CommonData = comDat;
-
 
             var p = State.ECC.Components.GetComponent<Pos>(cat);
             p.Position = dlp;
@@ -460,5 +438,4 @@ namespace BareE.Harness
             ImGuiNET.ImGui.End();
         }
     }
-
 }

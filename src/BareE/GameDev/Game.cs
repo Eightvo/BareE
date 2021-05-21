@@ -5,9 +5,10 @@
         public Game(GameSceneBase initialScene, GameState initialState, GameEnvironment env)
         {
             ActiveScene = initialScene;
-            State = initialState??new GameState();
-            Environment =env??GameEnvironment.Load();
+            State = initialState ?? new GameState();
+            Environment = env ?? GameEnvironment.Load();
         }
+
         public GameState State
         {
             get { return ActiveScene.State; }
@@ -16,9 +17,8 @@
                 ActiveScene.State = value;
             }
         }
+
         public GameSceneBase ActiveScene { get; set; }
         public GameEnvironment Environment { get; set; }
-
-        
     }
 }

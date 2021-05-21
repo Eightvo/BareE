@@ -10,25 +10,24 @@ using Veldrid.VirtualReality;
 
 namespace BareE.GameDev
 {
-    public abstract class GameSceneBase:IDisposable
+    public abstract class GameSceneBase : IDisposable
     {
-
         public PriorityQueue<GameSystem> Systems = new PriorityQueue<GameSystem>();
         public GameState State { get; set; }
-        FramebufferToScreen leftEyeToScreen;
-        FramebufferToScreen rightEyeToScreen;
-        FramebufferToScreen hudToScreen;
-        IntPtr leftEyePtr;
-        IntPtr rightEyePtr;
-        IntPtr hudPtr;
-        Veldrid.CommandList hudCmds;
+        private FramebufferToScreen leftEyeToScreen;
+        private FramebufferToScreen rightEyeToScreen;
+        private FramebufferToScreen hudToScreen;
+        private IntPtr leftEyePtr;
+        private IntPtr rightEyePtr;
+        private IntPtr hudPtr;
+        private Veldrid.CommandList hudCmds;
 
-        IntPtr HudGuiPtr;
-        IntPtr WinGuiPtr;
+        private IntPtr HudGuiPtr;
+        private IntPtr WinGuiPtr;
 
-        bool rebuildHud;
+        private bool rebuildHud;
 
-        ISceneDataProvider tranfserSceneData = new DefaultSceneDataProvider();
+        private ISceneDataProvider tranfserSceneData = new DefaultSceneDataProvider();
 
         internal void DoLoad(Instant Instant, GameState State, GameEnvironment Env)
         {
@@ -45,7 +44,7 @@ namespace BareE.GameDev
                 MaximumAnisotropy = 4,
                 ComparisonKind = ComparisonKind.Always
             };
-            
+
             if (Env.IsVR)
             {
                 //OutputDescription vrODesc = new OutputDescription()
@@ -75,26 +74,25 @@ namespace BareE.GameDev
             hudToScreen.Update(Env.Window.Device);
 
             hudCmds = Env.Window.Device.ResourceFactory.CreateCommandList();
-            
+
             leftEyePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.LeftEyeBackBuffer.ColorTargets[0].Target);
             rightEyePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.RightEyeBackBuffer.ColorTargets[0].Target);
             hudPtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.HUDBackBuffer.ColorTargets[0].Target);
-            
 
             //WinGuiPtr = ImGuiNET.ImGui.CreateContext();
-           // ImGuiNET.ImGui.SetCurrentContext(WinGuiPtr);
-           // var io = ImGuiNET.ImGui.GetIO();
+            // ImGuiNET.ImGui.SetCurrentContext(WinGuiPtr);
+            // var io = ImGuiNET.ImGui.GetIO();
             //io.Fonts.AddFontDefault();
-           // Env.Window.IGR.RecreateFontDeviceTexture(Env.Window.Device);
-          //  ImGuiNET.ImGui.NewFrame();
+            // Env.Window.IGR.RecreateFontDeviceTexture(Env.Window.Device);
+            //  ImGuiNET.ImGui.NewFrame();
 
-          // HudGuiPtr = ImGuiNET.ImGui.CreateContext();
-           // ImGuiNET.ImGui.SetCurrentContext(HudGuiPtr);
-           // io = ImGuiNET.ImGui.GetIO();
-           // io.Fonts.AddFontDefault();
-           // Env.Window.IGR.RecreateFontDeviceTexture(Env.Window.Device);
-          //  ImGuiNET.ImGui.NewFrame();
-          //  ImGuiNET.ImGui.SetCurrentContext(WinGuiPtr);
+            // HudGuiPtr = ImGuiNET.ImGui.CreateContext();
+            // ImGuiNET.ImGui.SetCurrentContext(HudGuiPtr);
+            // io = ImGuiNET.ImGui.GetIO();
+            // io.Fonts.AddFontDefault();
+            // Env.Window.IGR.RecreateFontDeviceTexture(Env.Window.Device);
+            //  ImGuiNET.ImGui.NewFrame();
+            //  ImGuiNET.ImGui.SetCurrentContext(WinGuiPtr);
 
             Load(Instant, State, Env);
             foreach (var sys in Systems)
@@ -111,8 +109,8 @@ namespace BareE.GameDev
             Initialize(Instant, State, Env);
             foreach (var sys in Systems)
                 sys.Initialize(Instant, State, Env);
-
         }
+
         internal void DoUpdate(Instant Instant, GameState State, GameEnvironment Env)
         {
             if (rebuildHud)
@@ -131,7 +129,6 @@ namespace BareE.GameDev
                 // hudToScreen.Update(Env.Window.Device);
             }
 
-
             leftEyeToScreen.Update(Env.Window.Device);
             rightEyeToScreen.Update(Env.Window.Device);
             hudToScreen.Update(Env.Window.Device);
@@ -140,18 +137,16 @@ namespace BareE.GameDev
             foreach (var sys in Systems)
                 sys.Update(Instant, State, Env);
         }
-        
+
         internal void DoRender(Instant Instant, GameState State, GameEnvironment Env)
         {
-
             if ((Env.DisplayMode & (DisplayMode.MonitorOnly | DisplayMode.Emulate)) == 0)
             {
                 Env.VRSettings.Pose = Env.VRSettings.Context.WaitForPoses();
             }
 
-           // Fence f = Env.Window.Device.ResourceFactory.CreateFence(false);
+            // Fence f = Env.Window.Device.ResourceFactory.CreateFence(false);
             var cmds = Env.Window.Cmds;
-
 
             cmds.Begin();
             cmds.SetFramebuffer(Env.LeftEyeBackBuffer);
@@ -160,9 +155,9 @@ namespace BareE.GameDev
             //Render World To Left Eye
 
             Matrix4x4 leftEyeView = Env.WorldCamera.CamMatrix;
-            if ((Env.DisplayMode & ( DisplayMode.MonitorOnly| DisplayMode.Emulate))==0)
+            if ((Env.DisplayMode & (DisplayMode.MonitorOnly | DisplayMode.Emulate)) == 0)
             {
-                leftEyeView  = Env.VRSettings.Pose.CreateView(VREye.Left, Env.WorldCamera.Position, Env.WorldCamera.Forward, Env.WorldCamera.Up);
+                leftEyeView = Env.VRSettings.Pose.CreateView(VREye.Left, Env.WorldCamera.Position, Env.WorldCamera.Forward, Env.WorldCamera.Up);
                 leftEyeView = leftEyeView * Env.VRSettings.Pose.LeftEyeProjection;
             }
             this.RenderEye(Instant, State, Env, leftEyeView, Env.LeftEyeBackBuffer, cmds);
@@ -188,7 +183,7 @@ namespace BareE.GameDev
                     rightEyeView = rightEyeView * Env.VRSettings.Pose.RightEyeProjection;
                 }
                 this.RenderEye(Instant, State, Env, rightEyeView, Env.RightEyeBackBuffer, cmds);
-                foreach(var sys in Systems)
+                foreach (var sys in Systems)
                     sys.RenderEye(Instant, State, Env, rightEyeView, Env.RightEyeBackBuffer, cmds);
                 cmds.End();
                 Env.Window.Device.SubmitCommands(cmds);
@@ -205,30 +200,27 @@ namespace BareE.GameDev
             if (Env.DisplayMode == DisplayMode.Emulate)
             {
                 //ImGuiNET.ImGui.ShowMetricsWindow();
-                 ImGuiNET.ImGui.Begin("View");
+                ImGuiNET.ImGui.Begin("View");
                 var sz = ImGuiNET.ImGui.GetWindowSize();
                 var ps = ImGuiNET.ImGui.GetWindowPos();
 
-                 ImGuiNET.ImGui.Image(leftEyePtr, new Vector2((sz.X-20.0f)/2.0f, sz.Y-40), new Vector2(1, 1), new Vector2(0, 0));
-                 ImGuiNET.ImGui.SameLine();
+                ImGuiNET.ImGui.Image(leftEyePtr, new Vector2((sz.X - 20.0f) / 2.0f, sz.Y - 40), new Vector2(1, 1), new Vector2(0, 0));
+                ImGuiNET.ImGui.SameLine();
                 ImGuiNET.ImGui.Image(rightEyePtr, new Vector2((sz.X - 20.0f) / 2.0f, sz.Y - 40), new Vector2(1, 1), new Vector2(0, 0));
                 ImGuiNET.ImGui.End();
                 //ImGuiNET.ImGui.Image(hudPtr, new Vector2(200, 200));
-
             }
-
 
             RenderHud(Instant, State, Env, Env.HUDBackBuffer, hudCmds);
             foreach (var sys in Systems)
                 sys.RenderHud(Instant, State, Env, Env.HUDBackBuffer, hudCmds);
 
-             Env.Window.IGR.Render(Env.Window.Device, hudCmds);
+            Env.Window.IGR.Render(Env.Window.Device, hudCmds);
             hudCmds.End();
             Env.Window.Device.SubmitCommands(hudCmds);
             //            Env.Window.Device.SubmitCommands(hudCmds, f);
             //            Env.Window.Device.WaitForFence(f);
             //            Env.Window.Device.ResetFence(f);
-
 
             switch (Env.DisplayMode)
             {
@@ -255,16 +247,12 @@ namespace BareE.GameDev
                     cmds.SetFramebuffer(Env.Window.Device.MainSwapchain.Framebuffer);
                     cmds.ClearColorTarget(0, RgbaFloat.Cyan);
 
-
-
                     hudToScreen.Render(Env.Window.Device.MainSwapchain.Framebuffer, cmds, tranfserSceneData, Matrix4x4.Identity, Matrix4x4.Identity);
 
-
-                   //Env.Window.IGR.Render(Env.Window.Device, Env.Window.Cmds);
-
+                    //Env.Window.IGR.Render(Env.Window.Device, Env.Window.Cmds);
 
                     Env.Window.Cmds.End();
-                    Env.Window.Device.SubmitCommands(Env.Window.Cmds); 
+                    Env.Window.Device.SubmitCommands(Env.Window.Cmds);
                     //Env.Window.Device.SubmitCommands(Env.Window.Cmds, f);
                     //Env.Window.Device.WaitForFence(f);
                     //Env.Window.Device.ResetFence(f);
@@ -310,8 +298,8 @@ namespace BareE.GameDev
                     Env.VRSettings.Context.SubmitFrame();
                     break;
             }
-            
         }
+
         public void Dispose()
         {
             foreach (var sys in Systems)
@@ -319,12 +307,28 @@ namespace BareE.GameDev
             Unload();
         }
 
-        public virtual void Load(Instant Instant, GameState State, GameEnvironment Env) { }
-        public virtual void Initialize(Instant Instant, GameState State, GameEnvironment Env) { }
-        public virtual void Update(Instant Instant, GameState State, GameEnvironment Env) {}
-        public virtual void RenderEye(Instant Instant, GameState State, GameEnvironment Env, Matrix4x4 eyeMat, Framebuffer outbuffer, CommandList cmds) { }
-        public virtual void RenderHud(Instant Instant, GameState State, GameEnvironment Env, Framebuffer outbuffer, CommandList cmds) { }
-        public virtual void Unload() { }
+        public virtual void Load(Instant Instant, GameState State, GameEnvironment Env)
+        {
+        }
 
+        public virtual void Initialize(Instant Instant, GameState State, GameEnvironment Env)
+        {
+        }
+
+        public virtual void Update(Instant Instant, GameState State, GameEnvironment Env)
+        {
+        }
+
+        public virtual void RenderEye(Instant Instant, GameState State, GameEnvironment Env, Matrix4x4 eyeMat, Framebuffer outbuffer, CommandList cmds)
+        {
+        }
+
+        public virtual void RenderHud(Instant Instant, GameState State, GameEnvironment Env, Framebuffer outbuffer, CommandList cmds)
+        {
+        }
+
+        public virtual void Unload()
+        {
+        }
     }
 }

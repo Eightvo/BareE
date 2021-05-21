@@ -4,32 +4,35 @@ using System.Linq;
 
 namespace BareE.DataStructures
 {
-
     public class AliasMap<T> : IDisposable
     {
         protected struct mapData
         {
             public T data;
             public int refCount;
+
             public mapData(T value)
             {
                 data = value;
                 refCount = 1;
             }
+
             public int AdjustReferences(int delta)
             {
                 refCount += delta;
                 return refCount;
             }
+
             public void ClearData()
             {
                 data = default(T);
                 refCount = 0;
             }
         }
-        Dictionary<String, int> _dataIdMap = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
-        List<mapData> _data = new List<mapData>();
-        Queue<int> _freeIDs = new Queue<int>();
+
+        private Dictionary<String, int> _dataIdMap = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
+        private List<mapData> _data = new List<mapData>();
+        private Queue<int> _freeIDs = new Queue<int>();
 
         public AliasMap()
         {
@@ -41,12 +44,12 @@ namespace BareE.DataStructures
             return (!String.IsNullOrEmpty(alias)) && _dataIdMap.ContainsKey(alias);
         }
 
-
         public int GetIndex(T indxOf)
         {
             if (indxOf == null || indxOf.Equals(default(T))) return 0;
             return _data.FindIndex(x => x.data.Equals(indxOf));
         }
+
         public int Alias(String alias, T toAlias)
         {
             if (AliasExists(alias))
@@ -95,7 +98,6 @@ namespace BareE.DataStructures
             return true;
         }
 
-
         public int Index(T toIndex)
         {
             int newId = _data.Count;
@@ -108,6 +110,7 @@ namespace BareE.DataStructures
             _data.Add(new mapData(toIndex));
             return newId;
         }
+
         public void UnIndex(int entId)
         {
             foreach (var a in _dataIdMap.Where(x => x.Value == entId).Select(x => x.Key).ToList())
@@ -115,7 +118,6 @@ namespace BareE.DataStructures
             //_data[entId].data = null;
             _data[entId] = default(mapData);
             _freeIDs.Enqueue(entId);
-
         }
 
         public T this[String alias]
@@ -128,6 +130,7 @@ namespace BareE.DataStructures
                 return _data[indx].data;
             }
         }
+
         public T this[int indx]
         {
             get
@@ -169,5 +172,4 @@ namespace BareE.DataStructures
             get { return _data.Count(); }
         }
     }
-
 }

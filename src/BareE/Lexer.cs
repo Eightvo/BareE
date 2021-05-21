@@ -8,8 +8,6 @@ using static BareE.LexerToken;
 
 namespace BareE
 {
-
-
     [DebuggerDisplay("[{LineNumer}, {Character}] {Type}: {Text}")]
     public class LexerToken
     {
@@ -17,6 +15,7 @@ namespace BareE
         public int LineNumer;
         public int Character;
         public String Text;
+
         public enum LexerTokenType
         {
             Whitespace = 0,
@@ -37,11 +36,13 @@ namespace BareE
     public class Lexer
     {
         public bool KeywordsCaseInsensitive { get; set; }
-       public static Lexer DefaultLexer = new Lexer();
+        public static Lexer DefaultLexer = new Lexer();
+
         public IEnumerable<LexerToken> Tokenize(String query)
         {
             return Tokenize(query, Encoding.ASCII);
         }
+
         public IEnumerable<LexerToken> Tokenize(String query, Encoding encoding)
         {
             ActiveEncoding = encoding;
@@ -73,6 +74,7 @@ namespace BareE
     "unsafe",   "ushort",   "using",      "virtual",   "void",
     "volatile", "while"
         };
+
         public HashSet<String> Operators = new HashSet<string>() {
     "{",  "}",  "[",  "]",  "(",   ")",  ".",  ",",  ":",  ";",
     "+",  "-",  "*",  "/",  "%",   "&",  "|",  "^",  "!",  "~",
@@ -80,7 +82,6 @@ namespace BareE
     "->", "==", "!=", "<=", ">=",  "+=", "-=", "*=", "/=", "%=",
     "&=", "|=", "^=", "<<", "<<=", "=>",
     ">>", ">>=", "@" };
-
 
         public bool OperatorMatch(String partialOperator)
         {
@@ -91,11 +92,11 @@ namespace BareE
             return false;
         }
 
-        Encoding ActiveEncoding;
-        int LineNumber;
-        int Character;
+        private Encoding ActiveEncoding;
+        private int LineNumber;
+        private int Character;
 
-        char MoveNext(StreamReader rdr)
+        private char MoveNext(StreamReader rdr)
         {
             Character += 1;
             var nxt = (char)rdr.Read();
@@ -112,7 +113,8 @@ namespace BareE
             //Console.Write($"Read:{nxt}");
             return nxt;
         }
-        LexerToken CreateToken(LexerToken.LexerTokenType type, String text)
+
+        private LexerToken CreateToken(LexerToken.LexerTokenType type, String text)
         {
             return new LexerToken()
             {
@@ -122,7 +124,8 @@ namespace BareE
                 Type = type
             };
         }
-        IEnumerable<LexerToken> ConsumeInput(StreamReader rdr)
+
+        private IEnumerable<LexerToken> ConsumeInput(StreamReader rdr)
         {
             while (!rdr.EndOfStream)
             {
@@ -138,14 +141,12 @@ namespace BareE
                         yield return v;
 
                     curr = (char)rdr.Peek();
-
                 }
-
             }
             yield break;
         }
 
-        IEnumerable<LexerToken> ConsumeInputSection(StreamReader rdr)
+        private IEnumerable<LexerToken> ConsumeInputSection(StreamReader rdr)
         {
             LexerToken nxtToken;
             char curr = (char)rdr.Peek();
@@ -168,7 +169,8 @@ namespace BareE
         }
 
         #region Whitespace
-        IEnumerable<LexerToken> ConsumeWhitespace(StreamReader rdr)
+
+        private IEnumerable<LexerToken> ConsumeWhitespace(StreamReader rdr)
         {
             StringBuilder whitespace = new StringBuilder();
             while (((char)rdr.Peek()).isWhitespaceChar() || ((char)rdr.Peek()).isNewLineChar())
@@ -180,13 +182,11 @@ namespace BareE
                     yield return CreateToken(LexerTokenType.Whitespace, ((char)rdr.Peek()).ToString());
                     whitespace.Clear();
                     MoveNext(rdr);
-
                 }
                 else if ((char)rdr.Peek() == '\t')
                 {
                     whitespace.Append("    ");
                     MoveNext(rdr);
-
                 }
                 else
                 {
@@ -198,7 +198,8 @@ namespace BareE
             if (whitespace.Length > 0)
                 yield return CreateToken(LexerTokenType.Whitespace, whitespace.ToString());
         }
-        LexerToken ConsumeComment(StreamReader rdr)
+
+        private LexerToken ConsumeComment(StreamReader rdr)
         {
             switch ((char)rdr.Peek())
             {
@@ -206,6 +207,7 @@ namespace BareE
                     MoveNext(rdr);//Read the initial /
                     //MoveNext(rdr);//Read the second /
                     return ConsumeSingleLineComment(rdr);
+
                 case '*':
                 default:
                     MoveNext(rdr);
@@ -213,7 +215,8 @@ namespace BareE
                     return ConsumeMultiLineComment(rdr);
             }
         }
-        LexerToken ConsumeSingleLineComment(StreamReader rdr)
+
+        private LexerToken ConsumeSingleLineComment(StreamReader rdr)
         {
             StringBuilder comment = new StringBuilder();
             while (!((char)rdr.Peek()).isNewLineChar())
@@ -224,7 +227,8 @@ namespace BareE
             }
             return CreateToken(LexerTokenType.Comment, comment.ToString());
         }
-        LexerToken ConsumeMultiLineComment(StreamReader rdr)
+
+        private LexerToken ConsumeMultiLineComment(StreamReader rdr)
         {
             StringBuilder comment = new StringBuilder();
             bool done = false;
@@ -233,7 +237,6 @@ namespace BareE
                 var curr = (char)rdr.Peek();
                 if (curr == '*')
                 {
-
                     var pC = MoveNext(rdr);
                     curr = (char)rdr.Peek();
                     if (curr == '/')
@@ -243,7 +246,6 @@ namespace BareE
                     }
                     else
                         comment.Append(pC);
-
                 }
                 comment.Append(curr);
                 curr = MoveNext(rdr);
@@ -251,25 +253,26 @@ namespace BareE
                     done = true;
             }
 
-
             return CreateToken(LexerTokenType.Comment, comment.ToString());
         }
-        #endregion
+
+        #endregion Whitespace
 
         #region Preprocess
-        LexerToken ConsumeDirective(StreamReader rdr, char curr)
+
+        private LexerToken ConsumeDirective(StreamReader rdr, char curr)
         {
             var DirectiveToken = ConsumeSingleLineComment(rdr);
             DirectiveToken.Type = LexerTokenType.Directive;
             return DirectiveToken;
-
         }
-        #endregion
+
+        #endregion Preprocess
 
         #region Tokens
-        LexerToken ConsumeToken(StreamReader rdr, char curr)
-        {
 
+        private LexerToken ConsumeToken(StreamReader rdr, char curr)
+        {
             if (curr.isIdentifierStartChar())
                 return ConsumeIdentifierOrKeyword(rdr);
             if (OperatorMatch($"{curr}"))
@@ -301,6 +304,7 @@ namespace BareE
                 {
                     case 'x':
                         return ConsumeHexNumericLiteral(rdr, text.ToString());
+
                     case 'b':
                         return ConsumeBinaryLiteral(rdr, text.ToString());
                 }
@@ -404,12 +408,14 @@ namespace BareE
             MoveNext(rdr);
             return CreateToken(LexerTokenType.Character_Literal, txt);
         }
+
         private LexerToken ConsumeUnknownLiteral(StreamReader rdr)
         {
             var nxt = MoveNext(rdr);
             String txt = nxt.ToString();
             return CreateToken(LexerTokenType.Unknown, txt);
         }
+
         private LexerToken ConsumeOperator(StreamReader rdr)
         {
             StringBuilder text = new StringBuilder();
@@ -420,7 +426,6 @@ namespace BareE
             }
             return CreateToken(LexerTokenType.Operator, $"{text}");
         }
-
 
         public bool IsKeyword(String text)
         {
@@ -433,7 +438,8 @@ namespace BareE
             }
             return false;
         }
-        LexerToken ConsumeIdentifierOrKeyword(StreamReader rdr)
+
+        private LexerToken ConsumeIdentifierOrKeyword(StreamReader rdr)
         {
             StringBuilder result = new StringBuilder();
             var curr = MoveNext(rdr);
@@ -459,7 +465,6 @@ namespace BareE
                 Keywords.Add(keyword);
         }
 
-        #endregion
-
+        #endregion Tokens
     }
 }

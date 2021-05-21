@@ -1,8 +1,3 @@
 ﻿namespace BareE.Harness
 {
-
-
-
-
-
 }

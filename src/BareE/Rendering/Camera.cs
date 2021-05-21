@@ -9,16 +9,26 @@ namespace BareE.Rendering
         {
             get;
         }
+
         public virtual bool LockUp { get; set; }
+
         public abstract void Zoom(float amount);
+
         public abstract void Move(Vector3 amount);
+
         public abstract void Roll(float v);
+
         public abstract void Pitch(float v);
+
         public abstract void Yaw(float v);
+
         public abstract void Tilt(float v);
+
         public abstract void Pan(float v);
+
         public abstract void Set(Vector3 position, Vector3 lookat, Vector3 up);
-        public virtual Vector3 Position { get;  set; }
+
+        public virtual Vector3 Position { get; set; }
         public virtual Vector3 Forward { get; }
         public virtual Vector3 Up { get; }
 
@@ -26,66 +36,68 @@ namespace BareE.Rendering
         {
             throw new NotImplementedException();
         }
+
         public virtual Vector3 ToWorldspace(Vector3 pt)
         {
             throw new NotImplementedException();
         }
+
         public virtual Vector3 Project(Vector3 pt)
         {
             throw new NotImplementedException();
         }
     }
-  /*
-    public class PerspectiveCamera : Camera
-    {
-        Vector2 Size = new Vector2(2.0f, 2.0f);
-        Quaternion Rotation = Quaternion.CreateFromRotationMatrix(Matrix4x4.Identity);
-        public override Matrix4x4 CamMatrix
-        {
 
-            get
-            {
-                var p = Matrix4x4.CreatePerspective(Size.X, Size.Y, 0.5f, 100.0f);
-                var t = Matrix4x4.CreateTranslation(Position);
-                var r = Matrix4x4.CreateFromQuaternion(Rotation);
-                //return p * t * r;
-                //return r * t * p;
-                var q = Matrix4x4.Multiply(r, t);
-                return Matrix4x4.Multiply(q, p);
-            }
-        }
+    /*
+      public class PerspectiveCamera : Camera
+      {
+          Vector2 Size = new Vector2(2.0f, 2.0f);
+          Quaternion Rotation = Quaternion.CreateFromRotationMatrix(Matrix4x4.Identity);
+          public override Matrix4x4 CamMatrix
+          {
+              get
+              {
+                  var p = Matrix4x4.CreatePerspective(Size.X, Size.Y, 0.5f, 100.0f);
+                  var t = Matrix4x4.CreateTranslation(Position);
+                  var r = Matrix4x4.CreateFromQuaternion(Rotation);
+                  //return p * t * r;
+                  //return r * t * p;
+                  var q = Matrix4x4.Multiply(r, t);
+                  return Matrix4x4.Multiply(q, p);
+              }
+          }
 
-        public override void Zoom(float amount)
-        {
-            Position = new Vector3(Position.X, Position.Y, Position.Z + amount);
-        }
-        public override void Move(Vector3 amount)
-        {
-            Position += new Vector3(-amount.X, -amount.Y, amount.Z);
-        }
-        public override void Roll(float v)
-        {
-            Rotation = Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitZ, v);
-        }
-        public override void Pitch(float v)
-        {
-            Rotation = Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitX, v);
-        }
-        public override void Yaw(float v)
-        {
-            Rotation = Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, v);
-        }
+          public override void Zoom(float amount)
+          {
+              Position = new Vector3(Position.X, Position.Y, Position.Z + amount);
+          }
+          public override void Move(Vector3 amount)
+          {
+              Position += new Vector3(-amount.X, -amount.Y, amount.Z);
+          }
+          public override void Roll(float v)
+          {
+              Rotation = Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitZ, v);
+          }
+          public override void Pitch(float v)
+          {
+              Rotation = Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitX, v);
+          }
+          public override void Yaw(float v)
+          {
+              Rotation = Rotation * Quaternion.CreateFromAxisAngle(Vector3.UnitY, v);
+          }
+      }
+      */
 
-
-    }
-    */
     public class LookAtQuaternionCamera : Camera
     {
-        
-        float AspectRatio { get { return Size.X / Size.Y; } }
-        float FieldOfView { get; set; } = 1.5f;
+        private float AspectRatio
+        { get { return Size.X / Size.Y; } }
+        private float FieldOfView { get; set; } = 1.5f;
         public bool useLeftHanded = false;
-        Matrix4x4 LookAtMatrix
+
+        private Matrix4x4 LookAtMatrix
         {
             get
             {
@@ -94,7 +106,8 @@ namespace BareE.Rendering
                 return CreateLookAtRH(Position, Position + Forward, Up);
             }
         }
-        Matrix4x4 ProjectionMatrix
+
+        private Matrix4x4 ProjectionMatrix
         {
             get
             {
@@ -102,15 +115,17 @@ namespace BareE.Rendering
             }
         }
 
-        Matrix4x4 TranslationMatrix { get; set; } = Matrix4x4.Identity;
-        Matrix4x4 RotationMatrix { get; set; } = Matrix4x4.Identity;
- 
+        private Matrix4x4 TranslationMatrix { get; set; } = Matrix4x4.Identity;
+        private Matrix4x4 RotationMatrix { get; set; } = Matrix4x4.Identity;
+
         public override Vector3 Position
         {
             get { return Vector3.Transform(Vector3.Zero, TranslationMatrix); }
             set { TranslationMatrix = Matrix4x4.CreateTranslation(value); }
         }
-        Vector2 Size;
+
+        private Vector2 Size;
+
         public override Vector3 Up
         {
             get
@@ -119,6 +134,7 @@ namespace BareE.Rendering
                 return Vector3.Transform(Vector3.UnitY, RotationMatrix);
             }
         }
+
         public override Vector3 Forward
         {
             get
@@ -126,14 +142,19 @@ namespace BareE.Rendering
                 return Vector3.Transform(-Vector3.UnitZ, RotationMatrix);
             }
         }
-        public LookAtQuaternionCamera(): this(new Vector2(2.0f, 2.0f)) { }
+
+        public LookAtQuaternionCamera() : this(new Vector2(2.0f, 2.0f))
+        {
+        }
+
         public LookAtQuaternionCamera(Vector2 size)
         {
             Size = size;
         }
-        Matrix4x4 CreateLookAtLH(Vector3 camPos, Vector3 camTarget, Vector3 camUp)
+
+        private Matrix4x4 CreateLookAtLH(Vector3 camPos, Vector3 camTarget, Vector3 camUp)
         {
-            var zAxis = Vector3.Normalize( camTarget-camPos);
+            var zAxis = Vector3.Normalize(camTarget - camPos);
             var xAxis = Vector3.Normalize(Vector3.Cross(camUp, zAxis));
             var yAxis = Vector3.Cross(zAxis, xAxis);
             return new Matrix4x4(
@@ -143,7 +164,8 @@ namespace BareE.Rendering
                 -Vector3.Dot(xAxis, camPos), -Vector3.Dot(yAxis, camPos), -Vector3.Dot(zAxis, camPos), 1.0f
                 );
         }
-        Matrix4x4 CreateLookAtRH(Vector3 camPos, Vector3 camTarget, Vector3 camUp)
+
+        private Matrix4x4 CreateLookAtRH(Vector3 camPos, Vector3 camTarget, Vector3 camUp)
         {
             var zaxis = Vector3.Normalize(camPos - camTarget);
             var xaxis = Vector3.Normalize(Vector3.Cross(camUp, zaxis));
@@ -152,8 +174,8 @@ namespace BareE.Rendering
                                  xaxis.Y, yaxis.Y, zaxis.Y, 0,
                                  xaxis.Z, yaxis.Z, zaxis.Z, 0,
                                  -Vector3.Dot(xaxis, camPos), -Vector3.Dot(yaxis, camPos), -Vector3.Dot(zaxis, camPos), 1);
-
         }
+
         public override Matrix4x4 CamMatrix
         {
             get
@@ -176,6 +198,7 @@ namespace BareE.Rendering
         {
             RotationMatrix = Matrix4x4.Transform(RotationMatrix, Quaternion.CreateFromAxisAngle(Vector3.Cross(Forward, Up), v));
         }
+
         /// <summary>
         /// Rotate on X axis relative to world
         /// </summary>
@@ -183,7 +206,6 @@ namespace BareE.Rendering
         public override void Tilt(float v)
         {
             RotationMatrix = Matrix4x4.Transform(RotationMatrix, Quaternion.CreateFromAxisAngle(Vector3.Cross(Vector3.UnitZ, Vector3.UnitY), v));
-
         }
 
         public override void Roll(float v)
@@ -199,6 +221,7 @@ namespace BareE.Rendering
         {
             RotationMatrix = Matrix4x4.Transform(RotationMatrix, Quaternion.CreateFromAxisAngle(Up, v));
         }
+
         /// <summary>
         /// Rotate on y axis relative to world.
         /// </summary>
@@ -207,18 +230,21 @@ namespace BareE.Rendering
         {
             RotationMatrix = Matrix4x4.Transform(RotationMatrix, Quaternion.CreateFromAxisAngle(Vector3.UnitY, v));
         }
+
         public override void Zoom(float amount)
         {
             FieldOfView += amount;
             if (FieldOfView <= 0.1f) FieldOfView = 0.1f;
             if (FieldOfView > Math.PI / 2.0f) FieldOfView = (float)Math.PI / 2.0f;
         }
+
         public override void Set(Vector3 position, Vector3 lookat, Vector3 up)
         {
             this.Position = position;
             this.RotationMatrix = CreateRotationMatrixFromForwardAndUp(lookat - position, up);
             //throw new NotImplementedException();
         }
+
         private Matrix4x4 CreateRotationMatrixFromForwardAndUp(Vector3 fwrd, Vector3 camUp)
         {
             var zAxis = fwrd;
@@ -232,14 +258,12 @@ namespace BareE.Rendering
                 );
         }
 
+        private Matrix4x4 _InvertexProjectionMatrix;
 
-
-        Matrix4x4 _InvertexProjectionMatrix;
-        Matrix4x4 InvertedProjectionMatrix
+        private Matrix4x4 InvertedProjectionMatrix
         {
             get
             {
-
                 if (Matrix4x4.Invert(ProjectionMatrix, out _InvertexProjectionMatrix))
                 {
                     return _InvertexProjectionMatrix;
@@ -247,8 +271,10 @@ namespace BareE.Rendering
                 throw new Exception("Invertion not exist?");
             }
         }
-        Matrix4x4 _InvertedWorldMatrix;
-        Matrix4x4 InvertedWorldMatrix
+
+        private Matrix4x4 _InvertedWorldMatrix;
+
+        private Matrix4x4 InvertedWorldMatrix
         {
             get
             {
@@ -262,13 +288,11 @@ namespace BareE.Rendering
 
         public override Vector3 ToEyespace(Vector3 pt)
         {
-
             return Vector3.Transform(pt, InvertedProjectionMatrix);
-            
         }
+
         public override Vector3 ToWorldspace(Vector3 pt)
         {
-
             Matrix4x4 toEyespace = InvertedProjectionMatrix;
             Matrix4x4 toWorldSpace = InvertedWorldMatrix;
             Matrix4x4 invertedCam;
@@ -280,20 +304,19 @@ namespace BareE.Rendering
             //return Vector3.Transform(pt, invertedCam);
             var v = Vector4.Transform(new Vector4(pt, 1), invertedCam);
             return new Vector3(v.X / v.W, v.Y / v.W, v.Z / v.W);
-
         }
 
         //Point in WorldSpace Sent To NDC
         public override Vector3 Project(Vector3 pt)
         {
-            var v = Vector4.Transform(new Vector4(pt,1), CamMatrix);
+            var v = Vector4.Transform(new Vector4(pt, 1), CamMatrix);
             return new Vector3(v.X / v.W, v.Y / v.W, v.Z / v.W);
         }
     }
+
     /*
     public class LookAtCamera : Camera
     {
-
         Vector2 Size = new Vector2(2.0f, 2.0f);
         Vector3 Forward = Vector3.UnitZ;
         Vector3 Up = Vector3.UnitY;
@@ -323,20 +346,16 @@ namespace BareE.Rendering
                 );
         }
 
-
         public override Matrix4x4 CamMatrix
         {
             get
             {
-
-               
- return CreateLookAtLH(Position, Position + Forward, Up) * Matrix4x4.CreatePerspective(Size.X, Size.Y, 0.5f, 100); 
+ return CreateLookAtLH(Position, Position + Forward, Up) * Matrix4x4.CreatePerspective(Size.X, Size.Y, 0.5f, 100);
                 //Original
                 //return Matrix4x4.CreateLookAt(Position + Forward, Position, Up) * Matrix4x4.CreatePerspective(Size.X, Size.Y, 0.5f, 100);
 
                 //return Matrix4x4.CreateLookAt(Position, Position-Forward, -Up) * Matrix4x4.CreatePerspective(Size.X, Size.Y, 0.5f, 100);
-                
-                
+
                 //return  Matrix4x4.CreatePerspective(Size.X, Size.Y, 0.5f, 100)* Matrix4x4.CreateLookAt(Position + Forward, Position, Up);
             }
         }
@@ -410,7 +429,6 @@ namespace BareE.Rendering
         {
             throw new NotImplementedException();
         }
-
     }
     */
 }

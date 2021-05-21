@@ -1,7 +1,5 @@
 ﻿using BareE.Rendering;
 
-using BareE.EZRend.ImageShader.FullscreenTexture;
-
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -11,22 +9,26 @@ using Veldrid;
 namespace BareE.EZRend
 {
     public class LitVertexOnlyShader<V> : VertexOnlyShader<V>
-        where V: unmanaged, IProvideVertexLayoutDescription
+        where V : unmanaged, IProvideVertexLayoutDescription
     {
-        public LitVertexOnlyShader(String partial) : base(partial) { }
-        public LitVertexOnlyShader(String vert, String frag) : base(vert, frag) { }
+        public LitVertexOnlyShader(String partial) : base(partial)
+        {
+        }
 
-        ambientLightData ald;
-        pointLightData pld;
-        CommonData commondata;
+        public LitVertexOnlyShader(String vert, String frag) : base(vert, frag)
+        {
+        }
 
+        private ambientLightData ald;
+        private pointLightData pld;
+        private CommonData commondata;
 
-        DeviceBuffer lightDataBuffer;
-        DeviceBuffer pointLightDataBuffer;
-        DeviceBuffer dataBuffer;
+        private DeviceBuffer lightDataBuffer;
+        private DeviceBuffer pointLightDataBuffer;
+        private DeviceBuffer dataBuffer;
 
-        ResourceLayout LightsLayout;
-        ResourceSet LightsSet;
+        private ResourceLayout LightsLayout;
+        private ResourceSet LightsSet;
 
         public override void UpdateBuffers(CommandList cmds)
         {
@@ -35,6 +37,7 @@ namespace BareE.EZRend
             cmds.UpdateBuffer(dataBuffer, 0, commondata);
             base.UpdateBuffers(cmds);
         }
+
         public override void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData, Matrix4x4 CameraMatrix, Matrix4x4 ModelMatrix)
         {
             ald = sceneData.AmbientLight;
@@ -42,6 +45,7 @@ namespace BareE.EZRend
             commondata = sceneData.CommonData;
             base.Render(Trgt, cmds, sceneData, CameraMatrix, ModelMatrix);
         }
+
         public override void CreateResources(GraphicsDevice device)
         {
             lightDataBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(ambientLightData.Size, BufferUsage.UniformBuffer));
@@ -76,10 +80,11 @@ namespace BareE.EZRend
 
         protected override IEnumerable<ResourceLayout> CreateResourceLayout()
         {
-            foreach(var rl in base.CreateResourceLayout())
+            foreach (var rl in base.CreateResourceLayout())
                 yield return rl;
             yield return LightsLayout;
         }
+
         public override IEnumerable<ResourceSet> GetResourceSets()
         {
             foreach (var rs in base.GetResourceSets())
@@ -87,5 +92,4 @@ namespace BareE.EZRend
             yield return LightsSet;
         }
     }
-
 }

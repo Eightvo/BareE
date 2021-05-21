@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace BareE.DataStructures
 {
-
     public class SafeQueue<T> : Queue<T>
     {
         public void SafeEnqueue(T item)
@@ -14,6 +13,7 @@ namespace BareE.DataStructures
                 this.Enqueue(item);
             }
         }
+
         public T SafeDequeue()
         {
             ICollection ic = (ICollection)this;

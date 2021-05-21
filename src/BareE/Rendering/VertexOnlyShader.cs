@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -12,7 +11,7 @@ namespace BareE.Rendering
     public class VertexOnlyShader<V> : IRenderUnit
          where V : unmanaged, IProvideVertexLayoutDescription
     {
-        V VertexInstance = new V();
+        private V VertexInstance = new V();
         public VertexOverflowBehaviour VertexOverflowBehaviour = VertexOverflowBehaviour.EXPAND;
         public float VertexOverflowExpansionFactor { get; set; } = 0.5f;
         public int MaximumVerticies { get { return MaxVerts; } set { MaxVerts = value; MaxVertexCountDirty = true; } }
@@ -21,35 +20,37 @@ namespace BareE.Rendering
         public String VertexShaderName { get; private set; }
         public String FragmentShaderName { get; private set; }
 
-        public VertexOnlyShader(String partialName) : this($"{partialName}.vert.spv", $"{partialName}.frag.spv") { }
+        public VertexOnlyShader(String partialName) : this($"{partialName}.vert.spv", $"{partialName}.frag.spv")
+        {
+        }
+
         public VertexOnlyShader(String vertexShaderName, String fragmentShaderName)
         {
-           // PixelFormat = NativePixelFormat;
+            // PixelFormat = NativePixelFormat;
             VertexShaderName = vertexShaderName;
             FragmentShaderName = fragmentShaderName;
         }
 
-        List<V> verts = new List<V>();
-        int MaxVerts = 100;
+        private List<V> verts = new List<V>();
+        private int MaxVerts = 100;
 
-        bool MaxVertexCountDirty = true;
-        bool VertexContentDirty = false;
+        private bool MaxVertexCountDirty = true;
+        private bool VertexContentDirty = false;
 
         public virtual bool UseDepthStencil { get { return true; } }
-        bool DrawReady = false;
+        private bool DrawReady = false;
 
-        PixelFormat NativePixelFormat;
-        Pipeline GraphicsPipeline;
-        DeviceBuffer VertexBuffer;
+        private PixelFormat NativePixelFormat;
+        private Pipeline GraphicsPipeline;
+        private DeviceBuffer VertexBuffer;
 
-        DeviceBuffer CameraMatrixBuffer;
-        ResourceLayout CameraMatrixResourceLayout;
-        DeviceBuffer ModelMatrixBuffer;
-       
+        private DeviceBuffer CameraMatrixBuffer;
+        private ResourceLayout CameraMatrixResourceLayout;
+        private DeviceBuffer ModelMatrixBuffer;
 
-        ResourceSet CameraResourceSet;
-        Shader[] ShaderSet;
-        ShaderSetDescription ShaderSetDesc;
+        private ResourceSet CameraResourceSet;
+        private Shader[] ShaderSet;
+        private ShaderSetDescription ShaderSetDesc;
         private bool DrawToggle = false;
 
         public void Clear()
@@ -68,9 +69,11 @@ namespace BareE.Rendering
                     case VertexOverflowBehaviour.EXCEPTION:
                         throw new Exception($"Vertex List exceeded {MaximumVerticies} Maximum");
                         return;
+
                     case VertexOverflowBehaviour.IGNORE:
                         throw new Exception($"Vertex List exceeded {MaximumVerticies} Maximum");
                         return;
+
                     case VertexOverflowBehaviour.EXPAND:
                         MaximumVerticies = MaximumVerticies + (int)Math.Ceiling(MaximumVerticies * VertexOverflowExpansionFactor);
                         MaxVertexCountDirty = true;
@@ -81,14 +84,10 @@ namespace BareE.Rendering
             VertexContentDirty = true;
         }
 
-
-       
-
         public uint NextMultipleOf16(uint ival)
         {
             return (uint)(Math.Floor(ival / 16.0f) * 16 + 16);
         }
-
 
         public virtual Shader[] CreateShaders(ResourceFactory factory)
         {
@@ -110,12 +109,12 @@ namespace BareE.Rendering
             CameraMatrixResourceLayout = factory.CreateResourceLayout(
                 new ResourceLayoutDescription(
                         new ResourceLayoutElementDescription("CameraMat", ResourceKind.UniformBuffer, ShaderStages.Vertex),
-                        new ResourceLayoutElementDescription("ModelMat",ResourceKind.UniformBuffer, ShaderStages.Vertex)
+                        new ResourceLayoutElementDescription("ModelMat", ResourceKind.UniformBuffer, ShaderStages.Vertex)
                     )
                 );
             CameraResourceSet = factory.CreateResourceSet(new ResourceSetDescription(CameraMatrixResourceLayout, CameraMatrixBuffer, ModelMatrixBuffer));
             CameraResourceSet.Name = "CAMERAS";
-            
+
             //Create and Compile the Shaders.
             ShaderSet = CreateShaders(factory);
             ShaderSetDesc = new ShaderSetDescription(
@@ -124,15 +123,16 @@ namespace BareE.Rendering
                 );
 
             CreatePipeLine(device);
-
         }
 
         public virtual BlendStateDescription BlendState { get; set; } = BlendStateDescription.SingleOverrideBlend;
+
         public virtual DepthStencilStateDescription DepthStencilDescription { get; } =
             new DepthStencilStateDescription(
                 depthTestEnabled: false,
                 depthWriteEnabled: false,
                 comparisonKind: ComparisonKind.Always);
+
         public RasterizerStateDescription RastorizerDescription { get; set; } =
             new RasterizerStateDescription(
                     cullMode: FaceCullMode.Back,
@@ -143,16 +143,24 @@ namespace BareE.Rendering
                 );
 
         protected PrimitiveTopology PrimitiveTopology { get; set; } = PrimitiveTopology.TriangleList;
+
         protected virtual IEnumerable<ResourceLayout> CreateResourceLayout()
         {
-            yield return CameraMatrixResourceLayout ;
+            yield return CameraMatrixResourceLayout;
         }
+
         public virtual IEnumerable<ResourceSet> GetResourceSets()
         {
             yield return this.CameraResourceSet;
         }
-        OutputDescription? _outputDesc;
-        public void SetOutputDescription(OutputDescription odesc) { _outputDesc = odesc; }
+
+        private OutputDescription? _outputDesc;
+
+        public void SetOutputDescription(OutputDescription odesc)
+        {
+            _outputDesc = odesc;
+        }
+
         protected virtual OutputDescription CreateOutputDescription(PixelFormat pixelFormat, bool withDepthstencil = false)
         {
             if (_outputDesc != null) return _outputDesc.Value;
@@ -198,6 +206,7 @@ namespace BareE.Rendering
             pipelineDescription.Outputs = oDesc;
             GraphicsPipeline = device.ResourceFactory.CreateGraphicsPipeline(pipelineDescription);
         }
+
         public virtual void Update(GraphicsDevice device)
         {
             if (verts.Count == 0) return;
@@ -215,9 +224,11 @@ namespace BareE.Rendering
             DrawToggle = true;
         }
 
-        public virtual void UpdateBuffers(CommandList cmds) {
+        public virtual void UpdateBuffers(CommandList cmds)
+        {
         }
-        public virtual void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData,Matrix4x4 CameraMatrix, Matrix4x4 ModelMatrix)
+
+        public virtual void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData, Matrix4x4 CameraMatrix, Matrix4x4 ModelMatrix)
         {
             if (VertexBuffer == null) return;
             cmds.UpdateBuffer(CameraMatrixBuffer, 0, CameraMatrix);
@@ -231,15 +242,11 @@ namespace BareE.Rendering
             var RssL = GetResourceSets().ToList();
             foreach (ResourceSet set in RssL)
             {
-                
                 //if (set as )
                 cmds.SetGraphicsResourceSet(i++, set);
             }
 
             cmds.Draw((uint)verts.Count);
-
-             
         }
     }
-
 }

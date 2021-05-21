@@ -1,6 +1,5 @@
-﻿using BareE.Rendering;
-
-using BareE.EZRend.ModelShader.Color;
+﻿using BareE.EZRend.ModelShader.Color;
+using BareE.Rendering;
 
 using System;
 using System.Collections.Generic;
@@ -10,25 +9,27 @@ using Veldrid;
 
 namespace BareE.EZRend.ImageShader.FullscreenTexture
 {
-
-    public class MultiTextureShader:LitVertexOnlyShader<Float3_Float3_Float3_Float3_Float2>
+    public class MultiTextureShader : LitVertexOnlyShader<Float3_Float3_Float3_Float3_Float2>
     {
-        class TextureDescData
+        private class TextureDescData
         {
             public TextureDescription? TexDesc;
             public SamplerDescription? SampDesc;
+
             internal TextureDescData(TextureDescription texDesc, SamplerDescription sampDesc)
             {
                 TexDesc = texDesc; SampDesc = sampDesc;
             }
         }
-        class TextureData
+
+        private class TextureData
         {
             public ResourceLayout layout;
             public ResourceSet set;
             public Texture tex;
             public TextureView view;
             public Sampler sampler;
+
             public TextureData(ResourceLayout lo, ResourceSet s, Texture t, TextureView tv, Sampler sm)
             {
                 layout = lo;
@@ -39,9 +40,8 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
             }
         }
 
-        TextureDescData[] textureDescriptions;
-        TextureData[] Textures;
-
+        private TextureDescData[] textureDescriptions;
+        private TextureData[] Textures;
 
         //ResourceLayout ambientLightsLayout;
         //ResourceSet ambientLightsSet;
@@ -49,22 +49,24 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
         //ResourceLayout pointLightsLayout;
         //ResourceSet pointLightsSet;
 
-
-
-        int TextureCount;
+        private int TextureCount;
 
         public SamplerFilter ColorTextureFilter = SamplerFilter.Anisotropic;
 
-        public MultiTextureShader(int textureCount) : this("BareE.EZRend.ModelShader.Uv.UvNormalBump", textureCount) { }
-        public MultiTextureShader(String partial, int textureCount):base(partial){
+        public MultiTextureShader(int textureCount) : this("BareE.EZRend.ModelShader.Uv.UvNormalBump", textureCount)
+        {
+        }
+
+        public MultiTextureShader(String partial, int textureCount) : base(partial)
+        {
             textureDescriptions = new TextureDescData[textureCount];
             Textures = new TextureData[textureCount];
             TextureCount = textureCount;
         }
 
-        public override void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData,Matrix4x4 camMat, Matrix4x4 ModelMatrix)
+        public override void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData, Matrix4x4 camMat, Matrix4x4 ModelMatrix)
         {
-            base.Render(Trgt, cmds, sceneData,camMat, ModelMatrix);
+            base.Render(Trgt, cmds, sceneData, camMat, ModelMatrix);
         }
 
         public override void Update(GraphicsDevice device)
@@ -80,6 +82,7 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
                         comparisonKind: ComparisonKind.Less
                         );
         }
+
         public void SetTexture(int textureId, GraphicsDevice device, Texture texture)
         {
             if (Textures[textureId].tex == texture) return;
@@ -102,8 +105,6 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
         {
             for (int i = 0; i < TextureCount; i++)
             {
-
-
                 var tDesc = new TextureDescription(device.MainSwapchain.Framebuffer.Width, device.MainSwapchain.Framebuffer.Height, 1, 1, 1, BareE.UTIL.Util.GetNativePixelFormat(device), TextureUsage.RenderTarget | TextureUsage.Sampled, TextureType.Texture2D);
 
                 var sDesc = new SamplerDescription()
@@ -135,7 +136,6 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
                 this.Textures[i] = new TextureData(ColorTextureLayout, ColorTextureResourceSet, Tex, ColorTextureView, ColorTextureSampler);
             }
             base.CreateResources(device);
-
         }
 
         protected override IEnumerable<ResourceLayout> CreateResourceLayout()
@@ -144,13 +144,11 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
             foreach (var v in base.CreateResourceLayout())
                 yield return v;
 
-
             //Textures
             foreach (var v in Textures)
                 yield return v.layout;
-
-
         }
+
         public override IEnumerable<ResourceSet> GetResourceSets()
         {
             foreach (var v in base.GetResourceSets())
@@ -158,9 +156,6 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
             //Textures
             foreach (var v in Textures)
                 yield return v.set;
-
-
         }
-
     }
 }

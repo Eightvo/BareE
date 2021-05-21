@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace BareE.DataStructures
 {
-
     public class RingBuffer<T>
     {
         public int Capacity;
-        object _lockObj = new object();
+        private object _lockObj = new object();
 
-        T[] _data;
-        uint head;
+        private T[] _data;
+        private uint head;
 
-        uint ptr;
+        private uint ptr;
+
         public RingBuffer(int capacity)
         {
             _data = new T[capacity];
@@ -49,10 +49,8 @@ namespace BareE.DataStructures
 
         public IEnumerable<T> SafeEnumerate(bool reversed = false)
         {
-
             lock (_lockObj)
             {
-
                 for (int i = 0; i < Count; i++)
                 {
                     if (reversed)
@@ -72,6 +70,7 @@ namespace BareE.DataStructures
                 return _data[(ptr + indx) % _data.Length];
             }
         }
+
         public int Count
         {
             get

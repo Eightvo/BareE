@@ -3,6 +3,5 @@
     [Message("ExitGame")]
     public class ExitGame
     {
-
     }
 }

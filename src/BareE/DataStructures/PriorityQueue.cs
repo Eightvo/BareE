@@ -3,18 +3,20 @@ using System.Collections.Generic;
 
 namespace BareE.DataStructures
 {
-    public class PriorityQueue<T>:IEnumerable<T>
+    public class PriorityQueue<T> : IEnumerable<T>
     {
         internal readonly struct PriorityNode
         {
             public readonly T Cell;
-            public readonly long  Cost;
+            public readonly long Cost;
+
             public PriorityNode(T cell, long cost)
             {
                 Cell = cell;
                 Cost = cost;
             }
         }
+
         private readonly LinkedList<PriorityNode> _list = new LinkedList<PriorityNode>();
 
         public void Push(T cell, long cost)
@@ -40,14 +42,17 @@ namespace BareE.DataStructures
             _list.RemoveFirst();
             return cell;
         }
+
         public T Peek()
         {
             return _list.First.Value.Cell;
         }
+
         public long PeekWeight()
         {
             return _list.First.Value.Cost;
         }
+
         public bool IsEmpty()
         {
             return _list.Count == 0;
@@ -63,23 +68,23 @@ namespace BareE.DataStructures
             return (IEnumerator)GetEnumerator();
         }
 
-        class PriorityQueueEnumerator : IEnumerator<T>
+        private class PriorityQueueEnumerator : IEnumerator<T>
         {
-            LinkedListNode<PriorityNode> toEnumerate;
-            LinkedListNode<PriorityNode> curr;
+            private LinkedListNode<PriorityNode> toEnumerate;
+            private LinkedListNode<PriorityNode> curr;
 
             public PriorityQueueEnumerator(LinkedList<PriorityNode> toenum)
             {
                 toEnumerate = toenum.First;
                 curr = null;
             }
+
             public T Current { get { return curr.Value.Cell; } }
 
             object IEnumerator.Current { get => Current; }
 
             public void Dispose()
             {
-                
             }
 
             public bool MoveNext()
@@ -87,7 +92,7 @@ namespace BareE.DataStructures
                 if (curr == null)
                     curr = toEnumerate;
                 else
-                curr = curr.Next;
+                    curr = curr.Next;
                 return curr != null;
             }
 
@@ -96,6 +101,5 @@ namespace BareE.DataStructures
                 curr = toEnumerate;
             }
         }
-
     }
 }

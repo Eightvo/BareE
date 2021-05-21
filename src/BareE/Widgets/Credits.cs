@@ -10,6 +10,7 @@ using System.Text;
 namespace BareE.Widgets
 {
     using IG = ImGuiNET.ImGui;
+
     namespace BareE.Widgets
     {
         public enum AssetCreditType
@@ -26,6 +27,7 @@ namespace BareE.Widgets
 
             THANKS
         }
+
         internal class creditSorter : IEqualityComparer<AssetCredits>, IComparer<AssetCredits>
         {
             public int Compare(AssetCredits x, AssetCredits y)
@@ -68,7 +70,6 @@ namespace BareE.Widgets
 
         public struct AssetCredits
         {
-
             public String Asset { get; set; }
 
             public AssetCreditType CreditType { get; set; }
@@ -77,14 +78,14 @@ namespace BareE.Widgets
             public String[] Licenses { get; set; }
             public String[] Urls { get; set; }
             public String[] Text { get; set; }
-
-
         }
-        public class Credits 
+
+        public class Credits
         {
             public string Name { get; set; } = "ImGuiCreditsScreen";
             public bool IsVisible { get; set; } = false;
-            HashSet<AssetCredits> _allCredits = new HashSet<AssetCredits>();
+            private HashSet<AssetCredits> _allCredits = new HashSet<AssetCredits>();
+
             private static IEnumerable<AssetCredits> FILEFREECREDITS()
             {
                 yield return new AssetCredits()
@@ -114,7 +115,6 @@ namespace BareE.Widgets
                     CreditType = AssetCreditType.THANKS,
                     Urls = new string[] { "https://github.com/SixLabors/ImageSharp" }
                 };
-
             }
 
             public Credits()
@@ -137,7 +137,6 @@ namespace BareE.Widgets
                                     {
                                         ac.Text[i] = System.IO.File.ReadAllText(ac.Text[i]);
                                     }
-
                                 }
 
                             _allCredits.Add(ac);
@@ -155,6 +154,7 @@ namespace BareE.Widgets
                 //foreach(.);
                 //Union(FILEFREECREDITS();
             }
+
             public void Render(Instant instant, GameState state, GameEnvironment env)
             {
                 if (!IsVisible) return;
@@ -184,6 +184,7 @@ namespace BareE.Widgets
                 }
                 IG.End();
             }
+
             private void RenderCredits(AssetCredits credit)
             {
                 StringBuilder authors = new StringBuilder();
@@ -211,8 +212,6 @@ namespace BareE.Widgets
                         IG.Text("");
                     }
             }
-
         }
     }
-
 }

@@ -1,9 +1,8 @@
 ﻿using Assimp;
 
-using BareE.Rendering;
-
 using BareE.EZRend.ImageShader.FullscreenTexture;
 using BareE.EZRend.ModelShader.Color;
+using BareE.Rendering;
 
 using System;
 using System.Collections.Generic;
@@ -16,6 +15,7 @@ namespace BareE.EZRend
     public class EZModel
     {
         public Dictionary<String, IRenderUnit> Meshes = new Dictionary<string, IRenderUnit>(StringComparer.InvariantCultureIgnoreCase);
+
         public void AddMesh(String name, IRenderUnit renderable)
         {
             var nxt = 2;
@@ -27,6 +27,7 @@ namespace BareE.EZRend
             }
             Meshes.Add(nxtName, renderable);
         }
+
         public void CreateResource(OutputDescription outputdesc, GraphicsDevice device)
         {
             foreach (var r in Meshes.Values)
@@ -40,6 +41,7 @@ namespace BareE.EZRend
     public static class ModelHelper
     {
         public static PostProcessSteps DefaultSteps = PostProcessSteps.CalculateTangentSpace | PostProcessSteps.FixInFacingNormals | PostProcessSteps.ForceGenerateNormals | PostProcessSteps.GenerateNormals | PostProcessSteps.Triangulate | PostProcessSteps.FlipWindingOrder;
+
         public static EZModel LoadTexturedMesh(String filename, PostProcessSteps pps, OutputDescription oDesc, GraphicsDevice device, Texture texture)
         {
             EZModel ret = new EZModel();
@@ -60,7 +62,6 @@ namespace BareE.EZRend
                     Vector3 n = new Vector3(normr.X, normr.Y, normr.Z);
                     Vector2 uv = new Vector2(uvr.X, 1.0f - uvr.Y);
                     uvn.AddVertex(new Float3_Float2_Float3(pt, uv, n));
-
                 }
                 uvn.CreateResources(device);
                 uvn.SetTexture(device, texture);
@@ -68,8 +69,6 @@ namespace BareE.EZRend
             }
             return ret;
         }
-
-
 
         public static EZModel LoadStaticTexturedBumpMesh(String filename, PostProcessSteps pps, OutputDescription oDesc, GraphicsDevice device, params Texture[] textures)
         {
@@ -86,7 +85,7 @@ namespace BareE.EZRend
 
             //uvn.SetPointLightData(new pointLightData()
             //{
-            //    
+            //
             //});
             uvn.SetOutputDescription(oDesc);
             for (int i = 0; i < scene.MeshCount; i++)
@@ -107,7 +106,6 @@ namespace BareE.EZRend
                     Vector2 uv = new Vector2(uvr.X, 1.0f - uvr.Y);
 
                     uvn.AddVertex(new Float3_Float3_Float3_Float3_Float2(pt, n, f, up, uv));
-
                 }
             }
             uvn.CreateResources(device);
@@ -115,7 +113,6 @@ namespace BareE.EZRend
             {
                 uvn.SetTexture(t, device, textures[t]);
             }
-            
 
             ret.AddMesh("mesg", uvn);
             return ret;
@@ -147,7 +144,6 @@ namespace BareE.EZRend
                     Vector2 uv = new Vector2(uvr.X, 1.0f - uvr.Y);
 
                     uvn.AddVertex(new Float3_Float3_Float3_Float3_Float2(pt, n, f, up, uv));
-
                 }
                 uvn.CreateResources(device);
                 //uvn.SetTexture(device, texture);
@@ -180,7 +176,6 @@ namespace BareE.EZRend
                     Vector3 n = new Vector3(normr.X, normr.Y, normr.Z);
                     Vector2 uv = new Vector2(uvr.X, 1.0f - uvr.Y);
                     uvn.AddVertex(new Float3_Float2_Float3(pt, uv, n));
-
                 }
             }
             uvn.CreateResources(device);
@@ -226,8 +221,8 @@ namespace BareE.EZRend
             uvn.CreateResources(device);
             ret.AddMesh("mesh", uvn);
             return ret;
-
         }
+
         public static EZModel LoadColoredMesh(String filename, PostProcessSteps pps, OutputDescription oDesc, GraphicsDevice device, Dictionary<Vector3, Vector3> clrMap)
         {
             EZModel ret = new EZModel();

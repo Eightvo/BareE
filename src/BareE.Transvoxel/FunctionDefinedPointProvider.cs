@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
 namespace BareE.Transvoxel
 {
-
-    public class CustomPointProvider<D>:PointProvider<D>
-        where D:struct, IPointData
+    public class CustomPointProvider<D> : PointProvider<D>
+        where D : struct, IPointData
     {
-        Dictionary<float, Dictionary<float, Dictionary<float, D>>> _pointCache;
+        private Dictionary<float, Dictionary<float, Dictionary<float, D>>> _pointCache;
+
         public CustomPointProvider()
         {
             _pointCache = new Dictionary<float, Dictionary<float, Dictionary<float, D>>>();
         }
+
         public void RemovePoint(Vector3 location)
         {
             if (!_pointCache.ContainsKey(location.X))
@@ -25,10 +25,12 @@ namespace BareE.Transvoxel
             _pointCache[location.X][location.Y].Remove(location.Z);
             return;
         }
+
         public void AddPoint(Vector3 location, D PointData)
         {
             AddPoint((int)location.X, (int)location.Y, (int)location.Z, PointData);
         }
+
         public void AddPoint(int X, int Y, int Z, D PointData)
         {
             if (!_pointCache.ContainsKey(X))
@@ -45,7 +47,6 @@ namespace BareE.Transvoxel
 
         public override D GetPoint(int Samplex, int Sampley, int Samplez)
         {
-
             if (_pointCache.ContainsKey(Samplex))
                 if (_pointCache[Samplex].ContainsKey(Sampley))
                     if (_pointCache[Samplex][Sampley].ContainsKey(Samplez))
@@ -68,13 +69,14 @@ namespace BareE.Transvoxel
         }
     }
 
-    public class SpherePointProvider<D>:PointProvider<D>
+    public class SpherePointProvider<D> : PointProvider<D>
         where D : struct, IPointData
     {
-        Vector3 worldPoint { get; set; }
-        float radius { get; set; }
-        D ShereData;
-        int BlockSize;
+        private Vector3 worldPoint { get; set; }
+        private float radius { get; set; }
+        private D ShereData;
+        private int BlockSize;
+
         public SpherePointProvider(Vector3 cp, float r, int blksz, D data)
         {
             worldPoint = cp;
@@ -82,20 +84,22 @@ namespace BareE.Transvoxel
             BlockSize = blksz;
             ShereData = data;
         }
+
         public override float GetSample(int Samplex, int Sampley, int Samplez)
         {
             var delta = worldPoint - new Vector3(Samplex, Sampley, Samplez);
-            var r = (  delta.LengthSquared()- (radius * radius));
+            var r = (delta.LengthSquared() - (radius * radius));
             //if (r < 0) return r;
             return r;
-                
         }
+
         public override bool HasSample(int Samplex, int Sampley, int Samplez)
         {
             var delta = worldPoint - new Vector3(Samplex, Sampley, Samplez);
             var r = (delta.LengthSquared() - (radius * radius));
             return r < 0;
         }
+
         public override D GetPoint(int Samplex, int Sampley, int Samplez)
         {
             var tx = Samplex;
@@ -107,22 +111,27 @@ namespace BareE.Transvoxel
             return default(D);
         }
     }
+
     public class FunctionDefinedPointProvider<D> : PointProvider<D>
         where D : struct, IPointData
     {
-        Func<int, int, int, D> PointFunc;
+        private Func<int, int, int, D> PointFunc;
+
         public FunctionDefinedPointProvider(Func<int, int, int, D> f)
         {
             PointFunc = f;
         }
+
         public override float GetSample(int Samplex, int Sampley, int Samplez)
         {
-            return GetPoint(Samplex,Sampley,Samplez).SampleValue;
+            return GetPoint(Samplex, Sampley, Samplez).SampleValue;
         }
+
         public override D GetPoint(int Samplex, int Sampley, int Samplez)
         {
             return PointFunc(Samplex, Sampley, Samplez);
         }
+
         public override bool HasSample(int Samplex, int Sampley, int Samplez)
         {
             return true;

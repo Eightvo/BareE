@@ -5,12 +5,13 @@ using System.Reflection;
 
 namespace BareE.DataStructures
 {
-
     public class ComponentCache
     {
         #region ComponentSystemMaint
-        static Dictionary<Type, ComponentAttribute> _componetTypeData;
-        static AliasMap<ComponentAttribute> _componentAliasMap;
+
+        private static Dictionary<Type, ComponentAttribute> _componetTypeData;
+        private static AliasMap<ComponentAttribute> _componentAliasMap;
+
         public static AliasMap<ComponentAttribute> ComponentAliasMap
         {
             get
@@ -20,6 +21,7 @@ namespace BareE.DataStructures
                 return _componentAliasMap;
             }
         }
+
         public static Dictionary<Type, ComponentAttribute> ComponentTypeData
         {
             get
@@ -29,6 +31,7 @@ namespace BareE.DataStructures
                 return _componetTypeData;
             }
         }
+
         public static void LoadComponentData()
         {
             _componetTypeData = new Dictionary<Type, ComponentAttribute>();
@@ -55,16 +58,18 @@ namespace BareE.DataStructures
                 }
             }
         }
-        #endregion
+
+        #endregion ComponentSystemMaint
 
         public object SyncRoot = new object();
 
-        Dictionary<int, Dictionary<int, object>> _components = new Dictionary<int, Dictionary<int, object>>();
+        private Dictionary<int, Dictionary<int, object>> _components = new Dictionary<int, Dictionary<int, object>>();
 
         public IEnumerable<String> ListComponents()
         {
             return ComponentAliasMap.Keys();
         }
+
         public int CountComponents(String componentName)
         {
             int i = ComponentAliasMap[componentName].CTypeID;
@@ -86,7 +91,6 @@ namespace BareE.DataStructures
                 _components[componentID].Add(-ent.Id, null);
             if (!_components[componentID].ContainsKey(ent.Id)) return;
             _components[componentID].Remove(ent.Id);
-
         }
 
         /// <summary>
@@ -103,7 +107,7 @@ namespace BareE.DataStructures
             if (!_components.ContainsKey(i))
                 return default(T);
 
-            //Getting a Component Cumulatively should be a different Function Call. 
+            //Getting a Component Cumulatively should be a different Function Call.
             object ret = GetComponent(e, tDat.CTypeID);
             if (ret != null)
                 return (T)ret;
@@ -114,6 +118,7 @@ namespace BareE.DataStructures
         {
             return GetComponent(e, ComponentAliasMap[sType].CTypeID);
         }
+
         public object GetComponent(Entity e, int cAttribId)
         {
             /* Done in calling func
@@ -138,7 +143,7 @@ namespace BareE.DataStructures
             SetComponent(e, component, ComponentTypeData[component.GetType()]);
         }
 
-        void SetComponent(Entity e, object component, ComponentAttribute cAttrib)
+        private void SetComponent(Entity e, object component, ComponentAttribute cAttrib)
         {
             if (!_components.ContainsKey(cAttrib.CTypeID))
                 _components.Add(cAttrib.CTypeID, new Dictionary<int, object>());
@@ -151,7 +156,7 @@ namespace BareE.DataStructures
                 _components[cAttrib.CTypeID][e.Id] = component;
         }
 
-        void MaskComponent(Entity e, int componentTypeId, bool mask = true)
+        private void MaskComponent(Entity e, int componentTypeId, bool mask = true)
         {
             if (!_components.ContainsKey(componentTypeId))
                 return;
@@ -179,7 +184,7 @@ namespace BareE.DataStructures
             //_components[i].Values.Cast<T>().CopyTo(ret, 0);
         }
 
-        IEnumerable<T> GetComponents<T>()
+        private IEnumerable<T> GetComponents<T>()
         {
             int i = ComponentTypeData[typeof(T)].CTypeID;
             if (!_components.ContainsKey(i))
@@ -201,11 +206,13 @@ namespace BareE.DataStructures
             int i = ComponentAliasMap[componentName].CTypeID;
             return HasComponent(i, ent);
         }
+
         public bool HasComponent<T>(Entity ent)
         {
             int i = ComponentTypeData[typeof(T)].CTypeID;
             return HasComponent(i, ent);
         }
+
         private bool HasComponent(int i, Entity ent)
         {
             if (!_components.ContainsKey(i)) return false;
@@ -223,7 +230,6 @@ namespace BareE.DataStructures
 
             foreach (var v in _components[i])
                 yield return new KeyValuePair<int, T>(v.Key, (T)v.Value);
-
         }
 
         public void RemoveByEntityID(int iD)
@@ -234,6 +240,7 @@ namespace BareE.DataStructures
                 v.Value.Remove(-iD);
             }
         }
+
         public IEnumerable<object> GetComponentsByEntity(Entity ent)
         {
             foreach (var v in _components)
@@ -243,6 +250,7 @@ namespace BareE.DataStructures
                 yield return GetComponent(ent, v.Key);
             }
         }
+
         public void Dispose()
         {
             foreach (var v in _components)

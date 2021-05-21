@@ -13,7 +13,7 @@ namespace BareE.Rendering
         public Vector2 u_resolution;
         public Vector2 u_mouse;
         public Vector3 u_campos;
-        float seed;
+        private float seed;
         public static uint Size { get { return 48; } }
     }
 }

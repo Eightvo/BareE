@@ -10,21 +10,24 @@ namespace BareE
 {
     public static class AssetManager
     {
-        static List<String> _assetRepositories;
-        static List<Assembly> _knownAssemblies;
+        private static List<String> _assetRepositories;
+        private static List<Assembly> _knownAssemblies;
+
         static AssetManager()
         {
             _assetRepositories = new List<string>();
             _assetRepositories.Add(Environment.CurrentDirectory);
             _knownAssemblies = new List<Assembly>();
             _knownAssemblies.Add(System.Reflection.Assembly.GetEntryAssembly());
-            foreach(var asmN in Assembly.GetEntryAssembly().GetReferencedAssemblies())
+            foreach (var asmN in Assembly.GetEntryAssembly().GetReferencedAssemblies())
                 _knownAssemblies.Add(Assembly.Load(asmN));
         }
+
         public static void AddAssetRepository(String location)
         {
             _assetRepositories.Add(location);
         }
+
         public static void ResetAssetRepositories()
         {
             _assetRepositories.Clear();
@@ -35,15 +38,18 @@ namespace BareE
         {
             return LoadTexture(LoadImageSharpTexture(resource, mipmap), device);
         }
+
         public static Texture LoadTexture(ImageSharpTexture imgSharpTexture, GraphicsDevice device)
         {
             return imgSharpTexture.CreateDeviceTexture(device, device.ResourceFactory);
         }
+
         public static ImageSharpTexture LoadImageSharpTexture(String resource, bool mipmap = false)
         {
             var strm = new MemoryStream(FindFileData(resource));
             return (new Veldrid.ImageSharp.ImageSharpTexture(strm, mipmap));
         }
+
         public static Stream FindFileStream(String name)
         {
             if (Path.IsPathRooted(name))
@@ -85,26 +91,28 @@ namespace BareE
             }
             throw new FileNotFoundException("File not found", name);
         }
+
         public static Byte[] FindFileData(String name)
         {
             if (Path.IsPathRooted(name))
                 name = name.Substring(Path.GetPathRoot(name).Length);
             if (name.StartsWith("assets", StringComparison.InvariantCultureIgnoreCase))
             {
-                foreach(var assetRepoPath in _assetRepositories)
+                foreach (var assetRepoPath in _assetRepositories)
                 {
                     var aP = Path.Combine(assetRepoPath, name);
                     if (File.Exists(aP))
                     {
-                       return File.ReadAllBytes(aP);
+                        return File.ReadAllBytes(aP);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 foreach (var asm in _knownAssemblies)
                 {
                     try
                     {
-                        
                         List<byte> data = new List<byte>();
                         using (var rdr = asm.GetManifestResourceStream(name))
                         {
@@ -123,7 +131,7 @@ namespace BareE
                     catch (Exception e) { throw new FileNotFoundException("File not found", name, e); }
                 }
             }
-            throw new FileNotFoundException($"File not found: {name}",name);
+            throw new FileNotFoundException($"File not found: {name}", name);
         }
 
         public static String ReadFile(string name)
@@ -158,16 +166,17 @@ namespace BareE
             var ext = System.IO.Path.GetExtension(pattern);
             foreach (var asm in new List<System.Reflection.Assembly>() { System.Reflection.Assembly.GetEntryAssembly(), System.Reflection.Assembly.GetExecutingAssembly() })
             {
-                foreach(var rn in asm.GetManifestResourceNames())
+                foreach (var rn in asm.GetManifestResourceNames())
                 {
                     var rne = System.IO.Path.GetExtension(rn);
-                    if (String.Compare(rne, ext, true)==0 || pattern=="*.*")
+                    if (String.Compare(rne, ext, true) == 0 || pattern == "*.*")
                         if (String.Compare(rne, ".dll", true) != 0)
                             yield return rn;
                 }
             }
             yield break;
         }
+
         public static IEnumerable<String> AllFiles(string pattern)
         {
             return AllFiles("./", pattern);

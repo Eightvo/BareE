@@ -8,15 +8,14 @@ using Veldrid;
 
 namespace BareE.EZRend
 {
-
-
     public class DiskShaderV1 : IRenderUnit
     {
-        struct DiskShaderVertex:IProvideVertexLayoutDescription
+        private struct DiskShaderVertex : IProvideVertexLayoutDescription
         {
             public Vector2 Position;
             public Vector3 DiameterAlphaHeight;
-            public int     ColorIndex;
+            public int ColorIndex;
+
             public uint SizeInBytes
             {
                 get
@@ -24,17 +23,20 @@ namespace BareE.EZRend
                     return (2 * 4) + (3 * 4) + 8;
                 }
             }
-            public VertexLayoutDescription GetVertexLayoutDescription(uint instanceStepRate=0)
+
+            public VertexLayoutDescription GetVertexLayoutDescription(uint instanceStepRate = 0)
             {
                 return new VertexLayoutDescription(
                      new VertexElementDescription("Position", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2),
                      new VertexElementDescription("DiameterAlphaHeight", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
-                     new VertexElementDescription("ColorIndex",VertexElementSemantic.TextureCoordinate, VertexElementFormat.Int1)
+                     new VertexElementDescription("ColorIndex", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Int1)
                     );
             }
+
             public static DiskShaderVertex Instance = new DiskShaderVertex();
         }
-        struct DiskShaderConfig
+
+        private struct DiskShaderConfig
         {
             public float time;
             public float seed;
@@ -43,13 +45,15 @@ namespace BareE.EZRend
             public int mpos_x;
             public int mpos_y;
             public int PalletSize;
+
             public uint SizeInBytes
             {
                 get
                 {
-                    return (2*4) + (5 * 4);
+                    return (2 * 4) + (5 * 4);
                 }
             }
+
             public static DiskShaderConfig Instance = new DiskShaderConfig();
         }
 
@@ -60,61 +64,63 @@ namespace BareE.EZRend
             TextureDirty = true;
         }
 
-        List<DiskShaderVertex> verts = new List<DiskShaderVertex>();
-        VertexOverflowBehaviour VertOverflowBehaviour = VertexOverflowBehaviour.EXPAND;
-        int MaximumVerts = 100;
-        float ExpansionFactor = 0.5f;
-        bool MaxVertexCountDirty = true;
-        bool VertexContentDirty = false;
+        private List<DiskShaderVertex> verts = new List<DiskShaderVertex>();
+        private VertexOverflowBehaviour VertOverflowBehaviour = VertexOverflowBehaviour.EXPAND;
+        private int MaximumVerts = 100;
+        private float ExpansionFactor = 0.5f;
+        private bool MaxVertexCountDirty = true;
+        private bool VertexContentDirty = false;
 
-        DiskShaderConfig Config;
-        bool ConfigDirty = true;
+        private DiskShaderConfig Config;
+        private bool ConfigDirty = true;
 
-        Sampler PalletSampler;
-        TextureView PalletTextureView;
-        Texture PalletTexture;
-        Texture trgtPalletTexture = null;
-        bool TextureDirty = false;
+        private Sampler PalletSampler;
+        private TextureView PalletTextureView;
+        private Texture PalletTexture;
+        private Texture trgtPalletTexture = null;
+        private bool TextureDirty = false;
 
-        bool DrawToggle = false;
+        private bool DrawToggle = false;
 
-        DeviceBuffer VertexBuffer;
-        DeviceBuffer ProjModelBuffer;
-        DeviceBuffer ConfigBuffer;
+        private DeviceBuffer VertexBuffer;
+        private DeviceBuffer ProjModelBuffer;
+        private DeviceBuffer ConfigBuffer;
 
-        Shader[] DiskShaders;
-        Pipeline DiskShaderPipeline;
+        private Shader[] DiskShaders;
+        private Pipeline DiskShaderPipeline;
 
-        ResourceSet ModelProjection;
-        ResourceSet ConfigRS;
+        private ResourceSet ModelProjection;
+        private ResourceSet ConfigRS;
 
         public void ClearVerts()
         {
             verts.Clear();
         }
+
         public void AddVert(Vector2 pos, int colorIndx, Vector3 DiamAplhaHght)
         {
-            AddVert( new DiskShaderVertex()
+            AddVert(new DiskShaderVertex()
             {
                 Position = pos,
                 ColorIndex = colorIndx,
                 DiameterAlphaHeight = DiamAplhaHght
             });
-
         }
 
         private void AddVert(DiskShaderVertex vert)
         {
-            if (verts.Count>=MaximumVerts)
+            if (verts.Count >= MaximumVerts)
             {
-                switch(VertOverflowBehaviour)
+                switch (VertOverflowBehaviour)
                 {
                     case VertexOverflowBehaviour.EXCEPTION:
                         new Exception($"Vertex List exceeded {MaximumVerts} Maximum");
                         return;
+
                     case VertexOverflowBehaviour.IGNORE:
                         //LibrarySettings.RaiseEZRendWarning(this, new Exception($"Vertex List exceeded {MaximumVerts} Maximum"));
                         return;
+
                     case VertexOverflowBehaviour.EXPAND:
                         MaximumVerts = MaximumVerts + (int)Math.Ceiling(MaximumVerts * ExpansionFactor);
                         MaxVertexCountDirty = true;
@@ -123,7 +129,6 @@ namespace BareE.EZRend
             }
             verts.Add(vert);
             VertexContentDirty = true;
-            
         }
 
         public uint NextMultipleOf16(uint ival)
@@ -131,13 +136,12 @@ namespace BareE.EZRend
             return (uint)(Math.Floor(ival / 16.0f) * 16 + 16);
         }
 
-        PixelFormat NativePixelFormat;
+        private PixelFormat NativePixelFormat;
 
         public void CreateResources(GraphicsDevice device)
         {
             NativePixelFormat = device.MainSwapchain.Framebuffer.OutputDescription.ColorAttachments[0].Format;
             var factory = device.ResourceFactory;
-            
 
             //Create The ResourceSet and Buffer required for the ModelProjection Matrix to be passed
             ProjModelBuffer = factory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
@@ -146,18 +150,18 @@ namespace BareE.EZRend
                     new ResourceLayoutElementDescription("ModelProjection", ResourceKind.UniformBuffer, ShaderStages.Vertex)
                 )
             );
-            ModelProjection = factory.CreateResourceSet(new ResourceSetDescription(projViewLayout,ProjModelBuffer));
+            ModelProjection = factory.CreateResourceSet(new ResourceSetDescription(projViewLayout, ProjModelBuffer));
 
-            //Create the resource set and Buffers for the 
+            //Create the resource set and Buffers for the
             //Config, Pallet and Pallet sampler.
             Config = new DiskShaderConfig()
             {
                 PalletSize = 8
             };
             ConfigBuffer = factory.CreateBuffer(new BufferDescription(NextMultipleOf16(DiskShaderConfig.Instance.SizeInBytes), BufferUsage.UniformBuffer));
-            PalletTexture = AssetManager.LoadTexture("BareE.EZRend.palletts.rng1.png",device, true);
+            PalletTexture = AssetManager.LoadTexture("BareE.EZRend.palletts.rng1.png", device, true);
             PalletTextureView = factory.CreateTextureView(PalletTexture);
-            
+
             PalletSampler = factory.CreateSampler(new SamplerDescription()
             {
                 AddressModeU = SamplerAddressMode.Clamp,
@@ -167,7 +171,7 @@ namespace BareE.EZRend
             });
             var DiskShaderLayout = factory.CreateResourceLayout(
                 new ResourceLayoutDescription(
-                    new ResourceLayoutElementDescription("Config", ResourceKind.UniformBuffer, ShaderStages.Vertex|ShaderStages.Fragment),
+                    new ResourceLayoutElementDescription("Config", ResourceKind.UniformBuffer, ShaderStages.Vertex | ShaderStages.Fragment),
                     new ResourceLayoutElementDescription("PalletTexture", ResourceKind.TextureReadOnly, ShaderStages.Vertex | ShaderStages.Fragment),
                     new ResourceLayoutElementDescription("PalletSampler", ResourceKind.Sampler, ShaderStages.Vertex | ShaderStages.Fragment)
                     )
@@ -177,15 +181,12 @@ namespace BareE.EZRend
                 PalletTextureView,
                 PalletSampler));
 
-
             //Create and Compile the Shaders.
             DiskShaders = EmbeddedShader.CreateShaderSet(device.ResourceFactory, "BareE.EZRend.Novelty.DiskShader.DiskShader_V1");
             var DiskShadersDescription = new ShaderSetDescription(
                 vertexLayouts: new VertexLayoutDescription[] { DiskShaderVertex.Instance.GetVertexLayoutDescription() },
                 shaders: DiskShaders
                 );
-
-
 
             GraphicsPipelineDescription pipelineDescription = new GraphicsPipelineDescription();
             pipelineDescription.BlendState = BlendStateDescription.SingleOverrideBlend;
@@ -208,18 +209,18 @@ namespace BareE.EZRend
 
             pipelineDescription.ShaderSet = DiskShadersDescription;
 
-
             pipelineDescription.Outputs = oDesc;
             DiskShaderPipeline = factory.CreateGraphicsPipeline(pipelineDescription);
         }
 
-        OutputDescription oDesc;
+        private OutputDescription oDesc;
+
         public void SetOutputDescription(OutputDescription oD)
         {
             oDesc = oD;
         }
 
-        public void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider scenedata,Matrix4x4 cameraMatrix, Matrix4x4 modelMatrix)
+        public void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider scenedata, Matrix4x4 cameraMatrix, Matrix4x4 modelMatrix)
         {
             if (!DrawToggle) return;
             var CameraMatrix = cameraMatrix;
@@ -231,12 +232,12 @@ namespace BareE.EZRend
                 TextureDirty = false;
             }
             cmds.SetFramebuffer(Trgt);
-            cmds.SetVertexBuffer(0,VertexBuffer);
+            cmds.SetVertexBuffer(0, VertexBuffer);
             cmds.SetPipeline(DiskShaderPipeline);
-            
+
             cmds.SetGraphicsResourceSet(0, ModelProjection);
             cmds.SetGraphicsResourceSet(1, ConfigRS);
-            
+
             cmds.Draw((uint)verts.Count);
         }
 
@@ -259,14 +260,14 @@ namespace BareE.EZRend
                 device.UpdateBuffer<DiskShaderConfig>(ConfigBuffer, 0, Config);
                 ConfigDirty = false;
             }
-//            if (TextureDirty)
-//            {
-                //device.UpdateTexture(PalletTexture, trgtPalletTexture., trgtPalletTexture.Width * trgtPalletTexture.Height, 0, 0, 0, 8, 1, 1, 0, 0);
-                //device.UpdateTexture(PalletTexture, )
-                //PalletTextureView.Dispose();
-               // PalletTextureView = device.ResourceFactory.CreateTextureView(PalletTexture);
-//                TextureDirty = false;
-//            }
+            //            if (TextureDirty)
+            //            {
+            //device.UpdateTexture(PalletTexture, trgtPalletTexture., trgtPalletTexture.Width * trgtPalletTexture.Height, 0, 0, 0, 8, 1, 1, 0, 0);
+            //device.UpdateTexture(PalletTexture, )
+            //PalletTextureView.Dispose();
+            // PalletTextureView = device.ResourceFactory.CreateTextureView(PalletTexture);
+            //                TextureDirty = false;
+            //            }
             DrawToggle = true;
         }
     }

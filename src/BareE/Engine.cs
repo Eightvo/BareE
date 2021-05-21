@@ -1,6 +1,5 @@
 ﻿using BareE.GameDev;
 
-using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -8,8 +7,7 @@ using Veldrid.Sdl2;
 
 namespace BareE
 {
-
-    struct BGLoadData
+    internal struct BGLoadData
     {
         public Messages.TransitionScene transition;
         public GameState state;
@@ -18,34 +16,38 @@ namespace BareE
 
     public class Engine
     {
-        Game ActiveGame;
-        GameEnvironment ActiveEnvironment { get { return ActiveGame.Environment; } }
-        GameState ActiveState { get { return ActiveGame.State; } }
-        bool isRunning = true;
-        GameSceneBase onDeckScene;
-        GameState onDeckState;
-        bool isTransitioning = false;
+        private Game ActiveGame;
+        private GameEnvironment ActiveEnvironment
+        { get { return ActiveGame.Environment; } }
+        private GameState ActiveState
+        { get { return ActiveGame.State; } }
+        private bool isRunning = true;
+        private GameSceneBase onDeckScene;
+        private GameState onDeckState;
+        private bool isTransitioning = false;
 
-        void LoadGameSceneInBackground(Messages.TransitionScene transition, GameState state, Instant instant)
+        private void LoadGameSceneInBackground(Messages.TransitionScene transition, GameState state, Instant instant)
         {
             transition.State.Messages.AddListener<Messages.ExitGame>(HandleExitGameMessage);
             transition.State.Messages.AddListener<Messages.TransitionScene>(HandleTransitionScene);
 
             transition.Scene.DoLoad(instant, transition.State, ActiveEnvironment);
             transition.Scene.DoInitialize(instant, transition.State, ActiveEnvironment);
-            onDeckScene  = transition.Scene;
+            onDeckScene = transition.Scene;
             onDeckState = transition.State;
         }
-        bool HandleTransitionScene(Messages.TransitionScene transition, GameState state, Instant instant)
+
+        private bool HandleTransitionScene(Messages.TransitionScene transition, GameState state, Instant instant)
         {
             if (!isTransitioning)
                 isTransitioning = true;
             else
                 return true;
-            Task.Run(()=> LoadGameSceneInBackground(transition, transition.State, instant));
+            Task.Run(() => LoadGameSceneInBackground(transition, transition.State, instant));
             return true;
         }
-        bool HandleExitGameMessage(Messages.ExitGame msg, GameState state, Instant instant)
+
+        private bool HandleExitGameMessage(Messages.ExitGame msg, GameState state, Instant instant)
         {
             isRunning = false;
             return true;
@@ -59,7 +61,7 @@ namespace BareE
             Instant instant = game.State.Clock.CaptureInstant();
             game.State.Messages.AddListener<Messages.ExitGame>(HandleExitGameMessage);
             game.State.Messages.AddListener<Messages.TransitionScene>(HandleTransitionScene);
-            game.ActiveScene.DoLoad(instant,game.State, game.Environment);
+            game.ActiveScene.DoLoad(instant, game.State, game.Environment);
             game.ActiveScene.DoInitialize(instant, game.State, game.Environment);
             Sdl2Events.Subscribe(HandleEvent);
             float cummulativeDelta = 0;
@@ -72,27 +74,25 @@ namespace BareE
                     onDeckScene = null;
                     isTransitioning = false;
                 }
-                    game.State.Clock.AdvanceTick();
-                    instant = game.State.Clock.CaptureInstant();
-                    cummulativeDelta += instant.TickDelta;
+                game.State.Clock.AdvanceTick();
+                instant = game.State.Clock.CaptureInstant();
+                cummulativeDelta += instant.TickDelta;
 
-                    game.State.Messages.ProcessMessages(instant, game.State);
-                    game.ActiveScene.DoUpdate(instant, game.State, game.Environment);
-                    var ss = game.Environment.Window.Window.PumpEvents();
-                    game.Environment.Window.IGR.Update((float)instant.TickDelta / 1000f, ss);
-                    game.ActiveScene.DoRender(instant, game.State, game.Environment);
+                game.State.Messages.ProcessMessages(instant, game.State);
+                game.ActiveScene.DoUpdate(instant, game.State, game.Environment);
+                var ss = game.Environment.Window.Window.PumpEvents();
+                game.Environment.Window.IGR.Update((float)instant.TickDelta / 1000f, ss);
+                game.ActiveScene.DoRender(instant, game.State, game.Environment);
             }
             game.Environment.Window.Window.Close();
             Log.EmitTrace($"Exit game");
-            
         }
 
         private void Window_Resized()
         {
-            
         }
 
-        void HandleEvent(ref SDL_Event ev)
+        private void HandleEvent(ref SDL_Event ev)
         {
             //if (ev.type!= SDL_EventType.MouseMotion)
             //    Log.EmitTrace($"<event> Window:[{ev.windowID}] Type:{ev.type} Timestamp:{ev.timestamp}");
@@ -128,18 +128,20 @@ namespace BareE
                 case SDL_EventType.FingerUp:
                 case SDL_EventType.JoyHatMotion:
                     break;
+
                 case SDL_EventType.JoyAxisMotion:
                 case SDL_EventType.JoyBallMotion:
                 case SDL_EventType.FingerMotion:
                     break;
+
                 case SDL_EventType.ControllerAxisMotion:
                     {
-
                         SDL_ControllerAxisEvent wEvent = Unsafe.As<SDL_Event, SDL_ControllerAxisEvent>(ref ev);
                         // Console.WriteLine($"Axis: {wEvent.axis} {wEvent.value} {wEvent.which} {wEvent.type} {wEvent.timestamp}");
                         ActiveState.Input.HandleGamepadAxisEvent(wEvent);
                     }
                     break;
+
                 case SDL_EventType.ControllerButtonDown:
                 case SDL_EventType.ControllerButtonUp:
                 case SDL_EventType.JoyButtonDown:
@@ -149,6 +151,7 @@ namespace BareE
                         ActiveState.Input.HandleGamepadButtonEvent(wEvent);
                     }
                     break;
+
                 case SDL_EventType.KeyUp:
                 case SDL_EventType.KeyDown:
                     {
@@ -165,19 +168,21 @@ namespace BareE
                         ActiveState.Input.HandleMouseButtonEvent(wEvent);
                     }
                     break;
+
                 case SDL_EventType.MouseMotion:
                     {
-                        
                         SDL_MouseMotionEvent wEvent = Unsafe.As<SDL_Event, SDL_MouseMotionEvent>(ref ev);
                         ActiveState.Input.HandleMouseMove(wEvent);
                     }
                     break;
+
                 case SDL_EventType.MouseWheel:
                     {
                         SDL_MouseWheelEvent wEvent = Unsafe.As<SDL_Event, SDL_MouseWheelEvent>(ref ev);
                         ActiveState.Input.HandleMouseWheelAxis(wEvent);
                     }
                     break;
+
                 case SDL_EventType.LastEvent:
                 case SDL_EventType.LowMemory:
                 case SDL_EventType.MultiGesture:
@@ -190,16 +195,12 @@ namespace BareE
                 case SDL_EventType.WillEnterForeground:
                 case SDL_EventType.SysWMEvent:
                     break;
+
                 case SDL_EventType.WindowEvent:
                     {
-
                     }
                     break;
-
-
             }
         }
-
-
     }
 }

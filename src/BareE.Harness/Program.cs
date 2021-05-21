@@ -1,5 +1,4 @@
-﻿
-using BareE.GameDev;
+﻿using BareE.GameDev;
 
 using System;
 
@@ -13,6 +12,5 @@ namespace BareE.Harness
             var g = new TestGame(new GameState(), GameEnvironment.Load());
             engine.Run(g);
         }
-
     }
 }

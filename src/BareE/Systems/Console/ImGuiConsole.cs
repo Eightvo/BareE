@@ -17,26 +17,26 @@ namespace BareE.Systems
 {
     public partial class ConsoleSystem : GameSystem
     {
-        bool Echo = true;
-        bool PropagateToLog = false;
-        RingBuffer<String> _outputBuffer;
-        RingBuffer<String> _history;
-        RingBuffer<String> _temp;
-        Entity _CmdRoot;
-        int _cursorPosition;
-        StringBuilder _buffer;
+        private bool Echo = true;
+        private bool PropagateToLog = false;
+        private RingBuffer<String> _outputBuffer;
+        private RingBuffer<String> _history;
+        private RingBuffer<String> _temp;
+        private Entity _CmdRoot;
+        private int _cursorPosition;
+        private StringBuilder _buffer;
 
+        private Widgets.BareE.Widgets.Credits CreditsWidget;
 
-        Widgets.BareE.Widgets.Credits CreditsWidget;
-
-        int currHistPtr = 0;
+        private int currHistPtr = 0;
         //        ECS.ECContainer ECC;
 
-        String cmdText = String.Empty;
+        private String cmdText = String.Empty;
 
         public bool IsShowingConsoleWindow = true;
 
-        bool cycleModeRequested;
+        private bool cycleModeRequested;
+
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
             if (cycleModeRequested)
@@ -47,22 +47,23 @@ namespace BareE.Systems
                     case DisplayMode.MonitorOnly:
                         Env.DisplayMode = DisplayMode.Emulate;
                         break;
+
                     case DisplayMode.Emulate:
                         Env.DisplayMode = DisplayMode.MonitorOnly;
                         break;
+
                     case DisplayMode.Mirror:
                         Env.DisplayMode = DisplayMode.VROnly;
                         break;
+
                     case DisplayMode.VROnly:
                         Env.DisplayMode = DisplayMode.Mirror;
                         break;
-
                 }
             }
         }
 
-
-        IEnumerable<object> getChildEnts(Dictionary<int, List<Entity>> pTree, Dictionary<int, String> nNames, EntityComponentContext ecc, int parent, int depth = 0)
+        private IEnumerable<object> getChildEnts(Dictionary<int, List<Entity>> pTree, Dictionary<int, String> nNames, EntityComponentContext ecc, int parent, int depth = 0)
         {
             if (!pTree.ContainsKey(parent)) yield break;
             foreach (var v in pTree[parent])
@@ -73,7 +74,6 @@ namespace BareE.Systems
                     yield return s;
             };
         }
-
 
         private void CreateCommands(GameState state)
         {
@@ -102,7 +102,6 @@ namespace BareE.Systems
                         }),
                         Cmd = "CycleMode",
                         HelpText = "Change Mode"
-
                     },
                     new ConsoleCommand()
                     {
@@ -181,7 +180,6 @@ namespace BareE.Systems
             });
         }
 
-
         public override void Load(Instant instant, GameState state, GameEnvironment environment)
         {
             _outputBuffer = new RingBuffer<string>(20);
@@ -189,7 +187,6 @@ namespace BareE.Systems
             _temp = new RingBuffer<string>(10);
 
             CreateCommands(state);
-
         }
 
         public override void Initialize(Instant instant, GameState state, GameEnvironment environment)
@@ -197,13 +194,12 @@ namespace BareE.Systems
             state.Messages.AddListener<ConsoleInput>(ProcessConsoleInput);
             CreditsWidget = new Widgets.BareE.Widgets.Credits();
         }
+
         public override void RenderEye(Instant instant, GameState state, GameEnvironment env, Matrix4x4 eyeMat, Framebuffer Target, CommandList commands)
         { }
 
-
         public unsafe override void RenderHud(Instant Instant, GameState State, GameEnvironment env, Framebuffer Target, CommandList cmds)
         {
-
             CreditsWidget.Render(Instant, State, env);
             if (!IsShowingConsoleWindow)
                 return;
@@ -220,7 +216,6 @@ namespace BareE.Systems
             ImGui.PushItemWidth(-1);
             ImGuiInputTextCallback callback = (data) =>
             {
-
                 var v = new ImGuiNET.ImGuiInputTextCallbackDataPtr(data);
                 if (v.EventFlag == ImGuiInputTextFlags.CallbackHistory && _history.Count > 0)
                 {
@@ -282,7 +277,6 @@ namespace BareE.Systems
                         SendOutput($"  {c.Cmd} :   {c.HelpText}");
                     }
                 }
-
             }
 
             var cmd = msg.Text;
@@ -309,7 +303,5 @@ namespace BareE.Systems
 
             return false;
         }
-
     }
-
 }

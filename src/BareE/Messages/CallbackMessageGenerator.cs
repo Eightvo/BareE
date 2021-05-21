@@ -8,7 +8,9 @@ namespace BareE.Messages
         {
             Callback = callback;
         }
-        Func<object, object> Callback;
+
+        private Func<object, object> Callback;
+
         public object GenerateMessage(object o)
         {
             if (Callback != null)

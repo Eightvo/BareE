@@ -6,7 +6,6 @@ using Veldrid;
 
 namespace BareE.EZRend.ModelShader.Color
 {
-
     public struct Float3_Float4_Float3 : IProvideVertexLayoutDescription
     {
         public Vector3 Layout_0;
@@ -19,8 +18,8 @@ namespace BareE.EZRend.ModelShader.Color
             Layout_1 = v2_4;
             Layout_2 = v3_3;
         }
-        public uint SizeInBytes { get => (4 * 3) + (4 * 4)+(4*3); }
 
+        public uint SizeInBytes { get => (4 * 3) + (4 * 4) + (4 * 3); }
 
         public VertexLayoutDescription GetVertexLayoutDescription(uint instanceStepRate = 0)
         {
@@ -32,9 +31,12 @@ namespace BareE.EZRend.ModelShader.Color
         }
     }
 
-    public class ColorNormalShader:VertexOnlyShader<Float3_Float4_Float3>
+    public class ColorNormalShader : VertexOnlyShader<Float3_Float4_Float3>
     {
-        public ColorNormalShader() : base("BareE.EZRend.ModelShader.Color.ColorNormal") { }
+        public ColorNormalShader() : base("BareE.EZRend.ModelShader.Color.ColorNormal")
+        {
+        }
+
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get => new DepthStencilStateDescription(

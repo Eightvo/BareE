@@ -7,7 +7,8 @@ namespace BareE
 {
     public struct Tri
     {
-        Vector3 pt1;
+        private Vector3 pt1;
+
         public Vector3 Pt1
         {
             get
@@ -22,10 +23,11 @@ namespace BareE
             }
         }
 
-        Vector3 pt2;
+        private Vector3 pt2;
         public Vector3 Pt2 { get { return pt2; } set { pt2 = value; } }
 
-        Vector3 pt3;
+        private Vector3 pt3;
+
         public Vector3 Pt3
         {
             get
@@ -47,7 +49,9 @@ namespace BareE
             pt3 = p3;
             InvertWinding = false;
         }
+
         public bool InvertWinding { get; set; }
+
         public IEnumerable<Vector3> Verticies
         {
             get
@@ -66,6 +70,7 @@ namespace BareE
                 }
             }
         }
+
         public Vector3 Normal
         {
             get
@@ -73,18 +78,17 @@ namespace BareE
                 return Vector3.Cross((pt2 - pt1), (pt3 - pt1));
             }
         }
-
     }
+
     public static class GeometryFactory
     {
-
         public static IEnumerable<Tri> CubeTriangulation
         {
             get
             {
                 Vector3[] temp = new Vector3[] { Vector3.Zero, Vector3.Zero, Vector3.Zero };
                 int i = 0;
-                foreach(var v in CubeVerts())
+                foreach (var v in CubeVerts())
                 {
                     temp[i] = v;
                     if (i == 2)
@@ -100,101 +104,91 @@ namespace BareE
         /// </summary>
         public static IEnumerable<Tri> Triangulize(IEnumerable<Vector3> verts)
         {
-                Vector3[] temp = new Vector3[] { Vector3.Zero, Vector3.Zero, Vector3.Zero };
-                int i = 0;
-                foreach (var v in CubeVerts())
-                {
-                    temp[i] = v;
-                    if (i == 2)
-                        yield return new Tri(temp[0], temp[1], temp[2]);
-                    i = (i + 1) % 3;
-                }
+            Vector3[] temp = new Vector3[] { Vector3.Zero, Vector3.Zero, Vector3.Zero };
+            int i = 0;
+            foreach (var v in CubeVerts())
+            {
+                temp[i] = v;
+                if (i == 2)
+                    yield return new Tri(temp[0], temp[1], temp[2]);
+                i = (i + 1) % 3;
+            }
         }
-
 
         public static IEnumerable<Vector3> CubeVerts()
         {
-                //Top
-                yield return (new Vector3(-0.5f, 0.5f, 0.5f));
-                yield return (new Vector3(0.5f, 0.5f, -0.5f));
-                yield return (new Vector3(0.5f, 0.5f, 0.5f));
+            //Top
+            yield return (new Vector3(-0.5f, 0.5f, 0.5f));
+            yield return (new Vector3(0.5f, 0.5f, -0.5f));
+            yield return (new Vector3(0.5f, 0.5f, 0.5f));
 
-                yield return (new Vector3(-0.5f, 0.5f, 0.5f));
-                yield return (new Vector3(-0.5f, 0.5f, -0.5f));
-                yield return (new Vector3(0.5f, 0.5f, -0.5f));
+            yield return (new Vector3(-0.5f, 0.5f, 0.5f));
+            yield return (new Vector3(-0.5f, 0.5f, -0.5f));
+            yield return (new Vector3(0.5f, 0.5f, -0.5f));
 
+            //Bottom
+            yield return (new Vector3(-0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(0.5f, -0.5f, -0.5f));
 
-                //Bottom
-                yield return (new Vector3(-0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(0.5f, -0.5f, -0.5f));
+            yield return (new Vector3(-0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(0.5f, -0.5f, -0.5f));
+            yield return (new Vector3(-0.5f, -0.5f, -0.5f));
 
+            //Close
+            yield return (new Vector3(-0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(0.5f, 0.5f, 0.5f));
+            yield return (new Vector3(0.5f, -0.5f, 0.5f));
 
-                yield return (new Vector3(-0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(0.5f, -0.5f, -0.5f));
-                yield return (new Vector3(-0.5f, -0.5f, -0.5f));
+            yield return (new Vector3(-0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(-0.5f, 0.5f, 0.5f));
+            yield return (new Vector3(0.5f, 0.5f, 0.5f));
 
-                //Close
-                yield return (new Vector3(-0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(0.5f, 0.5f, 0.5f));
-                yield return (new Vector3(0.5f, -0.5f, 0.5f));
+            //Far
+            yield return (new Vector3(-0.5f, -0.5f, -0.5f));
+            yield return (new Vector3(0.5f, -0.5f, -0.5f));
+            yield return (new Vector3(0.5f, 0.5f, -0.5f));
 
-                yield return (new Vector3(-0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(-0.5f, 0.5f, 0.5f));
-                yield return (new Vector3(0.5f, 0.5f, 0.5f));
+            yield return (new Vector3(-0.5f, -0.5f, -0.5f));
+            yield return (new Vector3(0.5f, 0.5f, -0.5f));
+            yield return (new Vector3(-0.5f, 0.5f, -0.5f));
 
-                //Far
-                yield return (new Vector3(-0.5f, -0.5f, -0.5f));
-                yield return (new Vector3(0.5f, -0.5f, -0.5f));
-                yield return (new Vector3(0.5f, 0.5f, -0.5f));
+            //Left
+            yield return (new Vector3(-0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(-0.5f, -0.5f, -0.5f));
+            yield return (new Vector3(-0.5f, 0.5f, -0.5f));
 
-                yield return (new Vector3(-0.5f, -0.5f, -0.5f));
-                yield return (new Vector3(0.5f, 0.5f, -0.5f));
-                yield return (new Vector3(-0.5f, 0.5f, -0.5f));
+            yield return (new Vector3(-0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(-0.5f, 0.5f, -0.5f));
+            yield return (new Vector3(-0.5f, 0.5f, 0.5f));
 
-                //Left
-                yield return (new Vector3(-0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(-0.5f, -0.5f, -0.5f));
-                yield return (new Vector3(-0.5f, 0.5f, -0.5f));
+            //Right
+            yield return (new Vector3(0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(0.5f, 0.5f, -0.5f));
+            yield return (new Vector3(0.5f, -0.5f, -0.5f));
 
-
-                yield return (new Vector3(-0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(-0.5f, 0.5f, -0.5f));
-                yield return (new Vector3(-0.5f, 0.5f, 0.5f));
-
-
-                //Right
-                yield return (new Vector3(0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(0.5f, 0.5f, -0.5f));
-                yield return (new Vector3(0.5f, -0.5f, -0.5f));
-
-
-                yield return (new Vector3(0.5f, -0.5f, 0.5f));
-                yield return (new Vector3(0.5f, 0.5f, 0.5f));
-                yield return (new Vector3(0.5f, 0.5f, -0.5f));
-            
+            yield return (new Vector3(0.5f, -0.5f, 0.5f));
+            yield return (new Vector3(0.5f, 0.5f, 0.5f));
+            yield return (new Vector3(0.5f, 0.5f, -0.5f));
         }
-
 
         public static IEnumerable<Vector3> SphereVerts(int lod)
         {
             var vectors = new List<Vector3>();
-        var indices = new List<int>();
+            var indices = new List<int>();
 
-        Icosahedron(vectors, indices);
+            Icosahedron(vectors, indices);
 
-        for (var i = 0; i<lod; i++)
-            Subdivide(vectors, indices, true);
+            for (var i = 0; i < lod; i++)
+                Subdivide(vectors, indices, true);
 
-        /// normalize vectors to "inflate" the icosahedron into a sphere.
-        for (var i = 0; i<vectors.Count; i++)
-            yield return Vector3.Normalize(vectors[i]);
+            /// normalize vectors to "inflate" the icosahedron into a sphere.
+            for (var i = 0; i < vectors.Count; i++)
+                yield return Vector3.Normalize(vectors[i]);
         }
-
 
         private static int GetMidpointIndex(Dictionary<string, int> midpointIndices, List<Vector3> vertices, int i0, int i1)
         {
-
             var edgeKey = string.Format("{0}_{1}", Math.Min(i0, i1), Math.Max(i0, i1));
 
             var midpointIndex = -1;
@@ -216,9 +210,7 @@ namespace BareE
                 }
             }
 
-
             return midpointIndex;
-
         }
 
         /// <summary>
@@ -228,10 +220,9 @@ namespace BareE
         /// <param name="size"></param>
         /// <param name="vertices"></param>
         /// <param name="indices"></param>
-        /// note: icosahedron definition may have come from the OpenGL red book. I don't recall where I found it. 
+        /// note: icosahedron definition may have come from the OpenGL red book. I don't recall where I found it.
         private static void Icosahedron(List<Vector3> vertices, List<int> indices)
         {
-
             indices.AddRange(
                 new int[]
                 {
@@ -280,6 +271,7 @@ namespace BareE
                 }
             );
         }
+
         /// <remarks>
         ///      i0
         ///     /  \
@@ -319,7 +311,6 @@ namespace BareE
                     m02,m01,m12
                     }
                     );
-
             }
 
             indices.Clear();

@@ -9,15 +9,19 @@ namespace BareE.Systems
     [MessageAttribute("PlaySFX")]
     public struct PlaySFX
     {
-        public PlaySFX(String title) { Resource = title; }
+        public PlaySFX(String title)
+        {
+            Resource = title;
+        }
+
         public String Resource;
     }
 
-
-    public class SoundSystem:GameDev.GameSystem
+    public class SoundSystem : GameDev.GameSystem
     {
-        Dictionary<String, System.Media.SoundPlayer> soundboard;
-        System.Media.SoundPlayer player = new System.Media.SoundPlayer();
+        private Dictionary<String, System.Media.SoundPlayer> soundboard;
+        private System.Media.SoundPlayer player = new System.Media.SoundPlayer();
+
         private bool doEmitSound(PlaySFX req, GameState state, Instant instant)
         {
             state.Messages.AddMsg(new ConsoleInput($"Playing {req.Resource}"));
@@ -31,8 +35,6 @@ namespace BareE.Systems
         {
             soundboard = new Dictionary<string, System.Media.SoundPlayer>();
             State.Messages.AddListener<PlaySFX>(doEmitSound);
-
         }
-        
     }
 }

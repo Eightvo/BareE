@@ -35,10 +35,12 @@ namespace BareE.UTIL
                 }
             }
         }
+
         public static PixelFormat GetNativePixelFormat(GraphicsDevice device)
         {
             return device.MainSwapchain.Framebuffer.OutputDescription.ColorAttachments[0].Format;
         }
+
         public static Framebuffer CreateFramebuffer(GraphicsDevice device, uint resolutionX, uint resolutionY)
         {
             return CreateFramebuffer(device, resolutionX, resolutionY, GetNativePixelFormat(device), TextureSampleCount.Count1);
@@ -74,7 +76,6 @@ namespace BareE.UTIL
                     ArrayLayer=0,
                     MipLevel=0,
                     Target=drawTrgt
-
                 }
             };
 
@@ -89,12 +90,9 @@ namespace BareE.UTIL
             {
                 ColorTargets = cltTrgs,
                 DepthTarget = depTrg
-
             };
             var offscreenBuffer = device.ResourceFactory.CreateFramebuffer(frameBuffDesc);
             return offscreenBuffer;
         }
-
-
     }
 }

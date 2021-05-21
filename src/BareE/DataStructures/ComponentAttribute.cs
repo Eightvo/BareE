@@ -10,13 +10,14 @@ namespace BareE.DataStructures
 
     public class ComponentAttribute : Attribute
     {
-        static int _componentTypeID;
+        private static int _componentTypeID;
         public int CTypeID;
         public ComponentFlags Flags;
 
         public String Name;
         public Type OriginatingType;
-        public ComponentAttribute(String name):this(name, ComponentFlags.None)
+
+        public ComponentAttribute(String name) : this(name, ComponentFlags.None)
         {
         }
 
@@ -26,6 +27,7 @@ namespace BareE.DataStructures
             Name = name;
             CTypeID = ++_componentTypeID;
         }
+
         public override string ToString()
         {
             return $"[{CTypeID}] {Name}";

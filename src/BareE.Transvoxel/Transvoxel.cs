@@ -30,7 +30,6 @@
 //
 //================================================================================
 
-
 // The RegularCellData structure holds information about the triangulation
 // used for a single equivalence class in the modified Marching Cubes algorithm,
 // described in Section 3.2.
@@ -43,14 +42,24 @@ namespace BareE.Transvoxel
     public struct VDat
     {
         public ushort VertData { get; private set; }
-        public VDat(ushort i) { VertData = i; }
-        public static implicit operator VDat(ushort v) { return new VDat(v); }
+
+        public VDat(ushort i)
+        {
+            VertData = i;
+        }
+
+        public static implicit operator VDat(ushort v)
+        {
+            return new VDat(v);
+        }
+
         public byte UpperUpperNibble { get { return (byte)((VertData & 0xF000) >> 12); } }
         public byte LowerUpperNibble { get { return (byte)((VertData & 0x0F00) >> 8); } }
         public bool XFlag { get { return (UpperUpperNibble & 0b0001) != 0; } }
         public bool YFlag { get { return (UpperUpperNibble & 0b0010) != 0; } }
         public bool ZFlag { get { return (UpperUpperNibble & 0b0100) != 0; } }
         public bool CurrentCellFlag { get { return (UpperUpperNibble & 0b1000) != 0; } }
+
         public Vector3 Direction
         {
             get
@@ -58,6 +67,7 @@ namespace BareE.Transvoxel
                 return new Vector3(XFlag ? -1 : 0, YFlag ? -1 : 0, ZFlag ? -1 : 0);
             }
         }
+
         public int StoreageIndex
         {
             get
@@ -65,6 +75,7 @@ namespace BareE.Transvoxel
                 return LowerUpperNibble;
             }
         }
+
         public byte UpperByte { get { return (byte)((VertData & 0xFF00) >> 8); } }
         public byte LowerByte { get { return (byte)((VertData & 0x00FF) >> 0); } }
 
@@ -72,23 +83,24 @@ namespace BareE.Transvoxel
         public byte InvertedCorner1 { get { return (byte)(Corner1 ^ 7); } }
         public byte Corner2 { get { return (byte)(VertData & 0x000F); } }
         public byte InvertedCorner2 { get { return (byte)(Corner2 ^ 7); } }
+
         public override string ToString()
         {
             return $"{VertData:X}";
         }
     }
 
-
-    struct RegularCellData
+    internal struct RegularCellData
     {
-        byte geometryCounts;       // High nibble is vertex count, low nibble is triangle count.
-        public List<Byte> TriVertList;//[15]  // Up to 5 Triangles (15 points). 
+        private byte geometryCounts;       // High nibble is vertex count, low nibble is triangle count.
+        public List<Byte> TriVertList;//[15]  // Up to 5 Triangles (15 points).
 
         public RegularCellData(byte geoCounts, List<Byte> vertIndx)
         {
             geometryCounts = geoCounts;
             TriVertList = vertIndx;
         }
+
         public long VertexCount
         {
             get
@@ -106,19 +118,20 @@ namespace BareE.Transvoxel
         }
     }
 
-
     // The TransitionCellData structure holds information about the triangulation
     // used for a single equivalence class in the Transvoxel Algorithm transition cell,
     // described in Section 4.3.
-    struct TransitionCellData
+    internal struct TransitionCellData
     {
-        long geometryCounts;        // High nibble is vertex count, low nibble is triangle count.
-        List<byte> vertexIndex;  // Groups of 3 indexes giving the triangulation.
+        private long geometryCounts;        // High nibble is vertex count, low nibble is triangle count.
+        private List<byte> vertexIndex;  // Groups of 3 indexes giving the triangulation.
+
         public TransitionCellData(byte geoCounts, List<Byte> vertIndx)
         {
             geometryCounts = geoCounts;
             vertexIndex = vertIndx;
         }
+
         public long VertexCount
         {
             get
@@ -135,7 +148,6 @@ namespace BareE.Transvoxel
             }
         }
     }
-
 
     // The regularCellClass table maps an 8-bit regular Marching Cubes case index to
     // an equivalence class index. Even though there are 18 equivalence classes in our
@@ -165,7 +177,6 @@ namespace BareE.Transvoxel
     0x03, 0x04, 0x04, 0x03, 0x04, 0x03, 0x0D, 0x01, 0x04, 0x0D, 0x03, 0x01, 0x03, 0x01, 0x01, 0x00
 };
 
-
         // The regularCellData table holds the triangulation data for all 16 distinct classes to
         // which a case can be mapped by the regularCellClass table.
 
@@ -188,7 +199,6 @@ namespace BareE.Transvoxel
     new RegularCellData(0x75,new List<Byte>(){0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6}),
     new RegularCellData(0x95,new List<Byte>(){0, 4, 5, 0, 3, 4, 0, 1, 3, 1, 2, 3, 6, 7, 8}),
 };
-
 
         // The regularVertexData table gives the vertex locations for every one of the 256 possible
         // cases in the modified Marching Cubes algorithm. Each 16-bit value also provides information
@@ -456,7 +466,6 @@ namespace BareE.Transvoxel
     new List<VDat>() { }
 };
 
-
         // The transitionCellClass table maps a 9-bit transition cell case index to an equivalence
         // class index. Even though there are 73 equivalence classes in the Transvoxel Algorithm,
         // several of them use the same exact triangulations, just with different vertex locations.
@@ -464,7 +473,7 @@ namespace BareE.Transvoxel
         // The high bit is set in the cases for which the inverse state of the voxel data maps to
         // the equivalence class, meaning that the winding order of each triangle should be reversed.
 
-        static List<byte> transitionCellClass = new List<byte>
+        private static List<byte> transitionCellClass = new List<byte>
 {
     0x00, 0x01, 0x02, 0x84, 0x01, 0x05, 0x04, 0x04, 0x02, 0x87, 0x09, 0x8C, 0x84, 0x0B, 0x05, 0x05,
     0x01, 0x08, 0x07, 0x8D, 0x05, 0x0F, 0x8B, 0x0B, 0x04, 0x0D, 0x0C, 0x1C, 0x04, 0x8B, 0x85, 0x85,
@@ -500,12 +509,11 @@ namespace BareE.Transvoxel
     0x85, 0x85, 0x8B, 0x04, 0xA6, 0x25, 0x07, 0x82, 0x84, 0x84, 0x85, 0x81, 0x04, 0x82, 0x81, 0x80
 };
 
-
         // The transitionCellData table holds the triangulation data for all 56 distinct classes to
         // which a case can be mapped by the transitionCellClass table. The class index should be ANDed
         // with 0x7F before using it to look up triangulation data in this table.
 
-        static List<TransitionCellData> transitionCellData = new List<TransitionCellData>
+        private static List<TransitionCellData> transitionCellData = new List<TransitionCellData>
         {
     new TransitionCellData(0x00,new List<Byte>(){}),
     new TransitionCellData(0x42,new List<Byte>(){0, 1, 3, 1, 2, 3}),
@@ -565,15 +573,13 @@ namespace BareE.Transvoxel
     new TransitionCellData(0xA8,new List<Byte>(){0, 1, 5, 1, 4, 5, 1, 2, 4, 2, 3, 4, 2, 6, 3, 3, 6, 7, 0, 8, 9, 0, 5, 8}),
 };
 
-
         // The transitionCornerData table contains the transition cell corner reuse data
         // shown in Figure 4.18.
 
-        static List<byte> transitionCornerData = new List<byte>()
+        private static List<byte> transitionCornerData = new List<byte>()
         {
             0x30, 0x21, 0x20, 0x12, 0x40, 0x82, 0x10, 0x81, 0x80, 0x37, 0x27, 0x17, 0x87
         };
-
 
         // The transitionVertexData table gives the vertex locations for every one of the 512 possible
         // cases in the Tranvoxel Algorithm. Each 16-bit value also provides information about whether
@@ -581,7 +587,7 @@ namespace BareE.Transvoxel
         // contains the indexes for the two endpoints of the edge on which the vertex lies, as numbered
         // in Figure 4.16. The high byte contains the vertex reuse data shown in Figure 4.17.
 
-        static List<List<ushort>> transitionVertexData = new List<List<ushort>>()
+        private static List<List<ushort>> transitionVertexData = new List<List<ushort>>()
 {
     new List<ushort>(){ },
     new List<ushort>(){ 0x2301, 0x1503, 0x199B, 0x289A},

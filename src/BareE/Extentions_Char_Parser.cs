@@ -5,10 +5,8 @@ using System.Linq;
 
 namespace BareE
 {
-
     public static partial class Extentions
     {
-
         public static List<String> Operators = new List<string>()
         {
             "@","$","{","}","[","]","(",")",",",";","+","-","*",
@@ -22,14 +20,16 @@ namespace BareE
             {
                 case '\u000D': //Carriage Return
                 case '\u000A': //Line Feed
-                case '\u0085': //Next Line 
+                case '\u0085': //Next Line
                 case '\u2028': //Line Separator
                 case '\u2029': //Paragraph Separator
                     return true;
+
                 default:
                     return false;
             }
         }
+
         public static bool isWhitespaceChar(this char c)
         {
             switch (c)
@@ -55,6 +55,7 @@ namespace BareE
                 case '\u000B': //Vertical tab
                 case '\u000C': //Form Feed Character
                     return true;
+
                 default:
                     return false;
             }
@@ -67,6 +68,7 @@ namespace BareE
             if (c == '_') return true;
             return false;
         }
+
         public static bool isIdentifierChar(this char c)
         {
             if (isLetter(c)) return true;
@@ -94,6 +96,7 @@ namespace BareE
             }
             return false;
         }
+
         public static bool isBinaryDigit(this char c)
         {
             switch (c)
@@ -104,6 +107,7 @@ namespace BareE
             }
             return false;
         }
+
         public static bool isDecimalDigit(this char c)
         {
             switch (c)
@@ -153,6 +157,7 @@ namespace BareE
             }
             return false;
         }
+
         public static bool isConnector(this Char c)
         {
             switch (c)
@@ -171,6 +176,7 @@ namespace BareE
             }
             return false;
         }
+
         public static bool isCombiningCharacter(this char c)
         {
             UnicodeCategory uCat = CharUnicodeInfo.GetUnicodeCategory(c);
@@ -178,6 +184,7 @@ namespace BareE
             if (uCat == UnicodeCategory.SpacingCombiningMark) return true;
             return false;
         }
+
         public static bool isFormattingCharacter(this Char c)
         {
             UnicodeCategory uCat = CharUnicodeInfo.GetUnicodeCategory(c);
@@ -189,6 +196,7 @@ namespace BareE
         {
             return Operators.FirstOrDefault(x => x.StartsWith(s)) != null;
         }
+
         public static bool isOperatorOrPunctuator(this String s)
         {
             return Operators.Contains(s);

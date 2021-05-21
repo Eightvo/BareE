@@ -3,7 +3,7 @@
     /*
     public class MultiTextureMonolithShader
     {
-        struct MultiTextureVertex 
+        struct MultiTextureVertex
         {
             public Vector3 Position;
             public Vector3 Normal;
@@ -21,7 +21,6 @@
             }
             public uint SizeInBytes { get => (4 * 3) + (4 * 3) + (4 * 3) + (4 * 3) + (4 * 2); }
 
-            
             public static VertexLayoutDescription GetVertexLayoutDescription(uint instanceStepRate = 0)
             {
                 return new VertexLayoutDescription(
@@ -87,7 +86,6 @@
         ResourceLayout CameraMatrixResourceLayout;
         DeviceBuffer ModelMatrixBuffer;
 
-
         ResourceSet CameraResourceSet;
         Shader[] ShaderSet;
         ShaderSetDescription ShaderSetDesc;
@@ -143,7 +141,6 @@
                 );
 
             CreatePipeLine(device);
-
         }
 
         public virtual BlendStateDescription BlendState { get; set; } = BlendStateDescription.SingleOverrideBlend;
@@ -248,24 +245,19 @@
 
             Console.WriteLine($"Pipeline Resource Layout:");
 
-
             cmds.SetFramebuffer(Trgt);
             cmds.SetVertexBuffer(0, this.VertexBuffer);
             uint i = 0;
             var RssL = GetResourceSets().ToList();
             foreach (ResourceSet set in RssL)
             {
-
                 //if (set as )
                 Console.WriteLine($"Setting Resource Set {set.Name} into slot {i}");
                 cmds.SetGraphicsResourceSet(i++, set);
             }
 
             cmds.Draw((uint)verts.Count);
-
-
         }
-
     }
     */
 }

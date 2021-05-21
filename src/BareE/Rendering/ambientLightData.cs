@@ -6,18 +6,23 @@ namespace BareE.Rendering
     [StructLayout(LayoutKind.Sequential)]
     public struct ambientLightData
     {
-        Vector4 r0;
-        Vector4 r1;
-        Vector4 r2;
-        Vector4 r3;
+        private Vector4 r0;
+        private Vector4 r1;
+        private Vector4 r2;
+        private Vector4 r3;
+
         public Vector3 alc
         {
             get { return new Vector3(r0.X, r0.Y, r0.Z); }
             set { r0 = new Vector4(value, r0.W); }
         }
-        public float ali { get { return r0.W; } 
-            set { r0.W = value; } 
+
+        public float ali
+        {
+            get { return r0.W; }
+            set { r0.W = value; }
         }
+
         public Vector3 dlp
         {
             get { return new Vector3(r1.X, r1.Y, r1.Z); }
@@ -28,6 +33,7 @@ namespace BareE.Rendering
                 r1.Z = value.Z;
             }
         }
+
         public Vector3 slp
         {
             get
@@ -55,6 +61,7 @@ namespace BareE.Rendering
                 r3.X = value.Z;
             }
         }
+
         public Vector3 slt
         {
             get

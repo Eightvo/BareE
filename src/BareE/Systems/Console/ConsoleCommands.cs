@@ -10,7 +10,7 @@ namespace BareE.Systems
 {
     public partial class ConsoleSystem
     {
-        object[] EmitMsgFunc(String a, GameState s, Instant i)
+        private object[] EmitMsgFunc(String a, GameState s, Instant i)
         {
             a = a.Trim();
             var sInd = a.Trim().IndexOf(' ');
@@ -37,17 +37,17 @@ namespace BareE.Systems
             return ret.ToArray();
         }
 
-        object[] ListAssetsFunc(String args, GameState state, Instant instant)
+        private object[] ListAssetsFunc(String args, GameState state, Instant instant)
         {
             List<String> ret = new List<string>();
-            foreach(var v in AssetManager.AllFiles(args.Trim()))
+            foreach (var v in AssetManager.AllFiles(args.Trim()))
             {
                 ret.Add(v);
             }
             return ret.ToArray();
         }
 
-        object[] DescMsgFunc(String args, GameState state, Instant instant)
+        private object[] DescMsgFunc(String args, GameState state, Instant instant)
         {
             var v = MessageQueue._messageAliasMap[args.Trim()];
             if (v == null) return (new String[] { $"Could not find message {args}" });
@@ -59,7 +59,8 @@ namespace BareE.Systems
             ret.Add(args);
             return ret.ToArray();
         }
-        object[] DescCompFunc(String args, GameState state, Instant instant)
+
+        private object[] DescCompFunc(String args, GameState state, Instant instant)
         {
             var v = ComponentCache.ComponentAliasMap[args.Trim()];
 
@@ -72,6 +73,7 @@ namespace BareE.Systems
             ret.Add(args);
             return ret.ToArray();
         }
+
         private object[] listallents(string a, GameState s, Instant i)
         {
             bool parentsOnly = a.Trim() != "-a";
@@ -97,7 +99,8 @@ namespace BareE.Systems
             ret.Insert(0, $"Found {ret.Count}");
             return ret.ToArray();
         }
-        object[] DescEntFunc(string a, GameState s, Instant i)
+
+        private object[] DescEntFunc(string a, GameState s, Instant i)
         {
             var ret = new List<object>();
             a = a.Trim();
@@ -118,11 +121,12 @@ namespace BareE.Systems
             }
             return ret.ToArray();
         }
-        object[] DescEntCompFunc(string a, GameState s, Instant i)
+
+        private object[] DescEntCompFunc(string a, GameState s, Instant i)
         {
             var ret = new List<object>();
-            String entRef=String.Empty;
-            String compRef=String.Empty;
+            String entRef = String.Empty;
+            String compRef = String.Empty;
 
             Queue<LexerToken> tokenQ = new Queue<LexerToken>();
             foreach (var t in Lexer.DefaultLexer.Tokenize(a))
@@ -137,9 +141,9 @@ namespace BareE.Systems
                 case LexerToken.LexerTokenType.Identifier:
                     entRef = tokenQ.Dequeue().Text;
                     break;
+
                 default:
                     return new String[] { "Expected <ent> <component>" };
-
             }
             while (tokenQ.Peek().Type == LexerToken.LexerTokenType.Whitespace)
                 tokenQ.Dequeue();
@@ -151,15 +155,15 @@ namespace BareE.Systems
                 case LexerToken.LexerTokenType.Identifier:
                     compRef = tokenQ.Dequeue().Text;
                     break;
+
                 default:
                     return new String[] { "Expected <ent> <component>" };
-
             }
 
             return descEntComp(entRef, compRef, s);
         }
 
-        object[] descEntComp(String entRef, String compRef, GameState state)
+        private object[] descEntComp(String entRef, String compRef, GameState state)
         {
             int entId;
             Entity ent;
@@ -177,9 +181,6 @@ namespace BareE.Systems
             {
                 Newtonsoft.Json.JsonConvert.SerializeObject(cv, Newtonsoft.Json.Formatting.Indented)
             };
-
         }
-
-      
     }
 }

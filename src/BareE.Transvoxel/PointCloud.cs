@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
 namespace BareE.Transvoxel
 {
@@ -16,14 +15,22 @@ namespace BareE.Transvoxel
         /// TransvoxelDODN implements the algrorithm such that 0 indicates the sample is in empty space.
         /// </summary>
         float SampleValue { get; }
+
         float CreateEmptySpaceSamplevalue();
     }
+
     public abstract class PointProvider<D>
-        where D : struct,IPointData
+        where D : struct, IPointData
     {
-        D pointData;
+        private D pointData;
+
         public abstract D GetPoint(int Samplex, int Sampley, int Samplez);
-        public D GetPoint(Vector3 loc) { return GetPoint((int)loc.X, (int)loc.Y, (int)loc.Z); }
+
+        public D GetPoint(Vector3 loc)
+        {
+            return GetPoint((int)loc.X, (int)loc.Y, (int)loc.Z);
+        }
+
         /// <summary>
         /// A positive value indicates the sample is above the surface in empty space and not within an object.
         /// A Negative value indicates the sample is below the isosurface.
@@ -38,19 +45,32 @@ namespace BareE.Transvoxel
         /// <param name="Samplez"></param>
         /// <returns></returns>
         public abstract float GetSample(int Samplex, int Sampley, int Samplez);
+
         public abstract bool HasSample(int Samplex, int Sampley, int Samplez);
-        public float GetSample(Vector3 loc) { return GetSample((int)loc.X, (int)loc.Y, (int)loc.Z); }
-        public bool HasSample(Vector3 loc) { return HasSample((int)loc.X, (int)loc.Y, (int)loc.Z); }
+
+        public float GetSample(Vector3 loc)
+        {
+            return GetSample((int)loc.X, (int)loc.Y, (int)loc.Z);
+        }
+
+        public bool HasSample(Vector3 loc)
+        {
+            return HasSample((int)loc.X, (int)loc.Y, (int)loc.Z);
+        }
     }
+
     public class PointCloud<D>
         where D : struct, IPointData
     {
-        List<PointProvider<D>> providers = new List<PointProvider<D>>();
+        private List<PointProvider<D>> providers = new List<PointProvider<D>>();
+
         public void AddProvider(PointProvider<D> provider)
         {
             providers.Add(provider);
         }
+
         public int BlockSize = 16;
+
         //To create a Block of BlockSizexBlockSizexBlockSize Transvoxel (Cells BlockSize+2)x(Cells BlockSize+2)x(Cells BlockSize+2) volume sample points are required.
         //1 Extra layer around the minimum edge, 2 extra layers around the maximum edge.
         //
@@ -65,11 +85,11 @@ namespace BareE.Transvoxel
             }
 
             D[,,] ret = new D[BlockSize, BlockSize, BlockSize];
-            for(int m=0;m< BlockSize; m++)
+            for (int m = 0; m < BlockSize; m++)
             {
-                for(int n=0;n< BlockSize; n++)
+                for (int n = 0; n < BlockSize; n++)
                 {
-                    for(int l=0; l< BlockSize; l++)
+                    for (int l = 0; l < BlockSize; l++)
                     {
                         ret[m, n, l] = GetPoint(BlockX, BlockY, BlockZ, m, n, l);
                     }
@@ -77,6 +97,7 @@ namespace BareE.Transvoxel
             }
             return ret;
         }
+
         /// <summary>
         /// Block <X,y,z> Sample<m,n,l>
         /// </summary>
@@ -87,10 +108,10 @@ namespace BareE.Transvoxel
         /// <param name="Samplen"></param>
         /// <param name="Samplez"></param>
         /// <returns></returns>
-        D GetPoint(int BlockX, int BlockY, int BlockZ, int Samplex, int Sampley, int Samplez)
+        private D GetPoint(int BlockX, int BlockY, int BlockZ, int Samplex, int Sampley, int Samplez)
         {
             //We want the sample that is negative and closest to 0.
-            D contributer=default(D);
+            D contributer = default(D);
             D farContrib = default(D);
             var sX = BlockX * BlockSize + Samplex;
             var sY = BlockY * BlockSize + Sampley;
@@ -99,7 +120,7 @@ namespace BareE.Transvoxel
             float nearestSampleValue = float.MinValue;
             float farthestSampleValue = float.MaxValue;
             bool near = false;
-            foreach(PointProvider<D> provider in providers)
+            foreach (PointProvider<D> provider in providers)
             {
                 if (!provider.HasSample(sX, sY, sZ))
                     continue;
@@ -121,28 +142,28 @@ namespace BareE.Transvoxel
                         near = true;
                     }
                 }
-
             }
             if (near)
                 return contributer;
             else
                 return farContrib;
         }
-        
+
         public Vector3 GetBlockCordinate(Vector3 worldPoint)
         {
             return new Vector3((float)Math.Floor(worldPoint.X / BlockSize),
                                (float)Math.Floor(worldPoint.Y / BlockSize),
                                (float)Math.Floor(worldPoint.Z / BlockSize));
         }
+
         public Vector3 GetSampleCordinate(Vector3 worldPoint)
         {
             return new Vector3((float)Math.Truncate(worldPoint.X - Math.Floor(worldPoint.X / BlockSize) * BlockSize),
                                (float)Math.Truncate(worldPoint.Y - Math.Floor(worldPoint.Y / BlockSize) * BlockSize),
                                (float)Math.Truncate(worldPoint.Z - Math.Floor(worldPoint.Z / BlockSize) * BlockSize));
         }
-
     }
+
     public class CloudView<D>
         where D : struct, IPointData
     {
@@ -150,13 +171,14 @@ namespace BareE.Transvoxel
         public Vector3 Anchor { get; set; }
         public int BlockSize { get { return Data.BlockSize; } }
 
-        PointCloud<D> Data;
+        private PointCloud<D> Data;
 
-        int GetRelativeBlockIndex(int x, int y, int z)
+        private int GetRelativeBlockIndex(int x, int y, int z)
         {
             return (x + 1) + 3 * (y + 1) + 9 * (z + 1);
         }
-        static List<Vector3> RelativeBlocks = new List<Vector3>()
+
+        private static List<Vector3> RelativeBlocks = new List<Vector3>()
         {
             new Vector3(-1,-1,-1),
             new Vector3( 0,-1,-1),
@@ -194,8 +216,9 @@ namespace BareE.Transvoxel
             new Vector3( 0, 1, 1),
             new Vector3( 1, 1, 1),
         };
+
         //Per Fig 3.1
-        public  static List<Vector3> Corners = new List<Vector3>()
+        public static List<Vector3> Corners = new List<Vector3>()
         {
             new Vector3(0,0,0),
             new Vector3(1,0,0),
@@ -207,7 +230,7 @@ namespace BareE.Transvoxel
             new Vector3(1,1,1)
         };
 
-        Vector4 calculateCacheIndex(int relPtX, int relPtY, int relPtZ)
+        private Vector4 calculateCacheIndex(int relPtX, int relPtY, int relPtZ)
         {
             int rBx = relPtX < 0 ? -1 : relPtX / Data.BlockSize;
             int rBy = relPtY < 0 ? -1 : relPtY / Data.BlockSize;
@@ -221,7 +244,7 @@ namespace BareE.Transvoxel
                 );
         }
 
-        D[][,,] NearDataCache = new D[27][,,];
+        private D[][,,] NearDataCache = new D[27][,,];
 
         /// <summary>
         /// Returns a Cube of Sample Data for the Block of data
@@ -241,7 +264,6 @@ namespace BareE.Transvoxel
             }
         }
 
-
         //Anchor is is sample space.
         //There are BlockSize samples per Block
         public void Initialize(PointCloud<D> data, Vector3 anchor)
@@ -250,7 +272,8 @@ namespace BareE.Transvoxel
             Anchor = anchor;
             RefillCache(anchor);
         }
-        void RefillCache(Vector3 anchor)
+
+        private void RefillCache(Vector3 anchor)
         {
             Anchor = anchor;
             AnchorBlock = Data.GetBlockCordinate(anchor);
@@ -265,6 +288,7 @@ namespace BareE.Transvoxel
                 NearDataCache[indx] = blk;
             }
         }
+
         public void UpdateAnchor(Vector3 newAnchor)
         {
             var newAnchorBlock = Data.GetBlockCordinate(newAnchor);
@@ -285,7 +309,8 @@ namespace BareE.Transvoxel
                 if (shiftedIndex >= 0 && shiftedIndex < 27)
                 {
                     NearDataCache[i] = NearDataCache[shiftedIndex];
-                } else
+                }
+                else
                 {
                     var requestedWorldBlock = newAnchorBlock + RelativeBlocks[i];
                     NearDataCache[i] = Data.GetPointBlock((int)requestedWorldBlock.X, (int)requestedWorldBlock.Y, (int)requestedWorldBlock.Z);
@@ -295,7 +320,6 @@ namespace BareE.Transvoxel
             Anchor = new Vector3(Anchor.X + Data.BlockSize * deltaVec.X,
                                Anchor.Y + Data.BlockSize * deltaVec.Y,
                                Anchor.Z + Data.BlockSize * deltaVec.Z);
-
         }
 
         /// <summary>
@@ -328,28 +352,28 @@ namespace BareE.Transvoxel
                     m = (byte)(m | f);
                 f = (byte)(f << 1);
             }
-           // if (m == (0xFF)) return 0;
+            // if (m == (0xFF)) return 0;
             return m;
         }
 
         public Vector3 CalculateVertex(int Cellx, int Celly, int Cellz, VDat v)
         {
-          //  Console.WriteLine($"\t\tCalculating Vertex on Edge {v.UpperByte:X} C{v.Corner1} to C{v.Corner2} for cell {Cellx} {Celly} {Cellz}");
-            //Translate cellRootPt to C0 of cell being calculated 
+            //  Console.WriteLine($"\t\tCalculating Vertex on Edge {v.UpperByte:X} C{v.Corner1} to C{v.Corner2} for cell {Cellx} {Celly} {Cellz}");
+            //Translate cellRootPt to C0 of cell being calculated
             Vector3 cellRootPt = Anchor + new Vector3(Cellx, Celly, Cellz);
-        //    Console.WriteLine($"\t\t\tRoot Point: {cellRootPt}");
+            //    Console.WriteLine($"\t\t\tRoot Point: {cellRootPt}");
             //cellRootPt += v.Direction;
             //Get the Corner Directions.
             Vector3 c1 = Corners[v.Corner2] + cellRootPt;
-            Vector3 c2= Corners[v.Corner1] + cellRootPt;
+            Vector3 c2 = Corners[v.Corner1] + cellRootPt;
             float sampleValue1 = GetSampleValue(c1);
             float sampleValue2 = GetSampleValue(c2);
             if (sampleValue1 == 0) return c1;
             if (sampleValue2 == 0) return c2;
-        //    Console.WriteLine($"\t\t\tEP0: {c1} = {sampleValue1}");
-        //    Console.WriteLine($"\t\t\tEP1: {c2} = {sampleValue2}");
+            //    Console.WriteLine($"\t\t\tEP0: {c1} = {sampleValue1}");
+            //    Console.WriteLine($"\t\t\tEP1: {c2} = {sampleValue2}");
             var T = sampleValue1 / (sampleValue1 - sampleValue2);
-        //    Console.WriteLine($"\t\t\t T={T}");
+            //    Console.WriteLine($"\t\t\t T={T}");
             var ret = (T * c1) + ((1 - T) * c2);
             return ret;
         }
@@ -368,90 +392,99 @@ namespace BareE.Transvoxel
             D PT = Blk[(int)cacheKey.Y, (int)cacheKey.Z, (int)cacheKey.W];
             return PT.SampleValue;
         }
+
         public float GetSampleValue(Vector3 gV)
         {
             return GetSampleValue((int)gV.X, (int)gV.Y, (int)gV.Z);
         }
+
         public IEnumerable<Tuple<Vector3, Vector3, Vector3>> TriangulateSurface()
         {
-            foreach (var r in TriangulateSurface(new Vector3(-Data.BlockSize + 2, -Data.BlockSize + 2, -Data.BlockSize + 2), 
-                                                 new Vector3((Data.BlockSize * 2) - 2, (Data.BlockSize * 2) - 2,(Data.BlockSize * 2) - 2)))
+            foreach (var r in TriangulateSurface(new Vector3(-Data.BlockSize + 2, -Data.BlockSize + 2, -Data.BlockSize + 2),
+                                                 new Vector3((Data.BlockSize * 2) - 2, (Data.BlockSize * 2) - 2, (Data.BlockSize * 2) - 2)))
             {
                 yield return r;
             }
         }
 
-        public IEnumerable<Tuple<Vector3,Vector3,Vector3>> TriangulateSurface(Vector3 minCell, Vector3 maxCell)
+        public IEnumerable<Tuple<Vector3, Vector3, Vector3>> TriangulateSurface(Vector3 minCell, Vector3 maxCell)
         {
-            for(int z=(int)minCell.Z;z<maxCell.Z;z++)
+            for (int z = (int)minCell.Z; z < maxCell.Z; z++)
             {
-                for (int y=(int)minCell.Y;y<maxCell.Y;y++)
+                for (int y = (int)minCell.Y; y < maxCell.Y; y++)
                 {
-                    for(int x=(int)minCell.X;x<maxCell.X;x++)
+                    for (int x = (int)minCell.X; x < maxCell.X; x++)
                     {
-                        foreach(var r in TriangulateCell(x, y, z))
+                        foreach (var r in TriangulateCell(x, y, z))
                             yield return r;
                     }
                 }
             }
         }
+
         public IEnumerable<Tuple<Vector3, Vector3, Vector3>> TriangulateCell(int x, int y, int z)
         {
-
             yield return null;
         }
-
 
         public void ForceRefreshAll()
         {
             RefillCache(Anchor);
         }
-
     }
-    struct cellConstructionData
+
+    internal struct cellConstructionData
     {
-        uint[] createdVerticies;
+        private uint[] createdVerticies;
+
         public void SaveVertex(int cellVertexIndex, uint globalVertexIndex)
         {
             (createdVerticies ?? new uint[4])[cellVertexIndex] = globalVertexIndex;
         }
+
         public uint retreiveVertex(int cellVertexIndex)
         {
             return (createdVerticies ?? new uint[4])[cellVertexIndex];
         }
     }
+
     public class TransvoxelTriangulation<D>
-        where D: struct, IPointData
+        where D : struct, IPointData
     {
         public List<Vector3> vertexPoints = new List<Vector3>();
         public List<uint> vertexIndexes = new List<uint>();
-        cellConstructionData[,,] tempData;
+        private cellConstructionData[,,] tempData;
 
-        byte validDirections = 0;
+        private byte validDirections = 0;
+
         //False Means create vertex.
         //So Point 7 <Maximal point> Indicated with 8th bit always returns false to IsDirectionValid.
         //Otherwise return false on minimal planes while constructing cells.
-        bool IsDirectionValid(byte dir)
+        private bool IsDirectionValid(byte dir)
         {
             return (dir & validDirections) == dir;
         }
+
         #region DebugVisualizationHelpers
-        bool IsCornerActive(int cornerIndex, byte casecode)
+
+        private bool IsCornerActive(int cornerIndex, byte casecode)
         {
             var mdp = (int)Math.Pow(2, cornerIndex);
             return (casecode & (mdp)) == (mdp);
         }
-        bool IsEdgeActive(int edgeLabel, byte casecode)
+
+        private bool IsEdgeActive(int edgeLabel, byte casecode)
         {
             var eqClass = Trannsvoxel.regularCellClass[casecode];
             var vrtxData = Trannsvoxel.regularVertexData[casecode];
-            foreach(var v in vrtxData)
+            foreach (var v in vrtxData)
             {
                 if (v.UpperByte == edgeLabel) return true;
             }
             return false;
         }
-        void DisplayPoints(int col, int row, byte ccode)
+
+        private void DisplayPoints(int col, int row, byte ccode)
         {
             var eqClass = Trannsvoxel.regularCellClass[ccode];
             var eqClassData = Trannsvoxel.regularCellData[eqClass];
@@ -536,15 +569,15 @@ namespace BareE.Transvoxel
             Console.ForegroundColor = det ? trueColor : falseColor;
             Console.Write(v1);
         }
-        #endregion
 
+        #endregion DebugVisualizationHelpers
 
-        bool hasArea(Vector3 pt1, Vector3 pt2, Vector3 pt3)
+        private bool hasArea(Vector3 pt1, Vector3 pt2, Vector3 pt3)
         {
-
             return true;
         }
-        void TriangulateCell(CloudView<D> view, int x, int y, int z, int cLvl, int pLvl)
+
+        private void TriangulateCell(CloudView<D> view, int x, int y, int z, int cLvl, int pLvl)
         {
             //Console.Clear();
             var caseCode = view.CalculateCaseCode(x, y, z, 0);
@@ -555,24 +588,24 @@ namespace BareE.Transvoxel
             //Console.WriteLine($"Anchor: {x}, {y}, {z}. Case Code: {caseCode} => EC:{eqClass} Tris:{eqClassData.TriangleCount} Verts:{eqClassData.VertexCount}");
             List<Vector3> generatedVertex = new List<Vector3>();
             List<int> useOrder = new List<int>();
-            foreach(var ed in vrtxData)
+            foreach (var ed in vrtxData)
             {
                 //Do the calculating of the vertex if it is needed to be created. Otherwise try to reuse a vertex.
                 var vPos = view.CalculateVertex(x, y, z, ed);
                 generatedVertex.Add(vPos);
                 useOrder.Add(-1);
-              //  Console.WriteLine($"\t0x{ed.VertData:X} CurrentCell? {ed.CurrentCellFlag} {ed.Direction} Stored: {ed.StoreageIndex} Vertex Position: { vPos}");
+                //  Console.WriteLine($"\t0x{ed.VertData:X} CurrentCell? {ed.CurrentCellFlag} {ed.Direction} Stored: {ed.StoreageIndex} Vertex Position: { vPos}");
             }
 
-           // Console.WriteLine();
+            // Console.WriteLine();
             for (int i = 0; i < eqClassData.TriangleCount; i++)
             {
                 var pt1 = eqClassData.TriVertList[(i * 3) + 0];
                 var pt2 = eqClassData.TriVertList[(i * 3) + 1];
                 var pt3 = eqClassData.TriVertList[(i * 3) + 2];
-            //    Console.Write($"{pt1} {vrtxData[pt1]:X} {generatedVertex[pt1]}| {pt2} {vrtxData[pt2]:X} {generatedVertex[pt2]}|{pt3} {vrtxData[pt3]:X} {generatedVertex[pt3]}");
+                //    Console.Write($"{pt1} {vrtxData[pt1]:X} {generatedVertex[pt1]}| {pt2} {vrtxData[pt2]:X} {generatedVertex[pt2]}|{pt3} {vrtxData[pt3]:X} {generatedVertex[pt3]}");
                 var noArea = !hasArea(generatedVertex[pt1], generatedVertex[pt2], generatedVertex[pt3]);
-            //    Console.WriteLine($"No Area: {noArea}");
+                //    Console.WriteLine($"No Area: {noArea}");
                 if (noArea) continue;
                 var uo = useOrder[pt1];
                 if (uo == -1)
@@ -597,24 +630,23 @@ namespace BareE.Transvoxel
                     vertexPoints.Add(generatedVertex[pt3]);
                 };
                 vertexIndexes.Add((uint)uo);
-
-
             }
-          //  var ct = Console.CursorTop;
-           // DisplayPoints(0, ct, caseCode);
+            //  var ct = Console.CursorTop;
+            // DisplayPoints(0, ct, caseCode);
         }
+
         public void Triangulate(CloudView<D> view)
         {
             var minCell = -view.BlockSize + 1;
             var maxCell = (view.BlockSize * 2) - 2;
-            Triangulate(view,new Vector3(minCell), new Vector3(maxCell));
-            
+            Triangulate(view, new Vector3(minCell), new Vector3(maxCell));
         }
+
         public void Triangulate(CloudView<D> view, Vector3 minCell, Vector3 maxCell)
         {
             vertexIndexes.Clear();
             vertexPoints.Clear();
-            tempData = new cellConstructionData[2,view.BlockSize, view.BlockSize];
+            tempData = new cellConstructionData[2, view.BlockSize, view.BlockSize];
             int currLvl = 1;
             int prevLvl = 0;
             validDirections = 0;
@@ -627,7 +659,7 @@ namespace BareE.Transvoxel
                     for (int x = (int)minCell.X; x < maxCell.X; x++)
                     {
                         TriangulateCell(view, x, y, z, currLvl, prevLvl);
-                        validDirections =(byte)(validDirections | 0b0001);
+                        validDirections = (byte)(validDirections | 0b0001);
                     }
                     validDirections = (byte)(validDirections | 0b0010);
                 }
@@ -637,5 +669,4 @@ namespace BareE.Transvoxel
             }
         }
     }
-
 }

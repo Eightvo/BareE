@@ -13,29 +13,53 @@ namespace BareE.Systems
     [MessageAttribute("PlaySong")]
     public struct PlaySong
     {
-        public PlaySong(String station, String title) { Station = station; filename = title; Pause = false; Stop = false; }
+        public PlaySong(String station, String title)
+        {
+            Station = station; filename = title; Pause = false; Stop = false;
+        }
+
         public String filename;
         public bool Pause;
         public bool Stop;
         public String Station;
-        public static PlaySong Paused() { return new PlaySong() { Pause = true }; }
-        public static PlaySong UnPaused() { return new PlaySong() { Pause = false }; }
-        public static PlaySong Next() { return new PlaySong(); }
-        public static PlaySong Stopped() { return new PlaySong { Stop = true }; }
-        public static PlaySong SetStation(String station) { return new PlaySong() { Station = station }; }
-    }
 
+        public static PlaySong Paused()
+        {
+            return new PlaySong() { Pause = true };
+        }
+
+        public static PlaySong UnPaused()
+        {
+            return new PlaySong() { Pause = false };
+        }
+
+        public static PlaySong Next()
+        {
+            return new PlaySong();
+        }
+
+        public static PlaySong Stopped()
+        {
+            return new PlaySong { Stop = true };
+        }
+
+        public static PlaySong SetStation(String station)
+        {
+            return new PlaySong() { Station = station };
+        }
+    }
 
     public class MusicSystem : GameDev.GameSystem
     {
-        NetCoreAudio.Player player;
-        Radio Radio;
-        String CurrentStation;
-        int currentSongIndex = 0;
-        public MusicSystem(string radiofile):this(Newtonsoft.Json.JsonConvert.DeserializeObject<Radio>(AssetManager.ReadFile(radiofile)))
-        {
+        private NetCoreAudio.Player player;
+        private Radio Radio;
+        private String CurrentStation;
+        private int currentSongIndex = 0;
 
+        public MusicSystem(string radiofile) : this(Newtonsoft.Json.JsonConvert.DeserializeObject<Radio>(AssetManager.ReadFile(radiofile)))
+        {
         }
+
         public MusicSystem(Radio radio)
         {
             Radio = new Radio()
@@ -44,10 +68,11 @@ namespace BareE.Systems
             };
         }
 
-        Queue<String> _recentlyPlayedSongs = new Queue<string>();
+        private Queue<String> _recentlyPlayedSongs = new Queue<string>();
 
-        Random rng = new Random();
-        bool handlePlaySong(PlaySong msg, GameState state, Instant instant)
+        private Random rng = new Random();
+
+        private bool handlePlaySong(PlaySong msg, GameState state, Instant instant)
         {
             if (!String.IsNullOrEmpty(msg.Station))
                 CurrentStation = msg.Station;
@@ -63,6 +88,7 @@ namespace BareE.Systems
                     currentSongIndex = (currentSongIndex + 1) % (Radio.Stations[CurrentStation].PlayList.Length);
                     song = Radio.Stations[CurrentStation].PlayList[currentSongIndex];
                     break;
+
                 case RadioStationPlayOrder.Shuffle:
                     while (String.IsNullOrEmpty(song))
                     {
@@ -75,10 +101,11 @@ namespace BareE.Systems
             }
 
             _recentlyPlayedSongs.Enqueue(song);
-            
-             player.Play(song);
+
+            player.Play(song);
             return true;
         }
+
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
             player = new NetCoreAudio.Player();
@@ -106,11 +133,13 @@ namespace BareE.Systems
             }); ; ;
         }
 
-        bool playerHasFinished = false;
+        private bool playerHasFinished = false;
+
         private void Player_PlaybackFinished(object sender, EventArgs e)
         {
             playerHasFinished = true;
         }
+
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
             if (playerHasFinished)
@@ -121,14 +150,14 @@ namespace BareE.Systems
                         handlePlaySong(PlaySong.Next(), State, Instant);
                     else
                     {
-                       // Console.WriteLine($"{Radio.Stations[CurrentStation].SongDelay} {Instant.SessionDuration}");
+                        // Console.WriteLine($"{Radio.Stations[CurrentStation].SongDelay} {Instant.SessionDuration}");
                         State.Messages.EmitRealTimeDelayedMessage(Radio.Stations[CurrentStation].SongDelay, PlaySong.Next(), Instant);
                     }
-
                 }
                 playerHasFinished = false;
             }
         }
+
         public override void Unload()
         {
             if (player.Playing)
@@ -136,13 +165,12 @@ namespace BareE.Systems
         }
     }
 
-
-
     public enum RadioStationPlayOrder
     {
         Sequential,
         Shuffle
     }
+
     public class Radio
     {
         public Dictionary<String, Station> Stations { get; set; }
@@ -150,11 +178,10 @@ namespace BareE.Systems
 
     public class Station
     {
-
         [JsonConverter(typeof(StringEnumConverter))]
         public RadioStationPlayOrder PlayOrder { get; set; }
+
         public int SongDelay { get; set; }
         public string[] PlayList { get; set; }
     }
-
 }

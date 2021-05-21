@@ -22,10 +22,9 @@ namespace BareE.Harness
 {
     public class TestGame : GameDev.Game
     {
-        public TestGame(GameState initialState, GameEnvironment env) : base(initialState, env)
+        public TestGame(GameState initialState, GameEnvironment env) : base(new TestGameScene(),initialState, env)
         {
             InputHandler.LoadFromConfig("BareE.Harness.Assets.Def.default.controls");
-            ActiveScene = new TestGameScene();
         }
     }
 
@@ -446,6 +445,15 @@ namespace BareE.Harness
             if (ImGuiNET.ImGui.Button("Cylce Mode"))
             {
                 State.Messages.AddMsg(new ConsoleInput("CycleMode"));
+            }
+            if (IG.Button("To that other scene"))
+            {
+                State.Messages.AddMsg<Messages.TransitionScene>(new Messages.TransitionScene()
+                {
+                    Preloaded = false,
+                    Scene = new VerySimpleScene(),
+                    State = new GameState()
+                });
             }
             ImGuiNET.ImGui.End();
         }

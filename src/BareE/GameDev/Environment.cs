@@ -151,6 +151,10 @@ namespace BareE.GameDev
         [JsonIgnore]
         public RenderDoc rd;
 
+
+        [JsonIgnore]
+        GameSceneBase LoadingScene { get; set; }
+
         public OutputDescription GetBackbufferOutputDescription()
         {
             var d = LeftEyeBackBuffer.OutputDescription;
@@ -164,6 +168,9 @@ namespace BareE.GameDev
         }
         public PixelFormat VRPixelFormat { get { return IsVR ? VRSettings.Context.LeftEyeFramebuffer.ColorTargets[0].Target.Format : Window.Device.SwapchainFramebuffer.ColorTargets[0].Target.Format; } }
         
+
+
+
 
 
         private static GameEnvironmentWindow initWindow(GameEnvironmentWindow gew,bool isvr, VRSettings vrs, GraphicsBackend backend)

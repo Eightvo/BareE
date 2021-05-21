@@ -1,19 +1,50 @@
 ﻿using BareE.GameDev;
 
+using System;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 using Veldrid.Sdl2;
 
 namespace BareE
 {
+
+    struct BGLoadData
+    {
+        public Messages.TransitionScene transition;
+        public GameState state;
+        public Instant instant;
+    }
+
     public class Engine
     {
         Game ActiveGame;
         GameEnvironment ActiveEnvironment { get { return ActiveGame.Environment; } }
         GameState ActiveState { get { return ActiveGame.State; } }
-
         bool isRunning = true;
+        GameSceneBase onDeckScene;
+        GameState onDeckState;
+        bool isTransitioning = false;
 
+        void LoadGameSceneInBackground(Messages.TransitionScene transition, GameState state, Instant instant)
+        {
+            transition.State.Messages.AddListener<Messages.ExitGame>(HandleExitGameMessage);
+            transition.State.Messages.AddListener<Messages.TransitionScene>(HandleTransitionScene);
+
+            transition.Scene.DoLoad(instant, transition.State, ActiveEnvironment);
+            transition.Scene.DoInitialize(instant, transition.State, ActiveEnvironment);
+            onDeckScene  = transition.Scene;
+            onDeckState = transition.State;
+        }
+        bool HandleTransitionScene(Messages.TransitionScene transition, GameState state, Instant instant)
+        {
+            if (!isTransitioning)
+                isTransitioning = true;
+            else
+                return true;
+            Task.Run(()=> LoadGameSceneInBackground(transition, transition.State, instant));
+            return true;
+        }
         bool HandleExitGameMessage(Messages.ExitGame msg, GameState state, Instant instant)
         {
             isRunning = false;
@@ -27,27 +58,29 @@ namespace BareE
             ActiveGame = game;
             Instant instant = game.State.Clock.CaptureInstant();
             game.State.Messages.AddListener<Messages.ExitGame>(HandleExitGameMessage);
+            game.State.Messages.AddListener<Messages.TransitionScene>(HandleTransitionScene);
             game.ActiveScene.DoLoad(instant,game.State, game.Environment);
             game.ActiveScene.DoInitialize(instant, game.State, game.Environment);
             Sdl2Events.Subscribe(HandleEvent);
             float cummulativeDelta = 0;
             while (isRunning)
             {
-                game.State.Clock.AdvanceTick();
-                instant = game.State.Clock.CaptureInstant();
-                cummulativeDelta += instant.TickDelta;
-                game.State.Messages.ProcessMessages(instant, game.State);
-                game.ActiveScene.DoUpdate(instant, game.State, game.Environment);
-                var ss = game.Environment.Window.Window.PumpEvents();
-                //if (cummulativeDelta>(1000.0f/game.Environment.TargetFramerate))
-                //{
+                if (onDeckScene != null)
+                {
+                    ActiveGame.ActiveScene = onDeckScene;
+                    ActiveGame.State = onDeckState;
+                    onDeckScene = null;
+                    isTransitioning = false;
+                }
+                    game.State.Clock.AdvanceTick();
+                    instant = game.State.Clock.CaptureInstant();
+                    cummulativeDelta += instant.TickDelta;
+
+                    game.State.Messages.ProcessMessages(instant, game.State);
+                    game.ActiveScene.DoUpdate(instant, game.State, game.Environment);
+                    var ss = game.Environment.Window.Window.PumpEvents();
                     game.Environment.Window.IGR.Update((float)instant.TickDelta / 1000f, ss);
                     game.ActiveScene.DoRender(instant, game.State, game.Environment);
-                 //   cummulativeDelta = 0;
-                //}else
-               // {
-               //     int i = 0;
-               // }
             }
             game.Environment.Window.Window.Close();
             Log.EmitTrace($"Exit game");

@@ -14,7 +14,7 @@ namespace BareE.GameDev
     {
 
         public PriorityQueue<GameSystem> Systems = new PriorityQueue<GameSystem>();
-
+        public GameState State { get; set; }
         FramebufferToScreen leftEyeToScreen;
         FramebufferToScreen rightEyeToScreen;
         FramebufferToScreen hudToScreen;

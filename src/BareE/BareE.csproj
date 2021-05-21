@@ -39,13 +39,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="sdl2" Version="2.0.5" />
     <PackageReference Include="System.Windows.Extensions" Version="5.0.0" />
-    <PackageReference Include="Veldrid" Version="4.9.0-ga769c2971c" />
-    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-ga769c2971c" />
-    <PackageReference Include="Veldrid.ImGui" Version="5.72.0-ga769c2971c" />
-    <PackageReference Include="Veldrid.RenderDoc" Version="1.0.1-ga769c2971c" />
-    <PackageReference Include="Veldrid.SPIRV" Version="1.0.14" />
-    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-ga769c2971c" />
-    <PackageReference Include="Veldrid.VirtualReality" Version="1.0.1-ga769c2971c" />
+    <PackageReference Include="Veldrid" Version="4.9.0-gffcf1cdb33" />
+    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-gffcf1cdb33" />
+    <PackageReference Include="Veldrid.ImGui" Version="5.72.0-gffcf1cdb33" />
+    <PackageReference Include="Veldrid.RenderDoc" Version="1.0.1-gffcf1cdb33" />
+    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-gffcf1cdb33" />
+    <PackageReference Include="Veldrid.VirtualReality" Version="1.0.1-gffcf1cdb33" />
   </ItemGroup>
 
 </Project>

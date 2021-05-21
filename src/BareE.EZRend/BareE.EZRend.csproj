@@ -85,11 +85,11 @@
   <ItemGroup>
     <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Veldrid" Version="4.9.0-ga769c2971c" />
-    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-ga769c2971c" />
-    <PackageReference Include="Veldrid.ImGui" Version="5.72.0-ga769c2971c" />
+    <PackageReference Include="Veldrid" Version="4.9.0-gffcf1cdb33" />
+    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-gffcf1cdb33" />
+    <PackageReference Include="Veldrid.ImGui" Version="5.72.0-gffcf1cdb33" />
     <PackageReference Include="Veldrid.SPIRV" Version="1.0.14" />
-    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-ga769c2971c" />
+    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-gffcf1cdb33" />
   </ItemGroup>
 
   <ItemGroup>

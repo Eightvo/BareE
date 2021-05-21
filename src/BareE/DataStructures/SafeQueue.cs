@@ -10,7 +10,7 @@ namespace BareE.DataStructures
     public class SafeQueue<T> :IEnumerable
     {
         Queue<T> _queue;
-        object SyncRoot;
+        object SyncRoot=new object();
         public void SafeEnqueue(T item)
         {
             lock (SyncRoot)

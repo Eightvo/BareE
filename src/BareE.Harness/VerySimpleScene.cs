@@ -41,12 +41,12 @@ namespace BareE.Harness
         {
             IG.Begin("Simple Scene");
             IG.Text("Text");
-            if (IG.Button("To that other scene"))
+            if (IG.Button("Home"))
             {
                 State.Messages.AddMsg<Messages.TransitionScene>(new Messages.TransitionScene()
                 {
                     Preloaded = false,
-                    Scene=new TestGameScene(),
+                    Scene=new SceneSelectorScene(),
                      State=new GameState()
                 }) ;
             }

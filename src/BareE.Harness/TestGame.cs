@@ -17,12 +17,13 @@ using Veldrid;
 
 using Matrix4x4 = System.Numerics.Matrix4x4;
 using BareE.Rendering;
+using System.Threading.Tasks;
 
 namespace BareE.Harness
 {
     public class TestGame : GameDev.Game
     {
-        public TestGame(GameState initialState, GameEnvironment env) : base(new TestGameScene(),initialState, env)
+        public TestGame(GameState initialState, GameEnvironment env) : base(new SceneSelectorScene(),initialState, env)
         {
             InputHandler.LoadFromConfig("BareE.Harness.Assets.Def.default.controls");
         }
@@ -336,6 +337,7 @@ namespace BareE.Harness
             }
 
         }
+
         public override void RenderEye(Instant Instant, GameState State, GameEnvironment env, Matrix4x4 eyeMat, Framebuffer outbuffer, CommandList cmds)
         {
             cmds.ClearColorTarget(0, RgbaFloat.Black);
@@ -350,7 +352,6 @@ namespace BareE.Harness
                 foreach (var mesh in v.Model.Meshes.Values)
                     mesh.Render(outbuffer, cmds, LightData, eyeMat, posComponent.Scale * posComponent.RotationMatrix * posComponent.TranslationMatrix);
             }
-
             clrNrml.Render(outbuffer, cmds, LightData, eyeMat, Matrix4x4.Identity);
         }
 
@@ -446,12 +447,12 @@ namespace BareE.Harness
             {
                 State.Messages.AddMsg(new ConsoleInput("CycleMode"));
             }
-            if (IG.Button("To that other scene"))
+            if (IG.Button("Home"))
             {
                 State.Messages.AddMsg<Messages.TransitionScene>(new Messages.TransitionScene()
                 {
                     Preloaded = false,
-                    Scene = new VerySimpleScene(),
+                    Scene = new SceneSelectorScene(),
                     State = new GameState()
                 });
             }

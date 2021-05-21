@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.EZRend", "BareE.EZRen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.Harness", "BareE.Harness\BareE.Harness.csproj", "{04121B2A-93FF-4933-936C-6AB22E350593}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.Transvoxel", "BareE.Transvoxel\BareE.Transvoxel.csproj", "{C7649C9F-7A30-4B52-AE30-79A49EC965B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{04121B2A-93FF-4933-936C-6AB22E350593}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04121B2A-93FF-4933-936C-6AB22E350593}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04121B2A-93FF-4933-936C-6AB22E350593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7649C9F-7A30-4B52-AE30-79A49EC965B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7649C9F-7A30-4B52-AE30-79A49EC965B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7649C9F-7A30-4B52-AE30-79A49EC965B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7649C9F-7A30-4B52-AE30-79A49EC965B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

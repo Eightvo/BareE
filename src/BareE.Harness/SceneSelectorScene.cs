@@ -36,6 +36,15 @@ namespace BareE.Harness
                     State = new GameState()
                 });
             }
+            if (IG.Button("Transvoxel Test Scene"))
+            {
+                State.Messages.AddMsg<TransitionScene>(new TransitionScene()
+                {
+                    Preloaded = false,
+                    Scene = new TransvoxelScene(),
+                    State = new GameState()
+                });
+            }
             IG.End();
         }
     }

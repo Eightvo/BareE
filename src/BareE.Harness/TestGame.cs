@@ -358,6 +358,7 @@ namespace BareE.Harness
 
         public override void RenderHud(Instant Instant, GameState State, GameEnvironment env, Framebuffer outbuffer, CommandList cmds)
         {
+            if (isMouseLook) return;
             ImGuiNET.ImGui.ShowMetricsWindow();
 
             ImGuiNET.ImGui.Begin("Lights");

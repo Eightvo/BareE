@@ -67,6 +67,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BareE.EZRend\BareE.EZRend.csproj" />
+    <ProjectReference Include="..\BareE.Transvoxel\BareE.Transvoxel.csproj" />
     <ProjectReference Include="..\BareE\BareE.csproj" />
   </ItemGroup>
 

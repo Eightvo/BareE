@@ -1,4 +1,6 @@
 ﻿# BareE
+ 
+![autobuild](https://github.com/Eightvo/BareE/actions/workflows/autobuild.yml/badge.svg)
 
 BareE is a Code First Game Development Framework. 
 

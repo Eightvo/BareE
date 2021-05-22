@@ -1,6 +1,8 @@
 ﻿using BareE.GameDev;
+using BareE.Messages;
 
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Veldrid.Sdl2;
@@ -25,6 +27,7 @@ namespace BareE
         private GameSceneBase onDeckScene;
         private GameState onDeckState;
         private bool isTransitioning = false;
+        object MessageDispatchLock = new object();
 
         private void LoadGameSceneInBackground(Messages.TransitionScene transition, GameState state, Instant instant)
         {
@@ -35,6 +38,13 @@ namespace BareE
             transition.Scene.DoInitialize(instant, transition.State, ActiveEnvironment);
             onDeckScene = transition.Scene;
             onDeckState = transition.State;
+        }
+        private void DispatchMessagesInBackground(MessageQueue queue, Instant instant, GameState state)
+        {
+            lock (MessageDispatchLock)
+            {
+                queue.ProcessMessages(instant, state);
+            }
         }
 
         private bool HandleTransitionScene(Messages.TransitionScene transition, GameState state, Instant instant)
@@ -80,8 +90,18 @@ namespace BareE
                 game.State.Clock.AdvanceTick();
                 instant = game.State.Clock.CaptureInstant();
                 cummulativeDelta += instant.TickDelta;
-
-                game.State.Messages.ProcessMessages(instant, game.State);
+                if (Monitor.TryEnter(MessageDispatchLock))
+                {
+                    try
+                    {
+                        Task.Run(() => DispatchMessagesInBackground(game.State.Messages, instant, game.State));
+                    }
+                    finally
+                    {
+                        Monitor.Exit(MessageDispatchLock);
+                    }
+                }
+                //game.State.Messages.ProcessMessages(instant, game.State);
                 game.ActiveScene.DoUpdate(instant, game.State, game.Environment);
                 var ss = game.Environment.Window.Window.PumpEvents();
                 game.Environment.Window.IGR.Update((float)instant.TickDelta / 1000f, ss);

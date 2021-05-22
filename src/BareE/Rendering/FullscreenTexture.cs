@@ -2,7 +2,6 @@
 
 namespace BareE.Rendering
 {
-
     /// <summary>
     /// Draws a specified texture to cover the entire output window.
     /// </summary>

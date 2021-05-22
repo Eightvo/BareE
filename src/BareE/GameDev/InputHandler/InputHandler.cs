@@ -74,15 +74,7 @@ namespace BareE.GameDev
             switch (def.ControlType.ToLower())
             {
                 case "button":
-                    if (def.Def.StartsWith("-"))
-                        isInverted = true;
-                    cntrl = new SoloControl(new InputAlias()
-                    {
-                        Alias = def.Alias,
-                        Source = def.Src,
-                        SourceKey = ReadKeyFromConfig(def.Src, isInverted ? def.Def.Substring(1) : def.Def)
-                    });
-                    cntrl.Invert = isInverted;
+                    cntrl = AddButtonFromDef(def, ref isInverted);
                     break;
 
                 case "axis":
@@ -93,41 +85,7 @@ namespace BareE.GameDev
                         defStr = defStr.Substring(1);
                     }
 
-                    switch (def.Src)
-                    {
-                        case InputSource.Keyboard:
-                            String k1 = defStr.Substring(0, def.Def.IndexOf(']') + 1);
-                            String k2 = def.Def.Substring(k1.Length);
-                            cntrl = new PairControl(
-                                new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = ReadKeyFromConfig(def.Src, k1) },
-                                new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = ReadKeyFromConfig(def.Src, k2) }
-                                );
-                            break;
-
-                        case InputSource.Gamepad:
-                            cntrl = new SoloControl(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = ReadKeyFromConfig(def.Src, defStr) });
-                            break;
-
-                        case InputSource.Mouse:
-                            if (String.Compare(defStr, "wheel", true) == 0)
-                            {
-                                cntrl = new MouseWheelAxis(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = MouseWheelID });
-                            }
-                            else if (String.Compare(defStr, "x", true) == 0)
-                            {
-                                cntrl = new MouseWheelAxis(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = MouseMoveXID });
-                            }
-                            else if (String.Compare(defStr, "y", true) == 0)
-                            {
-                                cntrl = new MouseWheelAxis(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = MouseMoveYID });
-                            }
-                            else
-                            {
-                                throw new NotImplementedException("Only mouse wheel for mouse axises");
-                            }
-
-                            break;
-                    }
+                    cntrl = AddAxisFromDef(def, cntrl, defStr);
                     if (isInverted)
                         cntrl.Invert = true;
                     break;
@@ -137,6 +95,62 @@ namespace BareE.GameDev
             float dzMax = (def.DZMax == 0 ? cntrl.DeadZoneBounds.Y : def.DZMax);
             cntrl.DeadZoneBounds = new Vector2(dzMax, dzMax);
             hndlr.AddControl(def.Alias, cntrl);
+        }
+
+        private static InputControl AddAxisFromDef(ControlDefModel def, InputControl cntrl, string defStr)
+        {
+            switch (def.Src)
+            {
+                case InputSource.Keyboard:
+                    String k1 = defStr.Substring(0, def.Def.IndexOf(']') + 1);
+                    String k2 = def.Def.Substring(k1.Length);
+                    cntrl = new PairControl(
+                        new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = ReadKeyFromConfig(def.Src, k1) },
+                        new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = ReadKeyFromConfig(def.Src, k2) }
+                        );
+                    break;
+
+                case InputSource.Gamepad:
+                    cntrl = new SoloControl(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = ReadKeyFromConfig(def.Src, defStr) });
+                    break;
+
+                case InputSource.Mouse:
+                    if (String.Compare(defStr, "wheel", true) == 0)
+                    {
+                        cntrl = new MouseWheelAxis(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = MouseWheelID });
+                    }
+                    else if (String.Compare(defStr, "x", true) == 0)
+                    {
+                        cntrl = new MouseWheelAxis(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = MouseMoveXID });
+                    }
+                    else if (String.Compare(defStr, "y", true) == 0)
+                    {
+                        cntrl = new MouseWheelAxis(new InputAlias() { Alias = def.Alias, Source = def.Src, SourceKey = MouseMoveYID });
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Only mouse wheel for mouse axises");
+                    }
+
+                    break;
+            }
+
+            return cntrl;
+        }
+
+        private static InputControl AddButtonFromDef(ControlDefModel def, ref bool isInverted)
+        {
+            InputControl cntrl;
+            if (def.Def.StartsWith("-"))
+                isInverted = true;
+            cntrl = new SoloControl(new InputAlias()
+            {
+                Alias = def.Alias,
+                Source = def.Src,
+                SourceKey = ReadKeyFromConfig(def.Src, isInverted ? def.Def.Substring(1) : def.Def)
+            });
+            cntrl.Invert = isInverted;
+            return cntrl;
         }
 
         private static int ReadKeyFromConfig(InputSource src, String def)
@@ -152,70 +166,74 @@ namespace BareE.GameDev
             switch (src)
             {
                 case InputSource.Keyboard:
-                    switch (d.ToLower())
-                    {
-                        case "esc":
-                            return (int)SDL_Scancode.SDL_SCANCODE_ESCAPE;
-
-                        case "ret":
-                        case "enter":
-                            return (int)SDL_Scancode.SDL_SCANCODE_RETURN;
-
-                        default:
-                            {
-                                SDL_Scancode SC;
-                                if (!Enum.TryParse<SDL_Scancode>($"SDL_SCANCODE_{d.ToLower()}", true, out SC))
-                                {
-                                    Log.EmitError(new Exception($"Could not parse keyboard key source {d.ToLower()}"));
-                                    return 0;
-                                }
-                                return (int)SC;
-                            }
-                    }
+                    return ReadKeyboardKeyFromConfig(d);
                 case InputSource.Gamepad:
-                    switch (d.ToLower())
-                    {
-                        default:
-                            {
-                                SDL_GameControllerAxis axis;
-                                if (Enum.TryParse<SDL_GameControllerAxis>(d, true, out axis))
-                                {
-                                    return (int)axis;
-                                }
-                                SDL_GameControllerButton btn;
-                                if (Enum.TryParse<SDL_GameControllerButton>(d, true, out btn))
-                                {
-                                    return (int)SDL_GameControllerAxis.Max + (int)(btn);
-                                }
-                                Log.EmitError(new Exception($"Could not parse gamepad source {d}"));
-                            }
-                            break;
-                    }
-                    break;
-
+                    return ReadGamepadKeyFromConfig(d);
                 case InputSource.Mouse:
-                    {
-                        switch (d.ToLower())
-                        {
-                            case "1":
-                                return (int)SDL_MouseButton.X1;
-
-                            case "2":
-                                return (int)SDL_MouseButton.X2;
-
-                            default:
-                                SDL_MouseButton btn;
-                                if (Enum.TryParse<SDL_MouseButton>(d, true, out btn))
-                                {
-                                    return (int)(btn);
-                                }
-                                Log.EmitError(new Exception($"Could not parse mousepad source {d}"));
-                                break;
-                        }
-                    }
-                    break;
+                    return ReadMouseKeyFromConfig(d);
             }
             return 0;
+        }
+
+        private static int ReadMouseKeyFromConfig(string d)
+        {
+            switch (d.ToLower())
+            {
+                case "1":
+                    return (int)SDL_MouseButton.X1;
+
+                case "2":
+                    return (int)SDL_MouseButton.X2;
+
+                default:
+                    SDL_MouseButton btn;
+                    if (Enum.TryParse<SDL_MouseButton>(d, true, out btn))
+                    {
+                        return (int)(btn);
+                    }
+                    Log.EmitError(new Exception($"Could not parse mousepad source {d}"));
+                    return 0;
+                    break;
+            }
+        }
+
+        private static int ReadGamepadKeyFromConfig(String d)
+        {
+            SDL_GameControllerAxis axis;
+            if (Enum.TryParse<SDL_GameControllerAxis>(d, true, out axis))
+            {
+                return (int)axis;
+            }
+            SDL_GameControllerButton btn;
+            if (Enum.TryParse<SDL_GameControllerButton>(d, true, out btn))
+            {
+                return (int)SDL_GameControllerAxis.Max + (int)(btn);
+            }
+            Log.EmitError(new Exception($"Could not parse gamepad source {d}"));
+            return 0;
+        }
+        private static int ReadKeyboardKeyFromConfig(string d)
+        {
+            switch (d.ToLower())
+            {
+                case "esc":
+                    return (int)SDL_Scancode.SDL_SCANCODE_ESCAPE;
+
+                case "ret":
+                case "enter":
+                    return (int)SDL_Scancode.SDL_SCANCODE_RETURN;
+
+                default:
+                {
+                    SDL_Scancode SC;
+                    if (!Enum.TryParse<SDL_Scancode>($"SDL_SCANCODE_{d.ToLower()}", true, out SC))
+                    {
+                        Log.EmitError(new Exception($"Could not parse keyboard key source {d.ToLower()}"));
+                        return 0;
+                    }
+                    return (int)SC;
+                }
+            }
         }
 
         #endregion Static

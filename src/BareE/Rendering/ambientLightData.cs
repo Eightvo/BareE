@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace BareE.Rendering
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct ambientLightData
+    public struct AmbientLightData
     {
         private Vector4 r0;
         private Vector4 r1;

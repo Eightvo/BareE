@@ -7,7 +7,7 @@ namespace BareE.Rendering
 {
     public interface ISceneDataProvider
     {
-        ambientLightData AmbientLight { get; set; }
+        AmbientLightData AmbientLight { get; set; }
         pointLightData PointLights { get; set; }
         CommonData CommonData { get; set; }
 
@@ -16,7 +16,7 @@ namespace BareE.Rendering
 
     public class DefaultSceneDataProvider : ISceneDataProvider
     {
-        public ambientLightData AmbientLight { get; set; }
+        public AmbientLightData AmbientLight { get; set; }
         public pointLightData PointLights { get; set; }
         public CommonData CommonData { get; set; }
 
@@ -27,20 +27,20 @@ namespace BareE.Rendering
 
         public DefaultSceneDataProvider()
         {
-            AmbientLight = new ambientLightData();
+            AmbientLight = new AmbientLightData();
             PointLights = new pointLightData();
             CommonData = new CommonData();
         }
 
-        public DefaultSceneDataProvider(ambientLightData ald, pointLightData pld) : this(ald, pld, new CommonData())
+        public DefaultSceneDataProvider(AmbientLightData ald, pointLightData pld) : this(ald, pld, new CommonData())
         {
         }
 
-        public DefaultSceneDataProvider(CommonData com) : this(new ambientLightData(), new pointLightData(), com)
+        public DefaultSceneDataProvider(CommonData com) : this(new AmbientLightData(), new pointLightData(), com)
         {
         }
 
-        public DefaultSceneDataProvider(ambientLightData ald, pointLightData pld, CommonData com)
+        public DefaultSceneDataProvider(AmbientLightData ald, pointLightData pld, CommonData com)
         {
             AmbientLight = ald;
             PointLights = pld;

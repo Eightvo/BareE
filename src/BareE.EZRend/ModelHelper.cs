@@ -76,17 +76,6 @@ namespace BareE.EZRend
             AssimpContext ac = new AssimpContext();
             var scene = ac.ImportFile(filename, pps);
             MultiTextureShader uvn = new MultiTextureShader(textures.Length);
-            //uvn.SetAmbientLightData(new ambientLightData()
-            //{
-            //    alc = new Vector3(1, 1, 1),
-            //    ali = 0.2f,
-            //    dlp = new Vector3(0, -100, 0),
-            //});
-
-            //uvn.SetPointLightData(new pointLightData()
-            //{
-            //
-            //});
             uvn.SetOutputDescription(oDesc);
             for (int i = 0; i < scene.MeshCount; i++)
             {

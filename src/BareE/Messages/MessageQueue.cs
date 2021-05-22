@@ -2,6 +2,7 @@
 using BareE.GameDev;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -30,7 +31,7 @@ namespace BareE.Messages
         //==>>MID => bool ProcessMessage<Typeof(MID)>(object as Typeof(MID) <<==
         private Dictionary<int, List<object>> _listeners = new Dictionary<int, List<object>>();
 
-        private Dictionary<int, SafeQueue<object>> _messages = new Dictionary<int, SafeQueue<object>>();
+        private Dictionary<int, ConcurrentQueue<object>> _messages = new Dictionary<int, ConcurrentQueue<object>>();
 
         private PriorityQueue<object> _delayedMessages_Effective = new PriorityQueue<object>();
         private PriorityQueue<object> _delayedMessages_Realtime = new PriorityQueue<object>();
@@ -102,8 +103,8 @@ namespace BareE.Messages
         private void EmitMsg(int i, object m)
         {
             if (!_messages.ContainsKey(i))
-                _messages.Add(i, new SafeQueue<object>());
-            _messages[i].SafeEnqueue(m);
+                _messages.Add(i, new ConcurrentQueue<object>());
+            _messages[i].Enqueue(m);
         }
         /// <summary>
         /// Add a handler to listen for a specific type of message.

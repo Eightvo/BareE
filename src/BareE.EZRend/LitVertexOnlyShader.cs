@@ -19,7 +19,7 @@ namespace BareE.EZRend
         {
         }
 
-        private ambientLightData ald;
+        private AmbientLightData ald;
         private pointLightData pld;
         private CommonData commondata;
 
@@ -48,7 +48,7 @@ namespace BareE.EZRend
 
         public override void CreateResources(GraphicsDevice device)
         {
-            lightDataBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(ambientLightData.Size, BufferUsage.UniformBuffer));
+            lightDataBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(AmbientLightData.Size, BufferUsage.UniformBuffer));
             lightDataBuffer.Name = "AbmientLightDataBuffer";
 
             pointLightDataBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(pointLightData.Size, BufferUsage.UniformBuffer));

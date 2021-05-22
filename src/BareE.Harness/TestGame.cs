@@ -46,7 +46,7 @@ namespace BareE.Harness
         private Vector3 alc;
         private Vector3 dlp = new Vector3(0, 0, 0);
 
-        private ambientLightData ambientLD = new ambientLightData();
+        private AmbientLightData ambientLD = new AmbientLightData();
         private CommonData comDat = new CommonData();
 
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)

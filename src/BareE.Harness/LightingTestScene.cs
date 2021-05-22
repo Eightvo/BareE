@@ -237,68 +237,7 @@ namespace BareE.Harness
                 Entity ent = State.ECC.Entities[ecp.Key];
                 if (v.Model == null)
                 {
-                    if (!String.IsNullOrEmpty(v.Skin))
-                    {
-                        if (v.HasNormalMap)
-                        {
-                            List<Texture> textures = new List<Texture>();
-                            textures.Add(LoadTexture(v.Skin, Env.Window.Device));
-
-                            if (!String.IsNullOrEmpty(v.NormalMap))
-                                textures.Add(LoadTexture(v.NormalMap, Env.Window.Device));
-
-                            if (!String.IsNullOrEmpty(v.SpecularMap))
-                                textures.Add(LoadTexture(v.SpecularMap, Env.Window.Device));
-
-                            if (!String.IsNullOrEmpty(v.EmmissiveMap))
-                                textures.Add(LoadTexture(v.EmmissiveMap, Env.Window.Device));
-
-                            if (v.isStatic)
-                            {
-                                v.Model = ModelHelper.LoadStaticTexturedBumpMesh(v.Root, ModelHelper.DefaultSteps,
-                                                                       Env.GetBackbufferOutputDescription(),
-                                                                       Env.Window.Device,
-                                                                       textures.ToArray());
-                            }
-                            else
-                            {
-                                v.Model = ModelHelper.LoadTexturedBumpMesh(v.Root, ModelHelper.DefaultSteps,
-                                                                       Env.GetBackbufferOutputDescription(),
-                                                                       Env.Window.Device,
-                                                                       textures.ToArray());
-                            }
-                        }
-                        else
-                        {
-                            if (v.isStatic)
-                            {
-                                v.Model = ModelHelper.LoadStaticTexturedMesh(v.Root, ModelHelper.DefaultSteps,
-                                                                       Env.GetBackbufferOutputDescription(),
-                                                                       Env.Window.Device,
-                                                                       LoadTexture(v.Skin, Env.Window.Device));
-                            }
-                            else
-                            {
-                                v.Model = ModelHelper.LoadTexturedMesh(v.Root, ModelHelper.DefaultSteps,
-                                                                       Env.GetBackbufferOutputDescription(),
-                                                                       Env.Window.Device,
-                                                                       LoadTexture(v.Skin, Env.Window.Device));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (v.isStatic)
-                        {
-                            v.Model = ModelHelper.LoadStaticColoredMesh(v.Root, ModelHelper.DefaultSteps, Env.GetBackbufferOutputDescription(),
-                                                                Env.Window.Device, v.ClrMap);
-                        }
-                        else
-                        {
-                            v.Model = ModelHelper.LoadColoredMesh(v.Root, ModelHelper.DefaultSteps, Env.GetBackbufferOutputDescription(),
-                                                                Env.Window.Device, v.ClrMap);
-                        }
-                    }
+                    CreateModel(Env, v);
                 }
 
                 var pos = State.ECC.Components.GetComponent<Pos>(ent);
@@ -307,6 +246,87 @@ namespace BareE.Harness
                 State.ECC.Components.SetComponent(ent, pos);
                 foreach (var m in v.Model.Meshes.Values)
                     m.Update(Env.Window.Device);
+            }
+        }
+
+        private void CreateModel(GameEnvironment Env, Components.EZModel v)
+        {
+            if (!String.IsNullOrEmpty(v.Skin))
+            {
+                if (v.HasNormalMap)
+                {
+                    CreateModelWithNormalMap(Env, v);
+                }
+                else
+                {
+                    CreateTexturedModel(Env, v);
+                }
+            }
+            else
+            {
+                CreateColorModel(Env, v);
+            }
+        }
+
+        private static void CreateColorModel(GameEnvironment Env, Components.EZModel v)
+        {
+            if (v.isStatic)
+            {
+                v.Model = ModelHelper.LoadStaticColoredMesh(v.Root, ModelHelper.DefaultSteps, Env.GetBackbufferOutputDescription(),
+                                                    Env.Window.Device, v.ClrMap);
+            }
+            else
+            {
+                v.Model = ModelHelper.LoadColoredMesh(v.Root, ModelHelper.DefaultSteps, Env.GetBackbufferOutputDescription(),
+                                                    Env.Window.Device, v.ClrMap);
+            }
+        }
+
+        private void CreateTexturedModel(GameEnvironment Env, Components.EZModel v)
+        {
+            if (v.isStatic)
+            {
+                v.Model = ModelHelper.LoadStaticTexturedMesh(v.Root, ModelHelper.DefaultSteps,
+                                                       Env.GetBackbufferOutputDescription(),
+                                                       Env.Window.Device,
+                                                       LoadTexture(v.Skin, Env.Window.Device));
+            }
+            else
+            {
+                v.Model = ModelHelper.LoadTexturedMesh(v.Root, ModelHelper.DefaultSteps,
+                                                       Env.GetBackbufferOutputDescription(),
+                                                       Env.Window.Device,
+                                                       LoadTexture(v.Skin, Env.Window.Device));
+            }
+        }
+
+        private void CreateModelWithNormalMap(GameEnvironment Env, Components.EZModel v)
+        {
+            List<Texture> textures = new List<Texture>();
+            textures.Add(LoadTexture(v.Skin, Env.Window.Device));
+
+            if (!String.IsNullOrEmpty(v.NormalMap))
+                textures.Add(LoadTexture(v.NormalMap, Env.Window.Device));
+
+            if (!String.IsNullOrEmpty(v.SpecularMap))
+                textures.Add(LoadTexture(v.SpecularMap, Env.Window.Device));
+
+            if (!String.IsNullOrEmpty(v.EmmissiveMap))
+                textures.Add(LoadTexture(v.EmmissiveMap, Env.Window.Device));
+
+            if (v.isStatic)
+            {
+                v.Model = ModelHelper.LoadStaticTexturedBumpMesh(v.Root, ModelHelper.DefaultSteps,
+                                                       Env.GetBackbufferOutputDescription(),
+                                                       Env.Window.Device,
+                                                       textures.ToArray());
+            }
+            else
+            {
+                v.Model = ModelHelper.LoadTexturedBumpMesh(v.Root, ModelHelper.DefaultSteps,
+                                                       Env.GetBackbufferOutputDescription(),
+                                                       Env.Window.Device,
+                                                       textures.ToArray());
             }
         }
 

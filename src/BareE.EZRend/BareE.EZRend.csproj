@@ -4,9 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>1.0.56</Version>
-    <PackageTags>a</PackageTags>
+    <PackageTags>BareE</PackageTags>
     <PackageLicenseFile>License.md</PackageLicenseFile>
     <Copyright>Greg Freedline 2021</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Eightvo/BareE</RepositoryUrl>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

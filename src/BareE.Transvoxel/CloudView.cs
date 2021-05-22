@@ -117,7 +117,6 @@ namespace BareE.Transvoxel
         {
             Anchor = anchor;
             AnchorBlock = Data.GetBlockCordinate(anchor);
-            int c = 0;
             foreach (var relBlock in RelativeBlocks)
             {
                 var indx = GetRelativeBlockIndex((int)relBlock.X, (int)relBlock.Y, (int)relBlock.Z);

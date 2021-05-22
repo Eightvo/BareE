@@ -5,8 +5,6 @@ namespace BareE.Transvoxel
     public abstract class PointProvider<D>
         where D : struct, IPointData
     {
-        private D pointData;
-
         public abstract D GetPoint(int Samplex, int Sampley, int Samplez);
 
         public D GetPoint(Vector3 loc)

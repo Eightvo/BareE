@@ -46,6 +46,7 @@ namespace BareE.Transvoxel
             var eqClassData = Trannsvoxel.regularCellData[eqClass];
             var vrtxData = Trannsvoxel.regularVertexData[eqClass];
             //About to attempt to draw the following figure.
+/*
             var c = @"
    +--------+
   /|       /|
@@ -57,6 +58,7 @@ namespace BareE.Transvoxel
 |/       |/
 +--------+
 ";
+*/
 
             ConsoleColor IFC = Console.ForegroundColor;
             ConsoleColor IBC = Console.BackgroundColor;

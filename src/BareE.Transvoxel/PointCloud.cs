@@ -24,11 +24,6 @@ namespace BareE.Transvoxel
         //This way we don't have to touch more then 27 blocks at a time.
         public D[,,] GetPointBlock(int BlockX, int BlockY, int BlockZ)
         {
-            if (BlockX == BlockY && BlockY == BlockZ && BlockZ == 0)
-            {
-                int i = 1;
-            }
-
             D[,,] ret = new D[BlockSize, BlockSize, BlockSize];
             for (int m = 0; m < BlockSize; m++)
             {

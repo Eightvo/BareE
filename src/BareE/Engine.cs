@@ -19,15 +19,18 @@ namespace BareE
     public class Engine
     {
         private Game ActiveGame;
+
         private GameEnvironment ActiveEnvironment
         { get { return ActiveGame.Environment; } }
+
         private GameState ActiveState
         { get { return ActiveGame.State; } }
+
         private bool isRunning = true;
         private GameSceneBase onDeckScene;
         private GameState onDeckState;
         private bool isTransitioning = false;
-        object MessageDispatchLock = new object();
+        private object MessageDispatchLock = new object();
 
         private void LoadGameSceneInBackground(Messages.TransitionScene transition, GameState state, Instant instant)
         {
@@ -39,6 +42,7 @@ namespace BareE
             onDeckScene = transition.Scene;
             onDeckState = transition.State;
         }
+
         private void DispatchMessagesInBackground(MessageQueue queue, Instant instant, GameState state)
         {
             lock (MessageDispatchLock)
@@ -62,6 +66,7 @@ namespace BareE
             isRunning = false;
             return true;
         }
+
         /// <summary>
         /// Runs a Game.
         /// </summary>

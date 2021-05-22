@@ -12,12 +12,14 @@ namespace BareE.Messages
         /// If the supplied Gamescene does not require the methods Load and Initialize called for any reason.
         /// </summary>
         public bool Preloaded;
+
         /// <summary>
         /// The scene to transition to.
         /// </summary>
         public GameSceneBase Scene;
+
         /// <summary>
-        /// The state supplied. 
+        /// The state supplied.
         /// Information can be passed from one scene to the next via the initial GameState or via The Environment Share.
         /// </summary>
         public GameState State;

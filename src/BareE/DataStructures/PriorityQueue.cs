@@ -1,32 +1,33 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace BareE.DataStructures
 {
-    public class PriorityQueue<T> 
+    public class PriorityQueue<T>
     {
         private class PQNode
         {
-
             public T Value { get; set; }
             public long Weight { get; set; }
             public PQNode Left { get; set; }
             public PQNode Right { get; set; }
+
             public PQNode(T value, long weight)
             {
                 Value = value;
                 Weight = weight;
             }
+
             internal void Enqueue(PQNode element)
             {
-                if (element.Weight<this.Weight)
+                if (element.Weight < this.Weight)
                 {
                     if (this.Left == null)
                         this.Left = element;
                     else
                         this.Left.Enqueue(element);
-                } else
+                }
+                else
                 {
                     if (this.Right == null)
                         this.Right = element;
@@ -48,9 +49,10 @@ namespace BareE.DataStructures
                             yield return e;
                 }
             }
-
         }
+
         private PQNode Head;
+
         public void Enqueue(T value, long weight)
         {
             if (Head == null)
@@ -63,7 +65,7 @@ namespace BareE.DataStructures
         {
             if (Head == null) throw new IndexOutOfRangeException("Queue is empty");
             T ret;
-            if (Head.Left==null)
+            if (Head.Left == null)
             {
                 ret = Head.Value;
                 Head = Head.Right;
@@ -85,7 +87,7 @@ namespace BareE.DataStructures
 
         public object Current { get; set; } = null;
 
-        private PQNode _currentNode=null;
+        private PQNode _currentNode = null;
         private PQNode _currentNodeParent = null;
 
         public long PeekWeight()
@@ -96,6 +98,7 @@ namespace BareE.DataStructures
                 h = h.Left;
             return h.Weight;
         }
+
         public T Peek()
         {
             if (Head == null) throw new IndexOutOfRangeException("Queue is empty");
@@ -104,7 +107,7 @@ namespace BareE.DataStructures
                 h = h.Left;
             return h.Value;
         }
-        
+
         public IEnumerable<T> Elements
         {
             get

@@ -208,7 +208,6 @@ namespace BareE.DataStructures
             yield break;
         }
 
-
         public void Dispose()
         {
             foreach (var v in _data)

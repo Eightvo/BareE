@@ -41,7 +41,6 @@ namespace BareE.DataStructures
             }
         }
 
-
         internal static void LoadComponentData()
         {
             _componetTypeData = new Dictionary<Type, ComponentAttribute>();
@@ -256,6 +255,7 @@ namespace BareE.DataStructures
             int i = ComponentAliasMap[componentName].CTypeID;
             return HasComponent(i, ent);
         }
+
         /// <summary>
         /// Returns true if the component or the ideal of a component contains this type of component.
         /// Returns false if a component has been masked.
@@ -269,6 +269,7 @@ namespace BareE.DataStructures
             int i = ComponentTypeData[typeof(T)].CTypeID;
             return HasComponent(i, ent);
         }
+
         /// <summary>
         /// Returns true if the component or the ideal of a component contains this type of component.
         /// Returns false if a component has been masked.
@@ -314,6 +315,7 @@ namespace BareE.DataStructures
                 v.Value.Remove(-iD);
             }
         }
+
         /// <summary>
         /// Enumerates all Components Associated with an Entity.
         /// </summary>

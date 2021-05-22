@@ -3,6 +3,7 @@ using BareE.Rendering;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 
 using Veldrid;
@@ -76,11 +77,11 @@ namespace BareE.EZRend.Novelty.SDLText
 
             var gIndx = 0;
             int i = 0;
-            using (var rdr = UTIL.FindStreamReader(descFile))
+            using (var rdr = new StreamReader(AssetManager.FindFileStream(descFile)))
             {
                 _glyphCache = new Dictionary<string, glyphInfo>();
 
-                _glyphSheet = UTIL.FindTexture(device, textureFile);
+                _glyphSheet = AssetManager.LoadTexture(textureFile, device);
                 base.SetTexture(device, _glyphSheet);
                 //CharacterUvWidth = (float)i / (float)_glyphSheet.Width;
 

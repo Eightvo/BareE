@@ -5,5 +5,5 @@
         EXCEPTION = 0,
         EXPAND = 1,
         IGNORE = 2
-    };
+    }
 }

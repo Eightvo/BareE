@@ -134,7 +134,6 @@ namespace BareE.GameDev
 
         [JsonConverter(typeof(StringEnumConverter))]
         [JsonProperty("DisplayMode")]
-
         public DisplayMode DisplayMode { get; set; }
 
         [JsonIgnore]

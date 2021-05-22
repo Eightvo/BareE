@@ -44,6 +44,7 @@ namespace BareE
             _assetRepositories.Clear();
             _assetRepositories.Add(Environment.CurrentDirectory);
         }
+
         /// <summary>
         /// Return a Veldird Device Texture from asset
         /// </summary>
@@ -55,6 +56,7 @@ namespace BareE
         {
             return LoadTexture(LoadImageSharpTexture(resource, mipmap), device);
         }
+
         /// <summary>
         /// Return a Veldrid device texture from ImageSharpTexture.
         /// </summary>
@@ -65,6 +67,7 @@ namespace BareE
         {
             return imgSharpTexture.CreateDeviceTexture(device, device.ResourceFactory);
         }
+
         /// <summary>
         /// Return an Image SharpTexture from asset.
         /// </summary>
@@ -76,6 +79,7 @@ namespace BareE
             var strm = new MemoryStream(FindFileData(resource));
             return (new Veldrid.ImageSharp.ImageSharpTexture(strm, mipmap));
         }
+
         /// <summary>
         /// Get a file stream from resource/Asset
         /// </summary>
@@ -169,6 +173,7 @@ namespace BareE
             }
             throw new FileNotFoundException($"File not found: {name}", name);
         }
+
         /// <summary>
         /// Read an Entire asset into a string.
         /// </summary>

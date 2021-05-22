@@ -61,6 +61,7 @@ namespace BareE.Rendering
 
         void SetOutputDescription(OutputDescription odesc);
     }
+
     /// <summary>
     /// An interface representing a structure to be used as a vertex buffer element.
     /// </summary>

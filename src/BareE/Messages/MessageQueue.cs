@@ -49,6 +49,7 @@ namespace BareE.Messages
         {
             _delayedMessages_Effective.Enqueue(m, delay + delayedFrom.EffectiveDuration);
         }
+
         /// <summary>
         /// Wait delay milliseconds from the instant provided including paused time, then emit the specified message.
         /// </summary>
@@ -59,8 +60,9 @@ namespace BareE.Messages
         {
             _delayedMessages_Realtime.Enqueue(m, delay + delayedFrom.SessionDuration);
         }
+
         /// <summary>
-        /// Wait delay turn from the instant provided, then emit the specified message. 
+        /// Wait delay turn from the instant provided, then emit the specified message.
         /// </summary>
         /// <param name="delay"></param>
         /// <param name="m"></param>
@@ -69,6 +71,7 @@ namespace BareE.Messages
         {
             _delayedMessages_Turn.Enqueue(m, delay + delayedFrom.Turn);
         }
+
         /// <summary>
         /// Emit a message immediately.
         /// </summary>
@@ -86,6 +89,7 @@ namespace BareE.Messages
             int i = tDat.MTypeID;
             EmitMsg(i, m);
         }
+
         /// <summary>
         /// Emit a message immediately.
         /// </summary>
@@ -96,6 +100,7 @@ namespace BareE.Messages
             int i = tDat.MTypeID;
             EmitMsg(i, msg);
         }
+
         /// <summary>
         /// Emit a message immediately.
         /// </summary>
@@ -106,6 +111,7 @@ namespace BareE.Messages
                 _messages.Add(i, new ConcurrentQueue<object>());
             _messages[i].Enqueue(m);
         }
+
         /// <summary>
         /// Add a handler to listen for a specific type of message.
         /// </summary>
@@ -119,6 +125,7 @@ namespace BareE.Messages
                 _listeners.Add(i, new List<object>());
             _listeners[i].Add(msgresp);
         }
+
         /// <summary>
         /// Enumerate the currently queued messages calling the specified handlers for each.
         /// The first handler to return true will be the last handler to handle the message.

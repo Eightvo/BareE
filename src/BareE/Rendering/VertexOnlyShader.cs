@@ -88,11 +88,6 @@ namespace BareE.Rendering
             VertexContentDirty = true;
         }
 
-        public uint NextMultipleOf16(uint ival)
-        {
-            return (uint)(Math.Floor(ival / 16.0f) * 16 + 16);
-        }
-
         public virtual Shader[] CreateShaders(ResourceFactory factory)
         {
             byte[] VertexShaderData = AssetManager.FindFileData(VertexShaderName);

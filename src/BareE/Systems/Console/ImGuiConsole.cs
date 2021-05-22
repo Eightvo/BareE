@@ -30,7 +30,7 @@ namespace BareE.Systems
         private int _cursorPosition;
         private StringBuilder _buffer;
 
-        private Widgets.BareE.Widgets.Credits CreditsWidget;
+        private BareE.Widgets.Credits CreditsWidget;
 
         private int currHistPtr = 0;
         //        ECS.ECContainer ECC;
@@ -76,7 +76,7 @@ namespace BareE.Systems
                 yield return $"{("".PadLeft(2 * depth))}{v.Id} {(nNames.ContainsKey(v.Id) ? nNames[v.Id] : "Anon")}";
                 foreach (var s in getChildEnts(pTree, nNames, ecc, v.Id, depth + 1))
                     yield return s;
-            };
+            }
         }
 
         private void CreateCommands(GameState state)
@@ -196,7 +196,7 @@ namespace BareE.Systems
         public override void Initialize(Instant instant, GameState state, GameEnvironment environment)
         {
             state.Messages.AddListener<ConsoleInput>(ProcessConsoleInput);
-            CreditsWidget = new Widgets.BareE.Widgets.Credits();
+            CreditsWidget = new BareE.Widgets.Credits();
         }
 
         public override void RenderEye(Instant instant, GameState state, GameEnvironment env, Matrix4x4 eyeMat, Framebuffer Target, CommandList commands)

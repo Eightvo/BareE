@@ -3,7 +3,7 @@
 namespace BareE.DataStructures
 {
     /// <summary>
-    /// Currently all components are treated Identically. 
+    /// Currently all components are treated Identically.
     /// This enumeration exists to facilitate Component Handling extensibility
     /// </summary>
     [Flags]
@@ -18,6 +18,7 @@ namespace BareE.DataStructures
     public class ComponentAttribute : Attribute
     {
         private static int _componentTypeID;
+
         /// <summary>
         /// This value is Dynamic. A Component Type ID is only guarenteed to remain static for the lifetime of the application.
         /// </summary>

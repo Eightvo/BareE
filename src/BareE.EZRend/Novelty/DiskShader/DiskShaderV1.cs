@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Numerics;
 
 using Veldrid;
+using Veldrid.SPIRV;
 
 namespace BareE.EZRend
 {
@@ -131,12 +132,29 @@ namespace BareE.EZRend
             VertexContentDirty = true;
         }
 
-        public uint NextMultipleOf16(uint ival)
+        private PixelFormat NativePixelFormat;
+        ShaderDescription ByName(String resource, ShaderStages stage)
         {
-            return (uint)(Math.Floor(ival / 16.0f) * 16 + 16);
+            List<byte> data = new List<byte>();
+            using (var rdr = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+            {
+                int nxt = rdr.ReadByte();
+                while (nxt != -1)
+                {
+                    data.Add((byte)nxt);
+                    nxt = rdr.ReadByte();
+                }
+            }
+            byte[] bytes = data.ToArray();
+            return new ShaderDescription(stage, bytes, "main");
         }
 
-        private PixelFormat NativePixelFormat;
+        private Shader[] CreateShaderSet(ResourceFactory factory, String res)
+        {
+            var vert = ByName($"{res}.vert.spv", ShaderStages.Vertex);
+            var frag = ByName($"{res}.frag.spv", ShaderStages.Fragment);
+            return factory.CreateFromSpirv(vert, frag);
+        }
 
         public void CreateResources(GraphicsDevice device)
         {
@@ -158,7 +176,7 @@ namespace BareE.EZRend
             {
                 PalletSize = 8
             };
-            ConfigBuffer = factory.CreateBuffer(new BufferDescription(NextMultipleOf16(DiskShaderConfig.Instance.SizeInBytes), BufferUsage.UniformBuffer));
+            ConfigBuffer = factory.CreateBuffer(new BufferDescription(MathHelper.NxtMultipleOfSixteen(DiskShaderConfig.Instance.SizeInBytes), BufferUsage.UniformBuffer));
             PalletTexture = AssetManager.LoadTexture("BareE.EZRend.palletts.rng1.png", device, true);
             PalletTextureView = factory.CreateTextureView(PalletTexture);
 
@@ -182,7 +200,7 @@ namespace BareE.EZRend
                 PalletSampler));
 
             //Create and Compile the Shaders.
-            DiskShaders = EmbeddedShader.CreateShaderSet(device.ResourceFactory, "BareE.EZRend.Novelty.DiskShader.DiskShader_V1");
+            DiskShaders = CreateShaderSet(device.ResourceFactory, "BareE.EZRend.Novelty.DiskShader.DiskShader_V1");
             var DiskShadersDescription = new ShaderSetDescription(
                 vertexLayouts: new VertexLayoutDescription[] { DiskShaderVertex.Instance.GetVertexLayoutDescription() },
                 shaders: DiskShaders

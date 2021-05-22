@@ -7,10 +7,6 @@ using SixLabors.ImageSharp.Processing;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 using JsonConverter = Newtonsoft.Json.JsonConverter;
 using JsonConverterAttribute = Newtonsoft.Json.JsonConverterAttribute;
@@ -20,21 +16,23 @@ namespace BareE.DataStructures
 {
     public class SpriteAtlas
     {
-        class AtlasPage
+        private class AtlasPage
         {
             public SpriteModel model;
             public Image src;
             public Veldrid.Rectangle PageRect;
-
         }
-        bool _dirty;
+
+        private bool _dirty;
         public bool Dirty { get { return _dirty; } }
         public Image<Rgba32> AtlasSheet;
-        Dictionary<String, AtlasPage> _Pages = new Dictionary<string, AtlasPage>();
+        private Dictionary<String, AtlasPage> _Pages = new Dictionary<string, AtlasPage>();
+
         public IEnumerable<String> Pages
         {
             get { return _Pages.Keys; }
         }
+
         public void Merge(String name, SpriteModel sprite, String TextureSrc)
         {
             AtlasPage newPage = new AtlasPage();
@@ -61,9 +59,7 @@ namespace BareE.DataStructures
                                                           Math.Min(img.Height, sprite.SrcRect.Height)));
             });
             return img;
-
         }
-
 
         public void Build(int maxWidth = 0, bool save = false)
         {
@@ -99,13 +95,13 @@ namespace BareE.DataStructures
             AtlasSheet = newImage;
             if (save)
             {
-                var saveTo =  $"newImage{DateTime.Now.ToString("yyyyMMddhhmmss")}.png";
+                var saveTo = $"newImage{DateTime.Now.ToString("yyyyMMddhhmmss")}.png";
                 AtlasSheet.Save(saveTo);
             }
             _dirty = false;
         }
 
-        RectangleF GetSpriteRect(AtlasPage page, String key)
+        private RectangleF GetSpriteRect(AtlasPage page, String key)
         {
             if (String.IsNullOrEmpty(key))
             {
@@ -143,6 +139,7 @@ namespace BareE.DataStructures
                 return new RectangleF(0, 0, 0, 0);
             }
         }
+
         public class SpriteModel
         {
             public String Name { get; set; }
@@ -166,6 +163,7 @@ namespace BareE.DataStructures
 
             [JsonProperty("Alternatives")]
             private SpriteAlternativeModel[] _Alternatives { get; set; }
+
             [JsonIgnore]
             public IEnumerable<SpriteAlternativeModel> Alternatives
             {
@@ -176,7 +174,6 @@ namespace BareE.DataStructures
                         yield return v;
                 }
             }
-
 
             [JsonIgnore]
             public Rectangle this[String query]
@@ -213,13 +210,13 @@ namespace BareE.DataStructures
                 }
             }
 
-
             public static SpriteModel LoadSpriteModel(String filename)
             {
                 return JsonConvert.DeserializeObject<SpriteModel>(
                     System.IO.File.ReadAllText(filename)
                 );
             }
+
             public static Dictionary<String, SpriteModel> LoadSpriteModels(String filename, StringComparer cmp = null)
             {
                 Dictionary<String, SpriteModel> ret = new Dictionary<string, SpriteModel>(cmp ?? StringComparer.InvariantCultureIgnoreCase);
@@ -230,28 +227,29 @@ namespace BareE.DataStructures
                 return ret;
             }
         }
+
         public class SpriteAlternativeModel
         {
             public String Name { get; set; }
+
             [JsonConverter(typeof(PoingJsonConverter))]
             public Point Off { get; set; }
-
-
         }
 
         public class TextureModel
         {
             public String Filename { get; set; }
+
             [JsonConverter(typeof(RectangleJsonConverter))]
             public Rectangle SrcRect { get; set; }
         }
+
         public class RectangleJsonConverter : JsonConverter
         {
             public override bool CanConvert(Type objectType)
             {
                 return (objectType == typeof(Rectangle));
             }
-
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
@@ -269,7 +267,6 @@ namespace BareE.DataStructures
                         );
                 }
 
-
                 return new Rectangle(jo["left"] != null ? (int)jo["left"] : 10,
                                      jo["top"] != null ? (int)jo["top"] : 10,
                                      (int)jo["width"], (int)jo["height"]);
@@ -286,12 +283,14 @@ namespace BareE.DataStructures
                 jo.WriteTo(writer);
             }
         }
+
         public class SizeJsonConverter : JsonConverter
         {
             public override bool CanConvert(Type objectType)
             {
                 return (objectType == typeof(Size));
             }
+
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
                 Size size = (Size)value;
@@ -313,8 +312,8 @@ namespace BareE.DataStructures
             public override bool CanConvert(Type objectType)
             {
                 return (objectType == typeof(Point));
-
             }
+
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
             {
                 Point pt = (Point)value;
@@ -347,6 +346,5 @@ namespace BareE.DataStructures
                 return new Point((int)jo["X"], (int)jo["Y"]);
             }
         }
-
     }
 }

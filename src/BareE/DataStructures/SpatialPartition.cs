@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using Box2 = Veldrid.Rectangle;
+
 namespace BareE.DataStructures
 {
     public class SpatialPartion
     {
-
         public static int _currID = 0;
-        int ID = ++_currID;
+        private int ID = ++_currID;
 
-        bool _filled;
-        bool Filled
+        private bool _filled;
+
+        private bool Filled
         {
             get
             {
@@ -23,7 +20,7 @@ namespace BareE.DataStructures
         }
 
         public Box2 Space;
-        SpatialPartion[] Subspaces;
+        private SpatialPartion[] Subspaces;
 
         public SpatialPartion(Box2 space, bool filled = false)
         {
@@ -35,6 +32,7 @@ namespace BareE.DataStructures
         {
             return AddRectangle(new Box2(0, 0, size.Width, size.Height));
         }
+
         public Box2 AddRectangle(Box2 footprint)
         {
             Box2 _nullBox2 = default(Box2);
@@ -48,7 +46,6 @@ namespace BareE.DataStructures
 
                 Box2 filledArea = new Box2(Space.Left, Space.Top, footprint.Width, footprint.Height);
                 Subspaces[0] = new SpatialPartion(filledArea, true);
-
 
                 Box2 unfilledRightSide = new Box2(Space.Left + footprint.Width, Space.Top, Space.Width - footprint.Width, footprint.Height);
                 if (unfilledRightSide.Width <= 0) unfilledRightSide.HasArea();
@@ -66,6 +63,7 @@ namespace BareE.DataStructures
             }
             return _nullBox2;
         }
+
         public void Crop()
         {
             int mX = 0;
@@ -84,13 +82,13 @@ namespace BareE.DataStructures
             ret.AddRange(GetFilledRegions(this));
             return ret;
         }
-        List<Box2> GetFilledRegions(SpatialPartion region)
+
+        private List<Box2> GetFilledRegions(SpatialPartion region)
         {
             //Console.WriteLine(region.ID);
             List<Box2> regions = new List<Box2>();
             if (region.Filled)
                 regions.Add(region.Space);
-
 
             if (region.Subspaces != null)
             {
@@ -100,5 +98,4 @@ namespace BareE.DataStructures
             return regions;
         }
     }
-
 }

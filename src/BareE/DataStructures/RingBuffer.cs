@@ -13,6 +13,7 @@ namespace BareE.DataStructures
         /// Maximum number of elements.
         /// </summary>
         public int Capacity;
+
         private object _lockObj = new object();
 
         private T[] _data;
@@ -26,7 +27,6 @@ namespace BareE.DataStructures
             for (int i = 0; i < capacity; i++) _data[i] = default(T);
             Capacity = capacity;
         }
-
 
         //public void Push(T value)
         //{

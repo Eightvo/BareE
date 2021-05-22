@@ -11,7 +11,7 @@ using Veldrid.VirtualReality;
 namespace BareE.GameDev
 {
     /// <summary>
-    /// Represents a distinct unit of Gameplay. 
+    /// Represents a distinct unit of Gameplay.
     /// </summary>
     public abstract class GameSceneBase : IDisposable
     {

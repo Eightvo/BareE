@@ -18,7 +18,7 @@ namespace BareE.Systems
     }
 
     /// <summary>
-    /// A built in system allowing the use of sound effects. 
+    /// A built in system allowing the use of sound effects.
     /// Responds to PlaySFX messages.
     /// </summary>
     public class SoundSystem : GameDev.GameSystem

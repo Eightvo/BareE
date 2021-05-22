@@ -1,8 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BareE.Tests.DataStructureTests
 {
@@ -13,12 +11,12 @@ namespace BareE.Tests.DataStructureTests
         public void PriorityQueueTest_Ordered()
         {
             BareE.DataStructures.PriorityQueue<int> toTest = new DataStructures.PriorityQueue<int>();
-            foreach(int i in new List<int>() { 10,3,5,2,5,5,2,6,8,9,2,3,10})
+            foreach (int i in new List<int>() { 10, 3, 5, 2, 5, 5, 2, 6, 8, 9, 2, 3, 10 })
             {
                 toTest.Enqueue(i, i);
             }
             var p = 0;
-            while(!toTest.IsEmpty)
+            while (!toTest.IsEmpty)
             {
                 var c = toTest.Dequeue();
                 Assert.IsTrue(c >= p);
@@ -40,9 +38,6 @@ namespace BareE.Tests.DataStructureTests
             Assert.AreEqual(toTest.Dequeue(), 3);
             Assert.AreEqual(toTest.Dequeue(), 4);
             Assert.AreEqual(toTest.Dequeue(), 5);
-
         }
-
-
     }
 }

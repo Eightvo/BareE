@@ -6,119 +6,6 @@ using Veldrid.Sdl2;
 
 namespace BareE.GameDev
 {
-    public enum InputSource
-    {
-        None = 0,
-        Keyboard = 1,
-        Mouse = 2,
-        Gamepad = 3
-    }
-
-    public struct InputAlias
-    {
-        public String Alias { get; set; }
-        public InputSource Source { get; set; }
-        public int SourceKey { get; set; }
-    }
-
-    public abstract class InputControl
-    {
-        public String Alias { get; set; }
-        public bool Invert { get; set; } = false;
-        public Vector2 DeadZoneBounds { get; set; } = new Vector2(0.1f, 0.9f);
-
-        public abstract IEnumerable<InputAlias> GetChildAliases();
-
-        public abstract float GetControlValue(ref Dictionary<String, float> currentValues);
-    }
-
-    public class SoloControl : InputControl
-    {
-        private InputAlias alias;
-
-        public SoloControl(InputAlias btn)
-        {
-            alias = btn;
-            Alias = btn.Alias;
-        }
-
-        public override IEnumerable<InputAlias> GetChildAliases()
-        {
-            yield return alias;
-            yield break;
-        }
-
-        public override float GetControlValue(ref Dictionary<String, float> currentValues)
-        {
-            if (!currentValues.ContainsKey(alias.Alias))
-                return 0.0f;
-            return currentValues[alias.Alias] * (Invert ? -1 : 1);
-        }
-    }
-
-    public class MouseWheelAxis : InputControl
-    {
-        private InputAlias iAlias;
-
-        public MouseWheelAxis(InputAlias alias)
-        {
-            Alias = alias.Alias;
-            iAlias = alias;
-        }
-
-        public override float GetControlValue(ref Dictionary<string, float> currentValues)
-        {
-            float posV = 0.0f;
-            float negV = 0.0f;
-            if (currentValues.ContainsKey(Alias))
-                posV = currentValues[Alias];
-            //currentValues[Alias] = 0;
-            return posV;
-        }
-
-        public override IEnumerable<InputAlias> GetChildAliases()
-        {
-            yield return iAlias;
-            yield break;
-        }
-    }
-
-    public class PairControl : InputControl
-    {
-        private InputAlias negativeAlias;
-        private InputAlias positiveAlias;
-
-        private String NegAlias
-        { get { return $"{Alias}_Neg"; } }
-        private String PosAlias
-        { get { return $"{Alias}_Pos"; } }
-
-        public PairControl(InputAlias neg, InputAlias pos)
-        {
-            Alias = neg.Alias;
-            neg.Alias = NegAlias;
-            pos.Alias = PosAlias;
-            negativeAlias = neg;
-            positiveAlias = pos;
-        }
-
-        public override IEnumerable<InputAlias> GetChildAliases()
-        {
-            yield return negativeAlias;
-            yield return positiveAlias;
-        }
-
-        public override float GetControlValue(ref Dictionary<string, float> currentValues)
-        {
-            float posV = 0.0f;
-            float negV = 0.0f;
-            if (currentValues.ContainsKey(PosAlias))
-                posV = currentValues[PosAlias];
-            if (currentValues.ContainsKey(NegAlias))
-                negV = currentValues[NegAlias];
-            return (posV - negV) * (Invert ? -1 : 1);
-        }
-    }
 
     /// <summary>
     /// Maps Input to numeric values for actionability via alias.
@@ -145,6 +32,7 @@ namespace BareE.GameDev
                 ControlGroupDefs.Add(v.Group, v);
             }
         }
+
         /// <summary>
         /// Construct an InputHandler instance that maps aliases to values according to the specified definition groups.
         /// </summary>
@@ -340,7 +228,6 @@ namespace BareE.GameDev
         private Dictionary<InputSource, Dictionary<int, InputAlias>> AliasedControls = new Dictionary<InputSource, Dictionary<int, InputAlias>>();
         private Dictionary<String, List<InputControl>> Controls = new Dictionary<string, List<InputControl>>();
         //HashSet<String> __NO_AUTO_UNSET_EVENT_ALIASES = new HashSet<string>();
-        
 
         public bool AddControl(String controlName, InputControl cntrl, bool overwrite = false)
         {
@@ -424,6 +311,7 @@ namespace BareE.GameDev
             }
         }
 */
+
         /// <summary>
         /// Get a 2D vector from a pair of aliases.
         /// </summary>
@@ -437,6 +325,7 @@ namespace BareE.GameDev
                 return new Vector2(this[aliasX], this[aliasY]);
             }
         }
+
         /// <summary>
         /// Read a value and ensure the value is not consumed again until the input is triggered again.
         /// </summary>
@@ -448,6 +337,7 @@ namespace BareE.GameDev
             CurrentValues[alias] = 0;
             return r;
         }
+
         /// <summary>
         /// Read a 2D vector from a pair of Values and ensure that value is not consumed again until the input is triggered again.
         /// </summary>
@@ -601,31 +491,5 @@ namespace BareE.GameDev
         #endregion TrackingInput
 
         #endregion Instance
-    }
-
-    /// <summary>
-    /// Used for serialization
-    /// </summary>
-    public class ControlGroupModel
-    {
-        public String Group { get; set; }
-        public ControlDefModel[] Controls { get; set; }
-    }
-    /// <summary>
-    /// Used for serialization
-    /// </summary>
-    public class ControlDefModel
-    {
-        public String Title { get; set; }
-        public String Alias { get; set; }
-        public InputSource Src { get; set; }
-
-        [Newtonsoft.Json.JsonProperty(PropertyName = "Type")]
-        public String ControlType { get; set; }
-
-        public String Def { get; set; }
-
-        public float DZMin { get; set; }
-        public float DZMax { get; set; }
     }
 }

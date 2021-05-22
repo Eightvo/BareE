@@ -11,18 +11,22 @@ namespace BareE.GameDev
         private long prevPauseLength;
         private long prevTickLength = 0;
         private long _gameTick;
+
         /// <summary>
         /// Current Game Tick
         /// </summary>
         public long GameTick { get { return _gameTick; } }
+
         /// <summary>
         /// Number of milliseconds since the game was first started.
         /// </summary>
         public long SessionDuration { get { return totalDuration.ElapsedMilliseconds; } }
+
         /// <summary>
         /// Number of milliseconds since the game was started while the game was not paused.
         /// </summary>
         public long EffectiveDuration { get { return totalDuration.ElapsedMilliseconds - currentPauseLength.ElapsedMilliseconds; } }
+
         /// <summary>
         /// Returns true if the paused state has been activated.
         /// </summary>
@@ -44,6 +48,7 @@ namespace BareE.GameDev
                 return;
             currentPauseLength.Start();
         }
+
         /// <summary>
         /// Deactivate the paused state.
         /// </summary>
@@ -53,6 +58,7 @@ namespace BareE.GameDev
                 return;
             currentPauseLength.Stop();
         }
+
         /// <summary>
         /// Current Turn.
         /// </summary>
@@ -70,6 +76,7 @@ namespace BareE.GameDev
         {
             _gameTick++; prevTickLength = SessionDuration - _tickStartTime; _tickStartTime = SessionDuration;
         }
+
         /// <summary>
         /// Obtain a stable snapshot of time.
         /// </summary>
@@ -79,6 +86,7 @@ namespace BareE.GameDev
             return new Instant(SessionDuration, EffectiveDuration, IsPaused, Turn, prevTickLength);
         }
     }
+
     /// <summary>
     /// Represents a stable snapshot of
     /// </summary>

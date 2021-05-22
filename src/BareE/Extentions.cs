@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BareE
 {
@@ -13,6 +9,7 @@ namespace BareE
         {
             return (rect.Width > 0 && rect.Height > 0);
         }
+
         public static double ToAngle(this Vector2 vec)
         {
             if (vec.X < 0)
@@ -24,6 +21,7 @@ namespace BareE
                 return Math.Atan2(vec.X, vec.Y) * MathHelper.RadToDeg(1);
             }
         }
+
         public static float ToFacingAngle(this Vector2 vec)
         {
             return MathHelper.ToFacingAngle(vec);

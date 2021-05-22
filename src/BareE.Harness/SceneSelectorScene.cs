@@ -26,7 +26,7 @@ namespace BareE.Harness
                 State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
                 {
                     Preloaded = false,
-                    Scene = new TestGameScene(),
+                    Scene = new LightingTestScene(),
                     State = new GameState()
                 });
             }

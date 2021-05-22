@@ -11,6 +11,7 @@ namespace BareE.DataStructures
         /// All instantiated Entities by name or index within a context.
         /// </summary>
         public AliasMap<Entity> Entities;
+
         /// <summary>
         /// All instantiated Components within a context.
         /// </summary>
@@ -41,6 +42,7 @@ namespace BareE.DataStructures
             }
             return spawn;
         }
+
         /// <summary>
         /// Instantiate a new entity by name as associate it with the provided components.
         /// </summary>
@@ -57,6 +59,7 @@ namespace BareE.DataStructures
             }
             return spawn;
         }
+
         /// <summary>
         /// Instantiate a new entity with the given parent and associate it with the given components.
         /// </summary>
@@ -69,6 +72,7 @@ namespace BareE.DataStructures
             ent.Parent = parent.Id;
             return ent;
         }
+
         /// <summary>
         /// Instantiate a new entity by name with the given parent and associate it with the given components.
         /// </summary>

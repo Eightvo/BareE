@@ -87,9 +87,6 @@ namespace BareE.DataStructures
 
         public object Current { get; set; } = null;
 
-        private PQNode _currentNode = null;
-        private PQNode _currentNodeParent = null;
-
         public long PeekWeight()
         {
             if (Head == null) throw new IndexOutOfRangeException("Queue is empty");

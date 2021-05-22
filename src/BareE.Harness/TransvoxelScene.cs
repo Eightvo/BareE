@@ -24,8 +24,6 @@ namespace BareE.Harness
         private float turnspeed = 8.0f;
 
         private bool isGrass = true;
-        private Texture GrassDirt;
-        private Texture Brick;
 
         private Texture CurrentTexture(GraphicsDevice device)
         {

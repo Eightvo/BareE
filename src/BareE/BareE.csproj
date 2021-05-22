@@ -16,6 +16,9 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>G:\git\BareE\BareE\bin\BareE</OutputPath>
+    <NoWarn>1701;1702;NU5104;</NoWarn>
+    <WarningsAsErrors>;NU1605</WarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -39,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="NetCoreAudio" Version="1.6.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="sdl2" Version="2.0.5" />

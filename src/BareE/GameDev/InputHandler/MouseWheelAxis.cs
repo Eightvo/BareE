@@ -15,10 +15,8 @@ namespace BareE.GameDev
         public override float GetControlValue(ref Dictionary<string, float> currentValues)
         {
             float posV = 0.0f;
-            float negV = 0.0f;
             if (currentValues.ContainsKey(Alias))
                 posV = currentValues[Alias];
-            //currentValues[Alias] = 0;
             return posV;
         }
 

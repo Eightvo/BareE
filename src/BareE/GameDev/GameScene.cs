@@ -25,9 +25,6 @@ namespace BareE.GameDev
         private IntPtr hudPtr;
         private Veldrid.CommandList hudCmds;
 
-        private IntPtr HudGuiPtr;
-        private IntPtr WinGuiPtr;
-
         private bool rebuildHud;
 
         private ISceneDataProvider tranfserSceneData = new DefaultSceneDataProvider();

@@ -14,7 +14,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <OutputPath>G:\git\BareE\BareE\bin\BareE.EZRend</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

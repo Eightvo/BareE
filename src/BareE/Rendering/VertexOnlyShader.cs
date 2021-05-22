@@ -42,7 +42,6 @@ namespace BareE.Rendering
         private bool VertexContentDirty = false;
 
         public virtual bool UseDepthStencil { get { return true; } }
-        private bool DrawReady = false;
 
         private PixelFormat NativePixelFormat;
         private Pipeline GraphicsPipeline;
@@ -55,7 +54,6 @@ namespace BareE.Rendering
         private ResourceSet CameraResourceSet;
         private Shader[] ShaderSet;
         private ShaderSetDescription ShaderSetDesc;
-        private bool DrawToggle = false;
 
         public void Clear()
         {
@@ -72,11 +70,9 @@ namespace BareE.Rendering
                 {
                     case VertexOverflowBehaviour.EXCEPTION:
                         throw new Exception($"Vertex List exceeded {MaximumVerticies} Maximum");
-                        return;
 
                     case VertexOverflowBehaviour.IGNORE:
                         throw new Exception($"Vertex List exceeded {MaximumVerticies} Maximum");
-                        return;
 
                     case VertexOverflowBehaviour.EXPAND:
                         MaximumVerticies = MaximumVerticies + (int)Math.Ceiling(MaximumVerticies * VertexOverflowExpansionFactor);
@@ -220,7 +216,6 @@ namespace BareE.Rendering
                 device.UpdateBuffer<V>(VertexBuffer, 0, verts.ToArray());
                 VertexContentDirty = false;
             }
-            DrawToggle = true;
         }
 
         public virtual void UpdateBuffers(CommandList cmds)

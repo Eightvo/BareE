@@ -11,8 +11,6 @@ namespace BareE
         {
             if (WriteExceptionToConsole)
                 Console.WriteLine(e);
-
-            System.Media.SoundPlayer soundplayer = new System.Media.SoundPlayer();
         }
 
         internal static void EmitTrace(string v)

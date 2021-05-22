@@ -122,7 +122,6 @@ namespace BareE
 
         private IEnumerable<LexerToken> ConsumeInputSection(StreamReader rdr)
         {
-            LexerToken nxtToken;
             char curr = (char)rdr.Peek();
             foreach (var v in ConsumeWhitespace(rdr))
                 yield return v;
@@ -340,8 +339,8 @@ namespace BareE
                 case '\\': ret = "\\"; break;
                 case '"': ret = "\""; break;
                 case '\'': ret = "'"; break;
+                default: throw new Exception("Unrecognized Escape Sequence");
             }
-            throw new Exception($"Unrecognized Escape sequence {escSeq}");
             MoveNext(rdr);
             return ret;
         }

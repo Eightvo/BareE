@@ -40,11 +40,9 @@ namespace BareE.Rendering
         private Sampler ColorTextureSampler;
         private TextureView ColorTextureView;
         private Texture ColorTexture;
-        private Texture TargtetColorTexture;
         private ResourceLayout ColorTextureLayout;
         private ResourceSet ColorTextureResourceSet;
         public SamplerFilter ColorTextureFilter = SamplerFilter.Anisotropic;
-        private bool TextureDirty = false;
 
         public void SetTexture(GraphicsDevice device, Texture texture)
         {

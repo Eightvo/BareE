@@ -193,7 +193,6 @@ namespace BareE.GameDev
                     }
                     Log.EmitError(new Exception($"Could not parse mousepad source {d}"));
                     return 0;
-                    break;
             }
         }
 

@@ -27,13 +27,10 @@ namespace BareE.Systems
         private RingBuffer<String> _history;
         private RingBuffer<String> _temp;
         private Entity _CmdRoot;
-        private int _cursorPosition;
-        private StringBuilder _buffer;
 
         private BareE.Widgets.Credits CreditsWidget;
 
         private int currHistPtr = 0;
-        //        ECS.ECContainer ECC;
 
         private String cmdText = String.Empty;
 

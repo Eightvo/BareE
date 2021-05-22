@@ -9,13 +9,6 @@ using Veldrid.Sdl2;
 
 namespace BareE
 {
-    internal struct BGLoadData
-    {
-        public Messages.TransitionScene transition;
-        public GameState state;
-        public Instant instant;
-    }
-
     public class Engine
     {
         private Game ActiveGame;

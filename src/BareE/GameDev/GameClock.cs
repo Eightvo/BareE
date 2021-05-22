@@ -8,7 +8,6 @@ namespace BareE.GameDev
         private Stopwatch currentPauseLength;
         private long _turnStartTime = 0;
         private long _tickStartTime = 0;
-        private long prevPauseLength;
         private long prevTickLength = 0;
         private long _gameTick;
 

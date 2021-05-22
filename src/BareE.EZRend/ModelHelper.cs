@@ -192,7 +192,6 @@ namespace BareE.EZRend
             var scene = ac.ImportFile(filename, pps);
             for (int i = 0; i < scene.MeshCount; i++)
             {
-                bool reqCreate = true;
                 var mesh = scene.Meshes[i];
                 ColorNormalShader uvn = new ColorNormalShader();
                 uvn.SetOutputDescription(oDesc);

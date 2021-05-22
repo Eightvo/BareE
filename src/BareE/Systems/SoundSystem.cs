@@ -24,6 +24,7 @@ namespace BareE.Systems
     public class SoundSystem : GameDev.GameSystem
     {
         private Dictionary<String, System.Media.SoundPlayer> soundboard;
+#pragma warning disable CA1416 // Validate platform compatibility
         private System.Media.SoundPlayer player = new System.Media.SoundPlayer();
 
         private bool doEmitSound(PlaySFX req, GameState state, Instant instant)
@@ -34,6 +35,7 @@ namespace BareE.Systems
             soundboard[req.Resource].Play();
             return true;
         }
+#pragma warning restore CA1416 // Validate platform compatibility
 
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {

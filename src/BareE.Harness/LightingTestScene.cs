@@ -29,7 +29,6 @@ namespace BareE.Harness
         private float turnspeed = 8.0f;
         private float modelTurnSpeed = 0.0f;
         private float modelSpeed = 0.0f;
-        private RenderDoc rd;
         private Entity cat;
 
         private String pText = "Pause";

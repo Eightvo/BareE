@@ -75,7 +75,6 @@ namespace BareE.EZRend.Novelty.SDLText
             var textureFile = System.IO.Path.ChangeExtension(descFile, ".png");
             System.Text.RegularExpressions.Regex sdfRegex = new System.Text.RegularExpressions.Regex(@"^(?<char>.)(?<style>[:/_!]) (?<charLeft>\d+),(?<charTop>\d+),(?<charWid>\d+),(?<charHeight>\d+).*$");
 
-            var gIndx = 0;
             int i = 0;
             using (var rdr = new StreamReader(AssetManager.FindFileStream(descFile)))
             {

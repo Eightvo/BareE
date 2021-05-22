@@ -8,6 +8,10 @@
     <PackageLicenseFile>License.md</PackageLicenseFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>G:\git\BareE\BareE\bin\BareE.Transvoxel</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\..\License.md">
       <Pack>True</Pack>

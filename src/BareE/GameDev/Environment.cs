@@ -126,6 +126,7 @@ namespace BareE.GameDev
 
     public class GameEnvironment
     {
+        private GameEnvironment() { }
         [JsonConverter(typeof(StringEnumConverter))]
         public GraphicsBackend PrefferedBackend { get; set; } = GraphicsBackend.OpenGL;
 

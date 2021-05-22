@@ -76,7 +76,7 @@ namespace BareE
             game.ActiveScene.DoInitialize(instant, game.State, game.Environment);
             Sdl2Events.Subscribe(HandleEvent);
             float cummulativeDelta = 0;
-            while (isRunning)
+            while (isRunning && game.Environment.Window.Window.Exists)
             {
                 if (onDeckScene != null)
                 {

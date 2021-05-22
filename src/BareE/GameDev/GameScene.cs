@@ -121,7 +121,7 @@ namespace BareE.GameDev
                 Env.HUDBackBuffer.Dispose();
                 Env.HUDBackBuffer = GameEnvironment.CreateFlatbuffer(Env.Window.Device, (uint)Env.Window.Window.Width, (uint)Env.Window.Window.Height, Env.VRPixelFormat, TextureSampleCount.Count1);
 
-                hudToScreen = new FullscreenTexture.FramebufferToScreen();
+                hudToScreen = new FramebufferToScreen();
                 hudToScreen.SetOutputDescription(Env.Window.Device.MainSwapchain.Framebuffer.OutputDescription);
                 hudToScreen.CreateResources(Env.Window.Device);
                 hudToScreen.SetTexture(Env.Window.Device, Env.HUDBackBuffer.ColorTargets[0].Target);

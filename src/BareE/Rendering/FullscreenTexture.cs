@@ -9,7 +9,7 @@ namespace BareE.Rendering
     {
         public override bool UseDepthStencil { get => true; }
 
-        public FullScreenTexture() : base("BareE.EZRend.ImageShader.FullscreenTexture.FullScreenTexture")
+        public FullScreenTexture() : base("BareE.Rendering.FullScreenTexture")
         {
             AddVertex(new Pos3_Uv2() { Position = new Vector3(-1, -1, 0), Uv = new Vector2(0, 1) });
             AddVertex(new Pos3_Uv2() { Position = new Vector3(1, 1, 0), Uv = new Vector2(1, 0) });

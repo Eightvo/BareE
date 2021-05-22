@@ -4,6 +4,10 @@ using System.Numerics;
 
 namespace BareE.Transvoxel
 {
+    /// <summary>
+    /// Contains Sample Data for a Cube of volume withing a point cloud.
+    /// </summary>
+    /// <typeparam name="D"></typeparam>
     public class CloudView<D>
         where D : struct, IPointData
     {

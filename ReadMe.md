@@ -13,6 +13,15 @@ Easily create new Component and Message Types using Component and Message Type a
 
 
 Supports VR.
+***
+# How to Build
+
+The repository is a standard Dot Net 5 Solution. The [Tools](https://dotnet.microsoft.com/download) can be obtained from microsoft.
+
+Suggested IDE is [Visual Studio](https://visualstudio.microsoft.com/) Community or Pro. 
+
+Nuget must be configured to find packages from MyGet as described below, or the Veldrid Nuget package references can be replaced with local references to 
+Veldrid. 
 
 ***
 Available on Nuget

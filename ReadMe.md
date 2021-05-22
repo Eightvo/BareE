@@ -15,7 +15,15 @@ Easily create new Component and Message Types using Component and Message Type a
 Supports VR.
 
 ***
+Available on Nuget
 
+[![NuGet](https://img.shields.io/nuget/v/Veldrid.svg)](https://www.nuget.org/packages/BareE) BareE
+
+[![NuGet](https://img.shields.io/nuget/v/Veldrid.svg)](https://www.nuget.org/packages/BareE.EZRend) BareE.EZRend
+
+[![NuGet](https://img.shields.io/nuget/v/Veldrid.svg)](https://www.nuget.org/packages/BareE.Transvoxel) BareE.Transvoxel
+
+***
 # MyGet
 
 BareE is built on [Veldrid](https://github.com/mellinoe/veldrid). The Nuget Packages referenced are hosted on [MyGet](https://www.myget.org)

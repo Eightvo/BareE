@@ -11,7 +11,6 @@ using Veldrid;
 
 namespace BareE.EZRend
 {
-
     public static class ModelHelper
     {
         public static PostProcessSteps DefaultSteps = PostProcessSteps.CalculateTangentSpace | PostProcessSteps.FixInFacingNormals | PostProcessSteps.ForceGenerateNormals | PostProcessSteps.GenerateNormals | PostProcessSteps.Triangulate | PostProcessSteps.FlipWindingOrder;

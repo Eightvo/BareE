@@ -263,7 +263,6 @@ namespace BareE.DataStructures
         /// <typeparam name="T"></typeparam>
         /// <param name="ent"></param>
         /// <returns></returns>
-
         public bool HasComponent<T>(Entity ent)
         {
             int i = ComponentTypeData[typeof(T)].CTypeID;

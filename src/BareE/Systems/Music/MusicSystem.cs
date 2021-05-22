@@ -2,15 +2,11 @@
 using BareE.GameDev;
 using BareE.Messages;
 
-using Newtonsoft.Json.Converters;
-
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace BareE.Systems
 {
-
     /// <summary>
     /// A built in class allowing the use of Audio via a radio like interface.
     /// Responds to PlaySong Messages in the following manner:
@@ -136,25 +132,5 @@ namespace BareE.Systems
             if (player.Playing)
                 player.Stop();
         }
-    }
-
-    public enum RadioStationPlayOrder
-    {
-        Sequential,
-        Shuffle
-    }
-
-    public class Radio
-    {
-        public Dictionary<String, Station> Stations { get; set; }
-    }
-
-    public class Station
-    {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public RadioStationPlayOrder PlayOrder { get; set; }
-
-        public int SongDelay { get; set; }
-        public string[] PlayList { get; set; }
     }
 }

@@ -178,14 +178,12 @@ namespace BareE
             switch ((char)rdr.Peek())
             {
                 case '/':
-                    MoveNext(rdr);//Read the initial /
-                    //MoveNext(rdr);//Read the second /
+                    MoveNext(rdr);
                     return ConsumeSingleLineComment(rdr);
 
                 case '*':
                 default:
                     MoveNext(rdr);
-                    //MoveNext(rdr);
                     return ConsumeMultiLineComment(rdr);
             }
         }

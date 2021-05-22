@@ -6,7 +6,6 @@ using Veldrid.Sdl2;
 
 namespace BareE.GameDev
 {
-
     /// <summary>
     /// Maps Input to numeric values for actionability via alias.
     /// Multiple Keys may map to the same alias, however multiple aliases can not map to the same key(s).

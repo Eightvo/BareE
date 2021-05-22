@@ -92,8 +92,8 @@ namespace BareE.Transvoxel
 
     internal struct RegularCellData
     {
-        private byte geometryCounts;       // High nibble is vertex count, low nibble is triangle count.
-        public List<Byte> TriVertList;//[15]  // Up to 5 Triangles (15 points).
+        private byte geometryCounts;   // High nibble is vertex count, low nibble is triangle count.
+        public List<Byte> TriVertList; // Up to 5 Triangles (15 points).
 
         public RegularCellData(byte geoCounts, List<Byte> vertIndx)
         {

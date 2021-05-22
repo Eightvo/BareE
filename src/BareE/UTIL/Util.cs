@@ -47,7 +47,6 @@ namespace BareE.UTIL
         }
 
         public static Framebuffer CreateFramebuffer(GraphicsDevice device, uint resolutionX, uint resolutionY, PixelFormat pixelFormat, TextureSampleCount sampleCount)
-
         {
             var drawTrgt = device.ResourceFactory.CreateTexture(
                 new TextureDescription(resolutionX,

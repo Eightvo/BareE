@@ -47,7 +47,7 @@ namespace BareE.Messages
         /// <param name="delayedFrom"></param>
         public void EmitEffectiveTimeDelayedMessage(long delay, object m, Instant delayedFrom)
         {
-            _delayedMessages_Effective.Push(m, delay + delayedFrom.EffectiveDuration);
+            _delayedMessages_Effective.Enqueue(m, delay + delayedFrom.EffectiveDuration);
         }
         /// <summary>
         /// Wait delay milliseconds from the instant provided including paused time, then emit the specified message.
@@ -57,7 +57,7 @@ namespace BareE.Messages
         /// <param name="delayedFrom"></param>
         public void EmitRealTimeDelayedMessage(long delay, object m, Instant delayedFrom)
         {
-            _delayedMessages_Realtime.Push(m, delay + delayedFrom.SessionDuration);
+            _delayedMessages_Realtime.Enqueue(m, delay + delayedFrom.SessionDuration);
         }
         /// <summary>
         /// Wait delay turn from the instant provided, then emit the specified message. 
@@ -67,7 +67,7 @@ namespace BareE.Messages
         /// <param name="delayedFrom"></param>
         public void EmitTurnDelayedMessage(long delay, object m, Instant delayedFrom)
         {
-            _delayedMessages_Turn.Push(m, delay + delayedFrom.Turn);
+            _delayedMessages_Turn.Enqueue(m, delay + delayedFrom.Turn);
         }
         /// <summary>
         /// Emit a message immediately.
@@ -128,26 +128,26 @@ namespace BareE.Messages
         public void ProcessMessages(Instant snapshot, GameState state)
         {
             /*Effective time Delay*/
-            while (!_delayedMessages_Effective.IsEmpty() &&
+            while (!_delayedMessages_Effective.IsEmpty &&
                   _delayedMessages_Effective.PeekWeight() <= snapshot.EffectiveDuration)
             {
-                EmitMsg(_delayedMessages_Effective.Pop());
+                EmitMsg(_delayedMessages_Effective.Dequeue());
                 // AddMsg(new ConsoleInput() { Text = $"ED={snapshot.EffectiveDuration}" });
             }
 
             /*Real time Delay*/
-            while (!_delayedMessages_Realtime.IsEmpty() &&
+            while (!_delayedMessages_Realtime.IsEmpty &&
                   _delayedMessages_Realtime.PeekWeight() <= snapshot.SessionDuration)
             {
-                EmitMsg(_delayedMessages_Realtime.Pop());
+                EmitMsg(_delayedMessages_Realtime.Dequeue());
                 // AddMsg(new ConsoleInput() { Text = $"SD={snapshot.SessionDuration}" });
             }
 
             /*Turn Delay*/
-            while (!_delayedMessages_Turn.IsEmpty() &&
+            while (!_delayedMessages_Turn.IsEmpty &&
                   _delayedMessages_Turn.PeekWeight() <= snapshot.Turn)
             {
-                EmitMsg(_delayedMessages_Turn.Pop());
+                EmitMsg(_delayedMessages_Turn.Dequeue());
                 // AddMsg(new ConsoleInput() { Text = $"Turn={snapshot.Turn}" });
             }
 

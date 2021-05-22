@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageLicenseFile>License.md</PackageLicenseFile>
+    <Copyright>Greg Freedline 2021</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +25,10 @@
     <None Remove="Assets\sfx\sfx_wpn_cannon3.wav" />
     <None Remove="Assets\Textures\brickVoxelTexture.png" />
     <None Remove="Assets\Textures\GrassDirtVoxelTexture.png" />
+    <None Include="..\..\License.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

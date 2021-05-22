@@ -66,9 +66,9 @@ namespace BareE.Harness
                     },
                 }
             });
-            this.Systems.Push(new BareE.Systems.ConsoleSystem(), 1);
-            this.Systems.Push(new BareE.Systems.SoundSystem(), 2);
-            this.Systems.Push(new BareE.Systems.MusicSystem("BareE.Harness.Assets.Def.default.radio"), 3);
+            this.Systems.Enqueue(new BareE.Systems.ConsoleSystem(), 1);
+            this.Systems.Enqueue(new BareE.Systems.SoundSystem(), 2);
+            this.Systems.Enqueue(new BareE.Systems.MusicSystem("BareE.Harness.Assets.Def.default.radio"), 3);
             State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput() { System = true, Text = "BOOT" });
 
             Env.WorldCamera.LockUp = true;

@@ -14,20 +14,16 @@ namespace BareE.Harness
     {
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
-            this.Systems.Push(new ConsoleSystem(), 1);
-            this.Systems.Push(new SoundSystem(), 2);
-            this.Systems.Push(new MusicSystem("BareE.Harness.Assets.Def.default.radio"), 3);
+            this.Systems.Enqueue(new ConsoleSystem(), 1);
+            this.Systems.Enqueue(new SoundSystem(), 2);
+            this.Systems.Enqueue(new MusicSystem("BareE.Harness.Assets.Def.default.radio"), 3);
         }
 
         private long p = 0;
 
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
-            //if (Instant.EffectiveDuration-p>1000)
-            //{
-            //    p = Instant.EffectiveDuration;
             State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput($"{p++}"));
-            //}
         }
 
         public override void RenderEye(Instant Instant, GameState State, GameEnvironment Env, Matrix4x4 eyeMat, Framebuffer outbuffer, CommandList cmds)

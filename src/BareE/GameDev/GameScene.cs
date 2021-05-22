@@ -98,7 +98,7 @@ namespace BareE.GameDev
             //  ImGuiNET.ImGui.SetCurrentContext(WinGuiPtr);
 
             Load(Instant, State, Env);
-            foreach (var sys in Systems)
+            foreach (var sys in Systems.Elements)
                 sys.Load(Instant, State, Env);
         }
 
@@ -110,7 +110,7 @@ namespace BareE.GameDev
         internal void DoInitialize(Instant Instant, GameState State, GameEnvironment Env)
         {
             Initialize(Instant, State, Env);
-            foreach (var sys in Systems)
+            foreach (var sys in Systems.Elements)
                 sys.Initialize(Instant, State, Env);
         }
 
@@ -137,7 +137,7 @@ namespace BareE.GameDev
             hudToScreen.Update(Env.Window.Device);
 
             Update(Instant, State, Env);
-            foreach (var sys in Systems)
+            foreach (var sys in Systems.Elements)
                 sys.Update(Instant, State, Env);
         }
 
@@ -164,7 +164,7 @@ namespace BareE.GameDev
                 leftEyeView = leftEyeView * Env.VRSettings.Pose.LeftEyeProjection;
             }
             this.RenderEye(Instant, State, Env, leftEyeView, Env.LeftEyeBackBuffer, cmds);
-            foreach (var sys in Systems)
+            foreach (var sys in Systems.Elements)
                 sys.RenderEye(Instant, State, Env, leftEyeView, Env.LeftEyeBackBuffer, cmds);
             cmds.End();
             //Env.Window.Device.SubmitCommands(cmds, f);
@@ -186,7 +186,7 @@ namespace BareE.GameDev
                     rightEyeView = rightEyeView * Env.VRSettings.Pose.RightEyeProjection;
                 }
                 this.RenderEye(Instant, State, Env, rightEyeView, Env.RightEyeBackBuffer, cmds);
-                foreach (var sys in Systems)
+                foreach (var sys in Systems.Elements)
                     sys.RenderEye(Instant, State, Env, rightEyeView, Env.RightEyeBackBuffer, cmds);
                 cmds.End();
                 Env.Window.Device.SubmitCommands(cmds);
@@ -215,7 +215,7 @@ namespace BareE.GameDev
             }
 
             RenderHud(Instant, State, Env, Env.HUDBackBuffer, hudCmds);
-            foreach (var sys in Systems)
+            foreach (var sys in Systems.Elements)
                 sys.RenderHud(Instant, State, Env, Env.HUDBackBuffer, hudCmds);
 
             Env.Window.IGR.Render(Env.Window.Device, hudCmds);
@@ -305,7 +305,7 @@ namespace BareE.GameDev
 
         public void Dispose()
         {
-            foreach (var sys in Systems)
+            foreach (var sys in Systems.Elements)
                 sys.Unload();
             Unload();
         }

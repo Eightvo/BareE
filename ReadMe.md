@@ -1,4 +1,6 @@
 ﻿# BareE
+ 
+![autobuild](https://github.com/Eightvo/BareE/actions/workflows/autobuild.yml/badge.svg)
 
 BareE is a Code First Game Development Framework. 
 
@@ -13,9 +15,26 @@ Easily create new Component and Message Types using Component and Message Type a
 
 
 Supports VR.
+***
+# How to Build
+
+The repository is a standard Dot Net 5 Solution. The [Tools](https://dotnet.microsoft.com/download) can be obtained from microsoft.
+
+Suggested IDE is [Visual Studio](https://visualstudio.microsoft.com/) Community or Pro. 
+
+Nuget must be configured to find packages from MyGet as described below, or the Veldrid Nuget package references can be replaced with local references to 
+Veldrid. 
 
 ***
+Available on Nuget
 
+[![NuGet](https://img.shields.io/nuget/v/Veldrid.svg)](https://www.nuget.org/packages/BareE) BareE
+
+[![NuGet](https://img.shields.io/nuget/v/Veldrid.svg)](https://www.nuget.org/packages/BareE.EZRend) BareE.EZRend
+
+[![NuGet](https://img.shields.io/nuget/v/Veldrid.svg)](https://www.nuget.org/packages/BareE.Transvoxel) BareE.Transvoxel
+
+***
 # MyGet
 
 BareE is built on [Veldrid](https://github.com/mellinoe/veldrid). The Nuget Packages referenced are hosted on [MyGet](https://www.myget.org)

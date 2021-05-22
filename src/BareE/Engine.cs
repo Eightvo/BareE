@@ -101,7 +101,6 @@ namespace BareE
                         Monitor.Exit(MessageDispatchLock);
                     }
                 }
-                //game.State.Messages.ProcessMessages(instant, game.State);
                 game.ActiveScene.DoUpdate(instant, game.State, game.Environment);
                 var ss = game.Environment.Window.Window.PumpEvents();
                 game.Environment.Window.IGR.Update((float)instant.TickDelta / 1000f, ss);

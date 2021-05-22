@@ -76,6 +76,7 @@ namespace BareE.Systems
         }
 
         private Queue<String> _recentlyPlayedSongs = new Queue<string>();
+        private String _nextSongToPlay;
 
         private Random rng = new Random();
 
@@ -109,7 +110,8 @@ namespace BareE.Systems
 
             _recentlyPlayedSongs.Enqueue(song);
 
-            player.Play(song);
+            //player.Play(song);
+            _nextSongToPlay = song;
             return true;
         }
 
@@ -157,11 +159,15 @@ namespace BareE.Systems
                         handlePlaySong(PlaySong.Next(), State, Instant);
                     else
                     {
-                        // Console.WriteLine($"{Radio.Stations[CurrentStation].SongDelay} {Instant.SessionDuration}");
                         State.Messages.EmitRealTimeDelayedMessage(Radio.Stations[CurrentStation].SongDelay, PlaySong.Next(), Instant);
                     }
                 }
                 playerHasFinished = false;
+            }
+            if (!String.IsNullOrEmpty(_nextSongToPlay))
+            {
+                player.Play(_nextSongToPlay);
+                _nextSongToPlay = null;
             }
         }
 

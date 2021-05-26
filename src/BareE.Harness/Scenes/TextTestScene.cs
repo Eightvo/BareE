@@ -30,7 +30,8 @@ namespace BareE.Harness.Scenes
         float glowDist;
         float outlineThreshold;
         float scale = 0.1f;
-
+        string TextTest = "Text";
+        
         Vector3 Color1=new Vector3(1,0,0);
         Vector3 Color2 = new Vector3(1, 0, 0);
 
@@ -116,7 +117,15 @@ namespace BareE.Harness.Scenes
             Vector3 Tint1 = Color1;
             Vector3 Tint2 = Color2;
 
-            text.PutCharacter('A', new Vector2(0, 0), 0.1f, new Vector3(1, 0, 0), new Vector3(0, 1, 1));
+            text.Cursor = new Vector2(Env.Window.Resolution.Width/2.0f, Env.Window.Resolution.Height/2.0f);
+            text.TextColor = Color1;
+            text.Scale = scale;
+            text.OutlineColor = Color2;
+            //text.PutCharacter('A', new Vector2(0, 0),scale, Color1, Color2);
+
+
+            foreach (var c in TextTest??"Empty")
+                text.AddCharacter(c);
             //Close Face
 
             /*
@@ -155,6 +164,7 @@ namespace BareE.Harness.Scenes
             IG.End();
 
             IG.Begin("Text");
+            IG.InputText("Test:", ref TextTest, 10);
             IG.DragFloat("Scale", ref scale);
             IG.ColorEdit3("Color1", ref Color1);
             IG.ColorEdit3("Color2", ref Color2);

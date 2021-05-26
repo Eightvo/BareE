@@ -114,14 +114,27 @@ namespace BareE.GUI.TextRendering
         }
         public void AddCharacter(char c)
         {
-            //var key = $"{c}{style}";
-            //var gI = GetInfo(c, style);
-            Vector3 cp = new Vector3(0, 0, 0);
-            Matrix4x4 transformMatrix = Matrix4x4.CreateScale(Scale) * Matrix4x4.CreateTranslation(new Vector3(Cursor, 1));
+            if (!ActiveFont.Glyphs.ContainsKey((int)c))
+            {
+                Cursor += new Vector2(ActiveFont.SpaceWidth, 0);
+                return;
+            }
             var glyphData = ActiveFont.Glyphs[(int)c];
+
+            Vector2 HalfRes = Resolution / 2.0f;
+            Vector2 trueCursor = Cursor-HalfRes;
+            trueCursor += new Vector2(glyphData.BearingX, glyphData.Drop);
+
+
+            Cursor += new Vector2(glyphData.Advance,0);
+
+            Matrix4x4 transformMatrix = 
+                Matrix4x4.CreateScale(Scale)
+                * Matrix4x4.CreateTranslation(new Vector3(trueCursor/HalfRes, 1));
 
             Vector2 UvBL = new Vector2(glyphData.Rect.Left / (float)ActiveFont.TotalWidth, glyphData.Rect.Height / ActiveFont.LineHeight); ;
             Vector2 UvTR = new Vector2(glyphData.Rect.Right / (float)ActiveFont.TotalWidth, 0);
+
             //Close Face
             AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvBL.Y), TextColor, OutlineColor));
             AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(UvTR.X, UvTR.Y), TextColor, OutlineColor));
@@ -130,6 +143,9 @@ namespace BareE.GUI.TextRendering
             AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvBL.Y), TextColor, OutlineColor));
             AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvTR.Y), TextColor, OutlineColor));
             AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(UvTR.X, UvTR.Y), TextColor, OutlineColor));
+
+
+
         }
         
         /*

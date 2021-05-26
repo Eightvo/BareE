@@ -28,10 +28,10 @@ void main()
 
 	//FinalColor=vec4(tint1, dist);
 
-	float alpha = smoothstep(0, 0.0+BlurOutDist, dist);
+	float alpha = 1-smoothstep(0, BlurOutDist, dist);
 
-	if (dist==0) FinalColor=vec4(0,1,0,1);
-	if (dist>0.25) FinalColor=vec4(0,0,1,1);
+	FinalColor=vec4(tint1,alpha);
+	//if (dist>0.25) FinalColor=vec4(0,0,1,1);
 
 
 	if (FinalColor.a==0) discard;

@@ -14,25 +14,39 @@ layout(std140, set=1, binding = 0) uniform Settings
 	vec2 DropShadow;
 	vec3 GlowColor;
 	float GlowDist;
+	int FontType;
+	int Flags;
+	vec2 FontRes;
 };
 
 
 const float smoothing = 1.0/32.0;
+
+vec4 STDFont(vec4 actualData, vec4 dropData)
+{
+    return actualData;
+}
+
+vec4 SDFFont(vec4 actualData, vec4 dropData)
+{
+    float dist = actualData.r;
+
+	float alpha = 1-smoothstep(0, BlurOutDist+OutlineThreshold, dist);
+	float cMix = smoothstep(BlurOutDist,BlurOutDist+OutlineThreshold, dist);
+	vec3 oClr = mix(tint1,tint2,cMix);
+
+	return vec4(oClr,alpha);
+}
 
 void main()
 {
 	vec4 actualData = texture(sampler2D(Texture,SurfaceSampler), uv);
 	vec4 dropData = texture(sampler2D(Texture,SurfaceSampler), uv-DropShadow);
 
-    float dist = actualData.r;
-
-	//FinalColor=vec4(tint1, dist);
-
-	float alpha = 1-smoothstep(0, BlurOutDist, dist);
-
-	FinalColor=vec4(tint1,alpha);
-	//if (dist>0.25) FinalColor=vec4(0,0,1,1);
-
+	if (FontType==1)
+	   FinalColor =actualData;
+	else 
+	   FinalColor = SDFFont(actualData, dropData);
 
 	if (FinalColor.a==0) discard;
 }

@@ -29,14 +29,15 @@ namespace BareE.Harness.Scenes
         Vector3 glowColor;
         float glowDist;
         float outlineThreshold;
-        float scale = 0.1f;
-        string TextTest = "Text";
-        
+        float scale = 1f;
+        string TextTest = "AA";
+
+        Vector2 TextPosition;
         Vector3 Color1=new Vector3(1,0,0);
         Vector3 Color2 = new Vector3(1, 0, 0);
 
-        String newFontName = String.Empty;
-
+        String newFontName = @"Assets\Fonts\SDF\Times_64em.fnt";
+        String ActiveFontName = @"Assets\Fonts\SDF\Times_64em.fnt";
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
 
@@ -59,41 +60,44 @@ namespace BareE.Harness.Scenes
             });
             text = new TextShader(new Vector2(Env.Window.Resolution.Width, Env.Window.Resolution.Height));
             text.CreateResources(Env.Window.Device);
-            //text.LoadFont(Env.Window.Device, "BareE.Harness.Assets.Fonts.SDF.Times New Roman.txt");
-            //text.LoadFont(Env.Window.Device, @"Assets\Fonts\SDF\A.txt");
-            //text.SetTexture(Env.Window.Device, AssetManager.LoadTexture(@"Assets\Fonts\SDF\c.png", Env.Window.Device));
-            text.LoadFont(Env.Window.Device, @"Assets\Fonts\SDF\c.fnt");
-            textSettings = TextSettings.Default;
+            text.LoadFont(Env.Window.Device, ActiveFontName);
+            textSettings = text.Settings;
             blurOutDist = textSettings.BlurOutDist;
             dropShadow = textSettings.DropShadow;
-            glowColor = textSettings.GlowColor;// textSettings.GlowColor;
+            glowColor = textSettings.GlowColor;
             glowDist = textSettings.GlowDist;
             outlineThreshold = textSettings.OutlineThreshold;
+            TextPosition = new Vector2(Env.Window.Resolution.Width / 2.0f, Env.Window.Resolution.Height/2.0f);
+            
         }
 
 
         public override void Initialize(Instant Instant, GameState State, GameEnvironment Env)
         {
             InputHandler.Build("System");
+
         }
 
         bool AB = false;
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
 
-            if (!String.IsNullOrEmpty(newFontName))
+            if (!(String.Compare(newFontName, ActiveFontName)==0))
             {
                 try
                 {
                     text.LoadFont(Env.Window.Device, newFontName);
+                    ActiveFontName = newFontName;
                 }catch(Exception e)
                 {
+                    State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput(e.Message));
                     Log.EmitError(e);
+
                 }
-                newFontName = String.Empty;
+                //newFontName = String.Empty;
                
             }
-
+            textSettings = text.Settings;
             textSettings.BlurOutDist = blurOutDist;
             textSettings.DropShadow = dropShadow;
             textSettings.GlowColor = glowColor;
@@ -117,15 +121,15 @@ namespace BareE.Harness.Scenes
             Vector3 Tint1 = Color1;
             Vector3 Tint2 = Color2;
 
-            text.Cursor = new Vector2(Env.Window.Resolution.Width/2.0f, Env.Window.Resolution.Height/2.0f);
+            text.Cursor = new Vector2(TextPosition.X, TextPosition.Y);
             text.TextColor = Color1;
             text.Scale = scale;
             text.OutlineColor = Color2;
             //text.PutCharacter('A', new Vector2(0, 0),scale, Color1, Color2);
 
-
-            foreach (var c in TextTest??"Empty")
-                text.AddCharacter(c);
+            text.AddString(TextTest);
+            //foreach (var c in TextTest??"Empty")
+            //    text.AddCharacter(c);
             //Close Face
 
             /*
@@ -159,16 +163,31 @@ namespace BareE.Harness.Scenes
             IG.InputFloat2("Drop Shadow", ref dropShadow);
             IG.InputFloat("glowdist", ref glowDist);
             IG.InputFloat("outlinethreshold", ref outlineThreshold);
-            //IG.ColorPicker3("Glow Color", ref glowColor);
             IG.ColorEdit3("Glow Color", ref glowColor);
             IG.End();
 
             IG.Begin("Text");
-            IG.InputText("Test:", ref TextTest, 10);
+            IG.InputTextMultiline("Test:", ref TextTest, 100, new Vector2(100,100));
+            IG.InputFloat2("Pos:", ref TextPosition);
             IG.DragFloat("Scale", ref scale);
             IG.ColorEdit3("Color1", ref Color1);
             IG.ColorEdit3("Color2", ref Color2);
             
+            if (IG.BeginCombo("Font", ActiveFontName))
+            {
+                foreach (var v in AssetManager.AllFiles("*.fnt"))
+                {
+                    var d = v;
+                    if (d.IndexOf("Assets") > 0 && (d.Contains('/') || d.Contains('\\')))
+                        d = d.Substring(d.IndexOf("Assets"));
+                    if (IG.Selectable(d, ActiveFontName == newFontName))
+                        newFontName = d;
+                }
+                    //IG.Combo(v,newFontName, )
+                IG.EndCombo();
+                
+            }
+
             IG.End();
             
         }

@@ -17,6 +17,10 @@ namespace BareE.GUI.TextRendering
         public Vector2 DropShadow { get; set; }
         public Vector3 GlowColor { get; set; }
         public float GlowDist { get; set; }
+        public int Type { get; 
+            set; }
+        public int Flags { get; set; }
+        public Vector2 TextureResolution { get; set; }
         public static TextSettings Default
         {
             get
@@ -27,7 +31,10 @@ namespace BareE.GUI.TextRendering
                     BlurOutDist = 0.0f,
                     DropShadow = new Vector2(0, 0),
                     GlowDist = 0.0f,
-                    GlowColor = new Vector3(0, 0, 1)
+                    GlowColor = new Vector3(0, 0, 1),
+                    Type = 2,
+                    Flags=0,
+                    TextureResolution=new Vector2(0,0)
                 };
             }
         }
@@ -98,7 +105,7 @@ namespace BareE.GUI.TextRendering
         }
 
 
-        public float Scale { get; set; } = 0.1f; 
+        public float Scale { get; set; } = 1f; 
 
         public Vector2 Cursor { get; set; } = new Vector2(-1, -1);
         public Vector3 TextColor { get; set; }
@@ -116,38 +123,72 @@ namespace BareE.GUI.TextRendering
         {
             if (!ActiveFont.Glyphs.ContainsKey((int)c))
             {
-                Cursor += new Vector2(ActiveFont.SpaceWidth, 0);
+                Cursor += new Vector2((ActiveFont.SpaceWidth*Scale)/2.0f, 0);
                 return;
             }
             var glyphData = ActiveFont.Glyphs[(int)c];
 
             Vector2 HalfRes = Resolution / 2.0f;
             Vector2 trueCursor = Cursor-HalfRes;
-            trueCursor += new Vector2(glyphData.BearingX, glyphData.Drop);
+            trueCursor += new Vector2(0,-(glyphData.Drop*Scale)/2.0f);
+            trueCursor = trueCursor / HalfRes;
 
-
-            Cursor += new Vector2(glyphData.Advance,0);
+            Cursor += new Vector2((glyphData.Advance/2.0f) * Scale, 0);
+            //Cursor += new Vector2( 
+            //    ((glyphData.Advance*Scale)/(float)ActiveFont.TotalWidth)*(float)Resolution.X
+            //    , 0);
+            //Cursor = new Vector2(glyphData.Advance, 0);
 
             Matrix4x4 transformMatrix = 
                 Matrix4x4.CreateScale(Scale)
-                * Matrix4x4.CreateTranslation(new Vector3(trueCursor/HalfRes, 1));
+                * Matrix4x4.CreateTranslation(new Vector3(trueCursor, 1));
 
-            Vector2 UvBL = new Vector2(glyphData.Rect.Left / (float)ActiveFont.TotalWidth, glyphData.Rect.Height / ActiveFont.LineHeight); ;
+            Vector2 UvBL = new Vector2(glyphData.Rect.Left / (float)ActiveFont.TotalWidth, glyphData.Rect.Height /(float)ActiveFont.LineHeight); 
             Vector2 UvTR = new Vector2(glyphData.Rect.Right / (float)ActiveFont.TotalWidth, 0);
 
             //Close Face
-            AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvBL.Y), TextColor, OutlineColor));
-            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(UvTR.X, UvTR.Y), TextColor, OutlineColor));
-            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(UvTR.X, UvBL.Y), TextColor, OutlineColor));
 
-            AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvBL.Y), TextColor, OutlineColor));
-            AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvTR.Y), TextColor, OutlineColor));
-            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(UvTR.X, UvTR.Y), TextColor, OutlineColor));
+            ///1Pixel = 1.0f/(float)Resolution.X;
 
+            var pixelWidth = (float)glyphData.Width / (float)Resolution.X;
+            var pixelHeight = (float)glyphData.Height / (float)Resolution.Y;
+
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0, 0, 0.5f), transformMatrix), new Vector2(UvBL.X, UvBL.Y), TextColor, OutlineColor));
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(pixelWidth, pixelHeight, 0.5f), transformMatrix), new Vector2(UvTR.X, UvTR.Y), TextColor, OutlineColor));
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(pixelWidth, 0, 0.5f), transformMatrix), new Vector2(UvTR.X, UvBL.Y), TextColor, OutlineColor));
+
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0, 0, 0.5f), transformMatrix), new Vector2(UvBL.X, UvBL.Y), TextColor, OutlineColor));
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0, pixelHeight, 0.5f), transformMatrix), new Vector2(UvBL.X, UvTR.Y), TextColor, OutlineColor));
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(pixelWidth, pixelHeight, 0.5f), transformMatrix), new Vector2(UvTR.X, UvTR.Y), TextColor, OutlineColor));
+
+            /*
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f*pixelWidth , -0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvBL.Y), TextColor, OutlineColor));
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f * pixelWidth, 0.5f, 0.5f), transformMatrix), new Vector2(UvTR.X, UvTR.Y), TextColor, OutlineColor));
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f * pixelWidth, -0.5f, 0.5f), transformMatrix), new Vector2(UvTR.X, UvBL.Y), TextColor, OutlineColor));
+
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f* pixelWidth, -0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvBL.Y), TextColor, OutlineColor));
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f* pixelWidth, 0.5f, 0.5f), transformMatrix), new Vector2(UvBL.X, UvTR.Y), TextColor, OutlineColor));
+            AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f * pixelWidth, 0.5f, 0.5f), transformMatrix), new Vector2(UvTR.X, UvTR.Y), TextColor, OutlineColor));
+            */
 
 
         }
-        
+
+        public void AddString(String str)
+        {
+            var currPos = Cursor;
+            foreach (var c in str)
+            {
+                if (c.isNewLineChar())
+                {
+                    Cursor = currPos - new Vector2(0, (ActiveFont.LineHeight*Scale) / 2.0f);
+                    currPos = Cursor;
+                    continue;
+                }
+                AddCharacter(c);
+            }
+        }
+
         /*
         private glyphInfo GetInfo(Char glyph, Char style = ':')
         {
@@ -161,7 +202,7 @@ namespace BareE.GUI.TextRendering
         */
         public override void CreateResources(GraphicsDevice device)
         {
-            SettingsBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(32, BufferUsage.UniformBuffer));
+            SettingsBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(48, BufferUsage.UniformBuffer));
             SettingsLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(
                     new ResourceLayoutElementDescription("Settings", ResourceKind.UniformBuffer, ShaderStages.Fragment)
                 )
@@ -201,7 +242,12 @@ namespace BareE.GUI.TextRendering
         {
             ActiveFont = Newtonsoft.Json.JsonConvert.DeserializeObject<FontData>(AssetManager.ReadFile(resource));
             var fontTextureFileName = System.IO.Path.ChangeExtension(resource, "png");
-            SetTexture(device, AssetManager.LoadTexture(fontTextureFileName, device));
+            var texture = AssetManager.LoadTexture(fontTextureFileName, device);
+            var sett = Settings;
+            sett.TextureResolution = new Vector2(texture.Width, texture.Height);
+            sett.Type = (int)ActiveFont.FontType;
+            Settings = sett;
+            SetTexture(device, texture);
         }
     }
 }

@@ -41,19 +41,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\Def\default.controls" />
     <EmbeddedResource Include="Assets\Def\default.radio" />
-    <EmbeddedResource Include="Assets\Fonts\SDF\a.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Fonts\SDF\b.fnt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Fonts\SDF\b.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Fonts\SDF\Comic Sans MS.png" />
-    <EmbeddedResource Include="Assets\Fonts\SDF\Comic Sans MS.txt" />
-    <EmbeddedResource Include="Assets\Fonts\SDF\Times New Roman.png" />
-    <EmbeddedResource Include="Assets\Fonts\SDF\Times New Roman.txt" />
     <EmbeddedResource Include="Assets\Models\chest3-final.fbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

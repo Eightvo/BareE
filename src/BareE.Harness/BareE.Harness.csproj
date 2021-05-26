@@ -10,6 +10,13 @@
   <ItemGroup>
     <None Remove="Assets\Def\default.controls" />
     <None Remove="Assets\Def\default.radio" />
+    <None Remove="Assets\Fonts\SDF\a.png" />
+    <None Remove="Assets\Fonts\SDF\b.fnt" />
+    <None Remove="Assets\Fonts\SDF\b.png" />
+    <None Remove="Assets\Fonts\SDF\Comic Sans MS.png" />
+    <None Remove="Assets\Fonts\SDF\Comic Sans MS.txt" />
+    <None Remove="Assets\Fonts\SDF\Times New Roman.png" />
+    <None Remove="Assets\Fonts\SDF\Times New Roman.txt" />
     <None Remove="Assets\Models\chest3-final.fbx" />
     <None Remove="Assets\Models\sheepies.blend" />
     <None Remove="Assets\Models\sheepies.mtl" />
@@ -34,6 +41,19 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\Def\default.controls" />
     <EmbeddedResource Include="Assets\Def\default.radio" />
+    <EmbeddedResource Include="Assets\Fonts\SDF\a.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Fonts\SDF\b.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Fonts\SDF\b.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Fonts\SDF\Comic Sans MS.png" />
+    <EmbeddedResource Include="Assets\Fonts\SDF\Comic Sans MS.txt" />
+    <EmbeddedResource Include="Assets\Fonts\SDF\Times New Roman.png" />
+    <EmbeddedResource Include="Assets\Fonts\SDF\Times New Roman.txt" />
     <EmbeddedResource Include="Assets\Models\chest3-final.fbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -73,11 +93,21 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BareE.EZRend\BareE.EZRend.csproj" />
+    <ProjectReference Include="..\BareE.GUI\BareE.GUI.csproj" />
     <ProjectReference Include="..\BareE.Transvoxel\BareE.Transvoxel.csproj" />
     <ProjectReference Include="..\BareE\BareE.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Fonts\SDF\22.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\c.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\c.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Models\BlockyCharacters\Faces\face_adventurer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

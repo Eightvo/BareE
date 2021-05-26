@@ -1,6 +1,7 @@
 ﻿using BareE.GameDev;
 using BareE.Messages;
 
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,13 +28,22 @@ namespace BareE
 
         private void LoadGameSceneInBackground(Messages.TransitionScene transition, GameState state, Instant instant)
         {
-            transition.State.Messages.AddListener<Messages.ExitGame>(HandleExitGameMessage);
-            transition.State.Messages.AddListener<Messages.TransitionScene>(HandleTransitionScene);
+            try
+            {
+                transition.State.Messages.AddListener<Messages.ExitGame>(HandleExitGameMessage);
+                transition.State.Messages.AddListener<Messages.TransitionScene>(HandleTransitionScene);
 
-            transition.Scene.DoLoad(instant, transition.State, ActiveEnvironment);
-            transition.Scene.DoInitialize(instant, transition.State, ActiveEnvironment);
-            onDeckScene = transition.Scene;
-            onDeckState = transition.State;
+                transition.Scene.DoLoad(instant, transition.State, ActiveEnvironment);
+                transition.Scene.DoInitialize(instant, transition.State, ActiveEnvironment);
+                onDeckScene = transition.Scene;
+                onDeckState = transition.State;
+            }catch(Exception e)
+            {
+                Log.EmitError(e);
+            }
+            finally{
+
+            }
         }
 
         private void DispatchMessagesInBackground(MessageQueue queue, Instant instant, GameState state)

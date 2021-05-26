@@ -1,4 +1,5 @@
 ﻿using BareE.GameDev;
+using BareE.Harness.Scenes;
 using BareE.Messages;
 
 using Veldrid;
@@ -39,7 +40,28 @@ namespace BareE.Harness
                     State = new GameState()
                 });
             }
+            if (IG.Button("SDF Test Scene"))
+            {
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
+                {
+                    Preloaded = false,
+                    Scene = new TextTestScene(),
+                    State = new GameState()
+                });
+            }
+
+
             IG.End();
         }
+
+        void RenderSceneButton<T>(string text)
+            where T:GameSceneBase,new()
+        {
+            if (IG.Button(text))
+            {
+            }
+
+        }
+
     }
 }

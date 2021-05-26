@@ -24,14 +24,14 @@ void main()
 	vec4 actualData = texture(sampler2D(Texture,SurfaceSampler), uv);
 	vec4 dropData = texture(sampler2D(Texture,SurfaceSampler), uv-DropShadow);
 
-    float dist = 1 - actualData.r;
+    float dist = actualData.r;
 
 	//FinalColor=vec4(tint1, dist);
 
-	float alpha = smoothstep(0.5-BlurOutDist, 0.5+BlurOutDist, dist);
+	float alpha = smoothstep(0, 0.0+BlurOutDist, dist);
 
 	if (dist==0) FinalColor=vec4(0,1,0,1);
-	if (dist==1) FinalColor=vec4(0,0,1,1);
+	if (dist>0.25) FinalColor=vec4(0,0,1,1);
 
 
 	if (FinalColor.a==0) discard;

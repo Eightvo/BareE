@@ -87,6 +87,7 @@ namespace BareE
         /// <returns></returns>
         public static Stream FindFileStream(String name)
         {
+            if (System.IO.File.Exists(name)) return new FileStream(name, FileMode.Open);
             if (Path.IsPathRooted(name))
                 name = name.Substring(Path.GetPathRoot(name).Length);
             if (name.StartsWith("assets", StringComparison.InvariantCultureIgnoreCase))
@@ -134,6 +135,7 @@ namespace BareE
         /// <returns></returns>
         public static Byte[] FindFileData(String name)
         {
+            if (File.Exists(name)) return File.ReadAllBytes(name);
             if (Path.IsPathRooted(name))
                 name = name.Substring(Path.GetPathRoot(name).Length);
             if (name.StartsWith("assets", StringComparison.InvariantCultureIgnoreCase))

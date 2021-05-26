@@ -15,9 +15,8 @@ namespace BareE.EZRend.Novelty.SDLText
         public float OutlineThreshold { get; set; }
         public float BlurOutDist { get; set; }
         public Vector2 DropShadow { get; set; }
+        public Vector3 GlowColor { get; set; }
         public float GlowDist { get; set; }
-        public Vector4 GlowColor { get; set; }
-
         public static SDLTextSettings Default
         {
             get
@@ -28,7 +27,7 @@ namespace BareE.EZRend.Novelty.SDLText
                     BlurOutDist = 0.0f,
                     DropShadow = new Vector2(0, 0),
                     GlowDist = 0.0f,
-                    GlowColor = new Vector4(0, 0, 0, 1)
+                    GlowColor = new Vector3(0, 0, 1)
                 };
             }
         }
@@ -47,7 +46,8 @@ namespace BareE.EZRend.Novelty.SDLText
         private Texture _glyphSheet;
 
         private bool SettingsDirty = true;
-        private SDLTextSettings Settings = SDLTextSettings.Default;
+        private SDLTextSettings _settings = SDLTextSettings.Default;
+        public SDLTextSettings Settings { get { return _settings; } set { _settings = value;SettingsDirty = true; } }
         private DeviceBuffer SettingsBuffer;
         private ResourceLayout SettingsLayout;
         private ResourceSet SettingsResourceSet;
@@ -55,16 +55,28 @@ namespace BareE.EZRend.Novelty.SDLText
         public String UnknownGlyphKey { get; set; }
         private float CharacterUvWidth { get; set; }
 
+        public bool UseDepth { get; set; } = false;
+
         public SDLTextShader() : base("BareE.EZRend.Novelty.SDLText.SDLText")
         {
             BlendState = BlendStateDescription.SingleAlphaBlend;
+            this.SampDesc = new SamplerDescription()
+            {
+                AddressModeU = SamplerAddressMode.Clamp,
+                AddressModeV = SamplerAddressMode.Clamp,
+                Filter = SamplerFilter.MinLinear_MagLinear_MipLinear,
+                //Filter = SamplerFilter.Anisotropic,
+                ComparisonKind = ComparisonKind.Always,
+                MaximumAnisotropy = 4
+            };
+
         }
 
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get => new DepthStencilStateDescription(
-                        depthTestEnabled: true,
-                        depthWriteEnabled: true,
+                        depthTestEnabled: UseDepth,
+                        depthWriteEnabled: UseDepth,
                         comparisonKind: ComparisonKind.LessEqual
                         );
         }
@@ -132,9 +144,9 @@ namespace BareE.EZRend.Novelty.SDLText
 
         public override void CreateResources(GraphicsDevice device)
         {
-            SettingsBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(64, BufferUsage.UniformBuffer));
+            SettingsBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription(32, BufferUsage.UniformBuffer));
             SettingsLayout = device.ResourceFactory.CreateResourceLayout(new ResourceLayoutDescription(
-                    new ResourceLayoutElementDescription("SettingsUniform", ResourceKind.UniformBuffer, ShaderStages.Fragment)
+                    new ResourceLayoutElementDescription("Settings", ResourceKind.UniformBuffer, ShaderStages.Fragment)
                 )
             );
             SettingsResourceSet = device.ResourceFactory.CreateResourceSet(
@@ -148,7 +160,7 @@ namespace BareE.EZRend.Novelty.SDLText
         {
             if (SettingsDirty)
             {
-                cmds.UpdateBuffer(SettingsBuffer, 0, Settings);
+                cmds.UpdateBuffer(SettingsBuffer, 0, _settings);
                 SettingsDirty = false;
             }
             base.UpdateBuffers(cmds);

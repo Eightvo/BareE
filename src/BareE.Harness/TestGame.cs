@@ -1,4 +1,5 @@
 ﻿using BareE.GameDev;
+using BareE.Harness.Scenes;
 
 namespace BareE.Harness
 {

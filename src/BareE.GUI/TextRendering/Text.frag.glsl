@@ -29,13 +29,14 @@ vec4 STDFont(vec4 actualData, vec4 dropData)
 
 vec4 SDFFont(vec4 actualData, vec4 dropData)
 {
-    float dist = actualData.r;
+    float dist = actualData.b;
+	float distH = actualData.r;
+	float distV = actualData.g;
 
-	float alpha = 1-smoothstep(0, BlurOutDist+OutlineThreshold, dist);
-	float cMix = smoothstep(BlurOutDist,BlurOutDist+OutlineThreshold, dist);
-	vec3 oClr = mix(tint1,tint2,cMix);
-
-	return vec4(oClr,alpha);
+	float alpha = 1-smoothstep(0.5, 0.5+BlurOutDist, dist);
+	
+	if (dist<0.5) return vec4(tint1,1);
+	return vec4(tint2, alpha);
 }
 
 void main()
@@ -44,7 +45,7 @@ void main()
 	vec4 dropData = texture(sampler2D(Texture,SurfaceSampler), uv-DropShadow);
 
 	if (FontType==1)
-	   FinalColor =actualData;
+	   FinalColor =vec4(tint1,actualData.a);
 	else 
 	   FinalColor = SDFFont(actualData, dropData);
 

@@ -10,7 +10,6 @@
   <ItemGroup>
     <None Remove="Assets\Def\default.controls" />
     <None Remove="Assets\Def\default.radio" />
-    <None Remove="Assets\Fonts\SDF\a.png" />
     <None Remove="Assets\Fonts\SDF\b.fnt" />
     <None Remove="Assets\Fonts\SDF\b.png" />
     <None Remove="Assets\Fonts\SDF\Comic Sans MS.png" />
@@ -86,6 +85,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Fonts\Bitmap\NaturalMono-Regular.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\Bitmap\NaturalMono-Regular.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\Bitmap\NMR_R64_M64.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\Bitmap\NMR_R64_M64.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Fonts\Bitmap\Times_64em.fnt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -101,10 +112,34 @@
     <None Update="Assets\Fonts\SDF\c.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Fonts\SDF\consola.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\consola.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Fonts\SDF\consola_SDF.fnt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Fonts\SDF\consola_SDF.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\NaturalMonoAlt-Regular_SDF.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\NaturalMonoAlt-Regular_SDF.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\NMR.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\NMR.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\NMR_R64_M64.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\NMR_R64_M64.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Fonts\SDF\Times_64em.fnt">
@@ -117,6 +152,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Fonts\SDF\Times_64em_CommAlpha.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\Times_new_SDF.fnt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\SDF\Times_new_SDF.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Fonts\SDF\Times_SDF.fnt">

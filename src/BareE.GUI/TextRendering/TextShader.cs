@@ -242,7 +242,7 @@ namespace BareE.GUI.TextRendering
         {
             ActiveFont = Newtonsoft.Json.JsonConvert.DeserializeObject<FontData>(AssetManager.ReadFile(resource));
             var fontTextureFileName = System.IO.Path.ChangeExtension(resource, "png");
-            var texture = AssetManager.LoadTexture(fontTextureFileName, device);
+            var texture = AssetManager.LoadTexture(fontTextureFileName, device, true);
             var sett = Settings;
             sett.TextureResolution = new Vector2(texture.Width, texture.Height);
             sett.Type = (int)ActiveFont.FontType;

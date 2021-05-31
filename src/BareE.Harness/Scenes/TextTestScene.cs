@@ -36,8 +36,8 @@ namespace BareE.Harness.Scenes
         Vector3 Color1=new Vector3(1,0,0);
         Vector3 Color2 = new Vector3(1, 0, 0);
 
-        String newFontName = @"Assets\Fonts\SDF\Times_64em.fnt";
-        String ActiveFontName = @"Assets\Fonts\SDF\Times_64em.fnt";
+        String newFontName = @"Assets\Fonts\SDF\Consola.fnt";
+        String ActiveFontName = @"Assets\Fonts\SDF\Consola.fnt";
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
 
@@ -61,7 +61,12 @@ namespace BareE.Harness.Scenes
             text = new TextShader(new Vector2(Env.Window.Resolution.Width, Env.Window.Resolution.Height));
             text.CreateResources(Env.Window.Device);
             text.LoadFont(Env.Window.Device, ActiveFontName);
+           // text.SetTexture(Env.Window.Device, AssetManager.LoadTexture(@"Assets\Fonts\SDF\a2.png",Env.Window.Device));
+           // text.Settings.Type = 2;
+
+            
             textSettings = text.Settings;
+            
             blurOutDist = textSettings.BlurOutDist;
             dropShadow = textSettings.DropShadow;
             glowColor = textSettings.GlowColor;
@@ -105,6 +110,9 @@ namespace BareE.Harness.Scenes
             //textSettings.GlowColor = new Vector4(glowDist, glowColor.X, glowColor.Y, glowColor.Z);
             textSettings.OutlineThreshold = outlineThreshold;
 
+            //Force SDF Font type for testing
+            //textSettings.Type = 2;
+
             text.Settings = textSettings;
             text.Clear();
             //for (int i = -1; i < RowsOfText; i++)
@@ -131,6 +139,14 @@ namespace BareE.Harness.Scenes
             //foreach (var c in TextTest??"Empty")
             //    text.AddCharacter(c);
             //Close Face
+
+//            text.AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(0, 1), Tint1, Tint2));
+//            text.AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(1, 0), Tint1, Tint2));
+//            text.AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(1, 1), Tint1, Tint2));
+
+//            text.AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, -0.5f, 0.5f), transformMatrix), new Vector2(0, 1), Tint1, Tint2));
+//            text.AddVertex(new TextVertex(Vector3.Transform(new Vector3(-0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(0, 0), Tint1, Tint2));
+//            text.AddVertex(new TextVertex(Vector3.Transform(new Vector3(0.5f, 0.5f, 0.5f), transformMatrix), new Vector2(1, 0), Tint1, Tint2));
 
             /*
             float lStart = 0;

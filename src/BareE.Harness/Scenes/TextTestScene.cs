@@ -29,7 +29,7 @@ namespace BareE.Harness.Scenes
         Vector3 glowColor;
         float glowDist;
         float outlineThreshold;
-        float scale = 1f;
+        float scale = 0.5f;
         string TextTest = "AA";
 
         Vector2 TextPosition;

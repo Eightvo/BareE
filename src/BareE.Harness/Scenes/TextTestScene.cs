@@ -61,10 +61,7 @@ namespace BareE.Harness.Scenes
             text = new TextShader(new Vector2(Env.Window.Resolution.Width, Env.Window.Resolution.Height));
             text.CreateResources(Env.Window.Device);
             text.LoadFont(Env.Window.Device, ActiveFontName);
-           // text.SetTexture(Env.Window.Device, AssetManager.LoadTexture(@"Assets\Fonts\SDF\a2.png",Env.Window.Device));
-           // text.Settings.Type = 2;
 
-            
             textSettings = text.Settings;
             
             blurOutDist = textSettings.BlurOutDist;

@@ -2,11 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Copyright>Greg Freedline 2021</Copyright>
+    <PackageLicenseFile>License.md</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://github.com/Eightvo/BareE</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="TextRendering\Text.frag.spv" />
     <None Remove="TextRendering\Text.vert.spv" />
+    <None Include="..\..\License.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

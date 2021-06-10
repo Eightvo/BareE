@@ -90,6 +90,7 @@ namespace BareE
             {
                 if (onDeckScene != null)
                 {
+                    ActiveGame.ActiveScene.Dispose();
                     ActiveGame.ActiveScene = onDeckScene;
                     ActiveGame.State = onDeckState;
                     onDeckScene = null;
@@ -114,6 +115,7 @@ namespace BareE
                 game.Environment.Window.IGR.Update((float)instant.TickDelta / 1000f, ss);
                 game.ActiveScene.DoRender(instant, game.State, game.Environment);
             }
+            game.ActiveScene.Dispose();
             game.Environment.Window.Window.Close();
             Log.EmitTrace($"Exit game");
         }

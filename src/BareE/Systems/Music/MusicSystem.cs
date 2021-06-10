@@ -201,6 +201,11 @@ namespace BareE.Systems
 
         public override void Unload()
         {
+            if (activeMusic!=null)
+            {
+                activeMusic.State = SoundStreamState.Stop;
+                activeMusic.Dispose();
+            }
            // if (player.Playing)
           //      player.Stop();
         }

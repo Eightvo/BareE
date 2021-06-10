@@ -23,6 +23,8 @@ namespace BareE.Systems
         public float Volume;
     }
 
+
+
     /// <summary>
     /// A built in system allowing the use of sound effects.
     /// Responds to PlaySFX messages.
@@ -37,14 +39,19 @@ namespace BareE.Systems
         float currentVolume = 0.5f;
         bool allowSFX = true;
 
-        public  bool doEmitSound(PlaySFX req, GameState state, Instant instant)
+        public bool doEmitSound(PlaySFX req, GameState state, Instant instant)
         {
             if (!allowSFX)
                 return true;
 
-            
+
             if (!soundboard.ContainsKey(req.Resource))
-                soundboard.Add(req.Resource, (MemoryStream)AssetManager.FindFileStream(req.Resource));
+            {
+                var initialStream = AssetManager.FindFileStream(req.Resource);
+                MemoryStream storageStream = new MemoryStream();
+                initialStream.CopyTo(storageStream);
+                soundboard.Add(req.Resource, storageStream);
+            }
 
             var mStr = new MemoryStream(soundboard[req.Resource].ToArray());
             var sfx = new SoundStream(mStr, sfxSink, false);

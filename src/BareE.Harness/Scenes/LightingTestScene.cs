@@ -73,7 +73,7 @@ namespace BareE.Harness
 
             State.Input = InputHandler.Build("System", "Cam", "Test");
             cat = State.ECC.SpawnEntity("cat",
-                Pos.Create(2f, new Vector3(-20, 0, -15)),
+                Pos.Create(2f, new Vector3(-0, 0, -0)),
                 BareE.Harness.Components.EZModel.CreateTextured(@"Assets/Models/cat.obj", @"Assets/Models/cat_diff.png"));
 
             /*

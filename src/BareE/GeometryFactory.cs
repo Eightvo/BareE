@@ -115,6 +115,18 @@ namespace BareE
             }
         }
 
+        public static IEnumerable<Vector3> QuadVerts()
+        {
+            //Close
+            yield return (new Vector3(-0.5f, -0.5f, -1.0f));
+            yield return (new Vector3(0.5f, 0.5f, -1f));
+            yield return (new Vector3(0.5f, -0.5f, -1f));
+
+            yield return (new Vector3(-0.5f, -0.5f, -1f));
+            yield return (new Vector3(-0.5f, 0.5f, -1f));
+            yield return (new Vector3(0.5f, 0.5f, -1f));
+        }
+
         public static IEnumerable<Vector3> CubeVerts()
         {
             //Top

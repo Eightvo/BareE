@@ -56,6 +56,11 @@ namespace BareE
         {
             return LoadTexture(LoadImageSharpTexture(resource, mipmap), device);
         }
+        
+        public static Texture LoadTexture(SixLabors.ImageSharp.Image img, GraphicsDevice device, bool mipmap=false)
+        {
+            return LoadTexture(AssetManager.LoadImageSharpTexture(img, mipmap), device);
+        }
 
         /// <summary>
         /// Return a Veldrid device texture from ImageSharpTexture.
@@ -78,6 +83,21 @@ namespace BareE
         {
             var strm = new MemoryStream(FindFileData(resource));
             return (new Veldrid.ImageSharp.ImageSharpTexture(strm, mipmap));
+        }
+
+        public static ImageSharpTexture LoadImageSharpTexture(SixLabors.ImageSharp.Image img, bool mipmap=false)
+        {
+            byte[] data;
+            using (MemoryStream strm = new MemoryStream())
+            {
+                img.Save(strm, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+                data = strm.ToArray();
+            }
+            using (MemoryStream strm = new MemoryStream(data))
+            {
+                data = strm.ToArray();
+                return new ImageSharpTexture(strm, mipmap);
+            }
         }
 
         /// <summary>

@@ -47,18 +47,21 @@ namespace BareE.DataStructures
 
         public Image<Rgba32> GetTextureSrcImage(SpriteModel sprite, String TextureSrc)
         {
-            Image<Rgba32> img = Image.Load<Rgba32>(TextureSrc);
-            if (sprite.SrcRect.Left <= 0 && sprite.SrcRect.Width >= img.Width && sprite.SrcRect.Bottom <= 0 && sprite.SrcRect.Top >= img.Height)
-                return img;
-
-            img.Mutate(x =>
+            using (var strm = AssetManager.FindFileStream(TextureSrc))
             {
-                x.Crop(new Rectangle(Math.Max(0, sprite.SrcRect.X),
-                                                          Math.Max(0, sprite.SrcRect.Y),
-                                                          Math.Min(img.Width, sprite.SrcRect.Width),
-                                                          Math.Min(img.Height, sprite.SrcRect.Height)));
-            });
-            return img;
+                Image<Rgba32> img = Image.Load<Rgba32>(strm);
+                if (sprite.SrcRect.Left <= 0 && sprite.SrcRect.Width >= img.Width && sprite.SrcRect.Bottom <= 0 && sprite.SrcRect.Top >= img.Height)
+                    return img;
+
+                img.Mutate(x =>
+                {
+                    x.Crop(new Rectangle(Math.Max(0, sprite.SrcRect.X),
+                                                              Math.Max(0, sprite.SrcRect.Y),
+                                                              Math.Min(img.Width, sprite.SrcRect.Width),
+                                                              Math.Min(img.Height, sprite.SrcRect.Height)));
+                });
+                return img;
+            }
         }
 
         public void Build(int maxWidth = 0, bool save = false)
@@ -236,13 +239,7 @@ namespace BareE.DataStructures
             public Point Off { get; set; }
         }
 
-        public class TextureModel
-        {
-            public String Filename { get; set; }
-
-            [JsonConverter(typeof(RectangleJsonConverter))]
-            public Rectangle SrcRect { get; set; }
-        }
+ 
 
         public class RectangleJsonConverter : JsonConverter
         {

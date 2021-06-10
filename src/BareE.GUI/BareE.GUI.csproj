@@ -9,6 +9,11 @@
     <RepositoryUrl>https://github.com/Eightvo/BareE</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>G:\git\BareE\BareE\bin\BareE.GUI</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="TextRendering\Text.frag.spv" />
     <None Remove="TextRendering\Text.vert.spv" />

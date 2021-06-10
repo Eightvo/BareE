@@ -10,6 +10,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>BareE</PackageTags>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

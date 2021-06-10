@@ -1,6 +1,12 @@
 ﻿using BareE.GameDev;
 
+using SharpAudio;
+using SharpAudio.Codec;
+
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace BareE.Harness
 {

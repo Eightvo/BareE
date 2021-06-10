@@ -5,6 +5,9 @@ using BareE.Messages;
 using System;
 using System.Collections.Generic;
 
+using SharpAudio;
+using SharpAudio.Codec;
+
 namespace BareE.Systems
 {
     /// <summary>
@@ -14,15 +17,20 @@ namespace BareE.Systems
     /// If a station is specified, the station will be set and a song from that station will be played.
     /// If neither a station nor a song is specifed a song from the current station will be played.
     /// </summary>
-    public class MusicSystem : GameDev.GameSystem
+    public unsafe class MusicSystem : GameDev.GameSystem
     {
-        private NetCoreAudio.Player player;
         private Radio Radio;
         private String CurrentStation;
         private int currentSongIndex = 0;
+        AudioEngine musicEngine;
+
+        SoundStream activeMusic;
+        float currentVolume = 0.25f;
+        bool allowMusic = true;
 
         public MusicSystem(string radiofile) : this(Newtonsoft.Json.JsonConvert.DeserializeObject<Radio>(AssetManager.ReadFile(radiofile)))
         {
+            
         }
 
         public MusicSystem(Radio radio)
@@ -40,6 +48,14 @@ namespace BareE.Systems
 
         private bool handlePlaySong(PlaySong msg, GameState state, Instant instant)
         {
+
+            if (msg.Pause)
+                if (activeMusic.State == SoundStreamState.Playing)
+                    activeMusic.State = SoundStreamState.Paused;
+                else if (activeMusic.State == SoundStreamState.Paused)
+                    activeMusic.State = SoundStreamState.Playing;
+
+
             if (!String.IsNullOrEmpty(msg.Station))
                 CurrentStation = msg.Station;
 
@@ -71,11 +87,37 @@ namespace BareE.Systems
             return true;
         }
 
+        private bool handleChangeSetting(ChangeSetting setting, GameState state, Instant instant)
+        {
+            switch (setting.Setting.ToLower())
+            {
+                case "music_volume":
+                    currentVolume = float.Parse(setting.Value);
+                    if (activeMusic != null)
+                        activeMusic.Volume = currentVolume;
+                    break;
+                case "music_enabled":
+                    allowMusic = bool.Parse(setting.Value);
+                    if (!allowMusic)
+                    {
+                        if (activeMusic.IsPlaying)
+                        {
+                            activeMusic.Stop();
+                            activeMusic.Dispose();
+                        }
+                    }
+                    break;
+            }
+            return true;
+        }
+
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
-            player = new NetCoreAudio.Player();
-            player.PlaybackFinished += Player_PlaybackFinished;
+
+            musicEngine = AudioEngine.CreateDefault();
+            
             State.Messages.AddListener<PlaySong>(handlePlaySong);
+            State.Messages.AddListener<ChangeSetting>(handleChangeSetting);
             State.ECC.SpawnEntity("MusicCmds", new ConsoleCommandSet()
             {
                 SetName = "Music",
@@ -122,15 +164,45 @@ namespace BareE.Systems
             }
             if (!String.IsNullOrEmpty(_nextSongToPlay))
             {
-                player.Play(_nextSongToPlay);
+                if (activeMusic!=null && activeMusic.State== SoundStreamState.Playing)
+                {
+                    activeMusic.Stop();
+
+ //                   activeMusic.Dispose();
+                }
+                activeMusic = new SoundStream(System.IO.File.OpenRead(_nextSongToPlay), musicEngine);
+                System.Threading.Tasks.Task.Run(() =>
+                {
+
+                    System.Threading.Thread.Sleep(100);
+                    activeMusic.Volume = currentVolume;
+                    if (allowMusic)
+                        activeMusic.Play();
+
+                });
+                
+//                player.Play(_nextSongToPlay);
                 _nextSongToPlay = null;
+            }
+            if (activeMusic!=null)
+            switch(activeMusic.State)
+            {
+                case SoundStreamState.Playing:
+                    break;
+                case SoundStreamState.PreparePlay:
+                    break;
+                case SoundStreamState.TrackFinished:
+                    playerHasFinished = true;
+                    break;
+                case SoundStreamState.Idle:
+                    break;
             }
         }
 
         public override void Unload()
         {
-            if (player.Playing)
-                player.Stop();
+           // if (player.Playing)
+          //      player.Stop();
         }
     }
 }

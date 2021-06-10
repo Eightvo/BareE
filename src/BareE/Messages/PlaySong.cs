@@ -9,12 +9,11 @@ namespace BareE.Messages
     {
         public PlaySong(String station, String title)
         {
-            Station = station; filename = title; Pause = false; Stop = false;
+            Station = station; filename = title; Pause = false; 
         }
 
         public String filename;
         public bool Pause;
-        public bool Stop;
         public String Station;
 
         public static PlaySong Paused()
@@ -30,11 +29,6 @@ namespace BareE.Messages
         public static PlaySong Next()
         {
             return new PlaySong();
-        }
-
-        public static PlaySong Stopped()
-        {
-            return new PlaySong { Stop = true };
         }
 
         public static PlaySong SetStation(String station)

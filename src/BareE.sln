@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.Harness", "BareE.Harn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.Transvoxel", "BareE.Transvoxel\BareE.Transvoxel.csproj", "{C7649C9F-7A30-4B52-AE30-79A49EC965B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BareE.GUI", "BareE.GUI\BareE.GUI.csproj", "{2634DBEA-2BA4-4804-8B09-A60EDC9CDF7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.GUI", "BareE.GUI\BareE.GUI.csproj", "{2634DBEA-2BA4-4804-8B09-A60EDC9CDF7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BareE.Tests", "BareE.Tests\BareE.Tests.csproj", "{C4A43C09-8028-456B-BA80-C3802D0B0C16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BareE.Tests", "BareE.Tests\BareE.Tests.csproj", "{C4A43C09-8028-456B-BA80-C3802D0B0C16}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4706DC09-03E5-4F41-B84C-BE6D2872C161}"
 	ProjectSection(SolutionItems) = preProject

@@ -115,8 +115,9 @@ namespace BareE
                 game.Environment.Window.IGR.Update((float)instant.TickDelta / 1000f, ss);
                 game.ActiveScene.DoRender(instant, game.State, game.Environment);
             }
-            game.ActiveScene.Dispose();
+
             game.Environment.Window.Window.Close();
+            game.ActiveScene.Dispose();
             Log.EmitTrace($"Exit game");
         }
 

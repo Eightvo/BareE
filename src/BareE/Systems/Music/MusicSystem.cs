@@ -167,8 +167,6 @@ namespace BareE.Systems
                 if (activeMusic!=null && activeMusic.State== SoundStreamState.Playing)
                 {
                     activeMusic.Stop();
-
- //                   activeMusic.Dispose();
                 }
                 activeMusic = new SoundStream(System.IO.File.OpenRead(_nextSongToPlay), musicEngine);
                 System.Threading.Tasks.Task.Run(() =>
@@ -206,8 +204,6 @@ namespace BareE.Systems
                 activeMusic.State = SoundStreamState.Stop;
                 activeMusic.Dispose();
             }
-           // if (player.Playing)
-          //      player.Stop();
         }
     }
 }

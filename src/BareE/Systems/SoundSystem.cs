@@ -87,5 +87,13 @@ namespace BareE.Systems
             State.Messages.AddListener<PlaySFX>(doEmitSound);
             State.Messages.AddListener<ChangeSetting>(handleChangeSettings);
         }
+
+        public override void Unload()
+        {
+            sfxSink.Dispose();
+            sfxEngine.Dispose();
+            base.Unload();
+        }
+
     }
 }

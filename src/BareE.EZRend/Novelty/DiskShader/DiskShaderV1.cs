@@ -31,7 +31,8 @@ namespace BareE.EZRend
                      new VertexElementDescription("Position", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2),
                      new VertexElementDescription("DiameterAlphaHeight", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
                      new VertexElementDescription("ColorIndex", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Int1)
-                    );
+                    )
+                { InstanceStepRate = instanceStepRate };
             }
 
             public static DiskShaderVertex Instance = new DiskShaderVertex();

@@ -30,6 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Flat\InstancedColor\InstancedColor.frag.spv" />
+    <None Remove="Flat\InstancedColor\InstancedColor.vert.spv" />
     <None Remove="fonts\Natural Mono Alt-Regular.ttf" />
     <None Remove="fonts\Natural Mono-Regular.ttf" />
     <None Remove="images\EZRend_BIG.png" />
@@ -66,6 +68,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Flat\InstancedColor\InstancedColor.frag.spv" />
+    <EmbeddedResource Include="Flat\InstancedColor\InstancedColor.vert.spv" />
     <EmbeddedResource Include="fonts\Natural Mono Alt-Regular.ttf" />
     <EmbeddedResource Include="fonts\Natural Mono-Regular.ttf" />
     <EmbeddedResource Include="images\EZRend_BIG.png" />

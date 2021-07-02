@@ -25,7 +25,8 @@ namespace BareE.Rendering
             return new VertexLayoutDescription(
                 new VertexElementDescription("Pos", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
                 new VertexElementDescription("UV", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2)
-                );
+                )
+            { InstanceStepRate = instanceStepRate };
         }
     }
 }

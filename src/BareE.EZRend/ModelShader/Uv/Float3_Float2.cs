@@ -23,7 +23,8 @@ namespace BareE.EZRend.ModelShader.Color
         {
             return new VertexLayoutDescription(
                 new VertexElementDescription("pos", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
-                new VertexElementDescription("uv", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2));
+                new VertexElementDescription("uv", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2))
+            { InstanceStepRate = instanceStepRate };
         }
     }
 }

@@ -27,7 +27,8 @@ namespace BareE.EZRend.ModelShader.Color
                 new VertexElementDescription("pos", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
                 new VertexElementDescription("Color", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float4),
                 new VertexElementDescription("normal", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3)
-              );
+              )
+            { InstanceStepRate = instanceStepRate };
         }
     }
 

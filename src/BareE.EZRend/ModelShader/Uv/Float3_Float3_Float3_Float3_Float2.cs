@@ -33,7 +33,8 @@ namespace BareE.EZRend.ModelShader.Color
                 new VertexElementDescription("forward", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
                 new VertexElementDescription("up", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
                 new VertexElementDescription("uv", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2)
-              );
+              )
+            { InstanceStepRate = instanceStepRate };
         }
     }
 }

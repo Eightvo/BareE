@@ -65,7 +65,8 @@ namespace BareE.GUI.TextRendering
                 new VertexElementDescription("uv", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2),
                 new VertexElementDescription("normal", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
                 new VertexElementDescription("Tangent", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3)
-              );
+              )
+            { InstanceStepRate = instanceStepRate };
         }
     }
     public class TextShader : VertexTextureShader<TextVertex>

@@ -15,7 +15,7 @@ namespace BareE.Rendering
     public class VertexOnlyShader<V> : IRenderUnit
          where V : unmanaged, IProvideVertexLayoutDescription
     {
-        private V VertexInstance = new V();
+        private static V VertexInstance = new V();
         public VertexOverflowBehaviour VertexOverflowBehaviour = VertexOverflowBehaviour.EXPAND;
         public float VertexOverflowExpansionFactor { get; set; } = 0.5f;
         public int MaximumVerticies { get { return MaxVerts; } set { MaxVerts = value; MaxVertexCountDirty = true; } }
@@ -112,8 +112,11 @@ namespace BareE.Rendering
 
             //Create and Compile the Shaders.
             ShaderSet = CreateShaders(factory);
+
+            var vertexLayouts = GetVertexLayoutDescriptions();
+
             ShaderSetDesc = new ShaderSetDescription(
-                vertexLayouts: new VertexLayoutDescription[] { VertexInstance.GetVertexLayoutDescription() },
+                vertexLayouts: vertexLayouts.ToArray<VertexLayoutDescription>(),
                 shaders: ShaderSet
                 );
 
@@ -148,6 +151,12 @@ namespace BareE.Rendering
         {
             yield return this.CameraResourceSet;
         }
+
+        public virtual IEnumerable<VertexLayoutDescription> GetVertexLayoutDescriptions()
+        {
+            yield return VertexInstance.GetVertexLayoutDescription();
+        }
+
 
         private OutputDescription? _outputDesc;
 
@@ -208,7 +217,7 @@ namespace BareE.Rendering
             if (MaxVertexCountDirty)
             {
                 if (VertexBuffer != null) VertexBuffer.Dispose();
-                VertexBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription((uint)MaxVerts * this.VertexInstance.SizeInBytes, BufferUsage.VertexBuffer));
+                VertexBuffer = device.ResourceFactory.CreateBuffer(new BufferDescription((uint)MaxVerts * VertexInstance.SizeInBytes, BufferUsage.VertexBuffer));
                 MaxVertexCountDirty = false;
             }
             if (VertexContentDirty)
@@ -225,6 +234,13 @@ namespace BareE.Rendering
         public virtual void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData, Matrix4x4 CameraMatrix, Matrix4x4 ModelMatrix)
         {
             if (VertexBuffer == null) return;
+            BaseRender(Trgt, cmds, sceneData, CameraMatrix, ModelMatrix);
+
+            cmds.Draw((uint)verts.Count);
+        }
+
+        protected void BaseRender(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData, Matrix4x4 CameraMatrix, Matrix4x4 ModelMatrix)
+        {
             cmds.UpdateBuffer(CameraMatrixBuffer, 0, CameraMatrix);
             cmds.UpdateBuffer(ModelMatrixBuffer, 0, ModelMatrix);
             UpdateBuffers(cmds);
@@ -239,8 +255,6 @@ namespace BareE.Rendering
                 //if (set as )
                 cmds.SetGraphicsResourceSet(i++, set);
             }
-
-            cmds.Draw((uint)verts.Count);
         }
     }
 }

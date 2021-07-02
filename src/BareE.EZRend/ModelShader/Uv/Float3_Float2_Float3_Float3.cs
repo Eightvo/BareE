@@ -30,7 +30,8 @@ namespace BareE.EZRend.ModelShader.Color
                 new VertexElementDescription("uv", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float2),
                 new VertexElementDescription("normal", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3),
                 new VertexElementDescription("Tangent", VertexElementSemantic.TextureCoordinate, VertexElementFormat.Float3)
-              );
+              )
+            { InstanceStepRate = instanceStepRate };
         }
     }
 }

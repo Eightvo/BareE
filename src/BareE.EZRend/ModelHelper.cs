@@ -2,6 +2,7 @@
 
 using BareE.EZRend.ImageShader.FullscreenTexture;
 using BareE.EZRend.ModelShader.Color;
+using BareE.EZRend.VertexTypes;
 
 using System;
 using System.Collections.Generic;

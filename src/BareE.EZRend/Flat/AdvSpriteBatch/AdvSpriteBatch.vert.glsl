@@ -1,10 +1,10 @@
 #version 450
 layout (location = 0) in vec3 Position; //Per Vertex
 layout (location = 1) in vec2 Uv;       //Per Vertex
-layout (location = 2) in vec4 UvBox;        //Pre Instance
-layout (location = 3) in vec4 Rotation;     //Pre Instance
-layout (location = 4) in vec4 PrimaryTint;  //Pre Instance
-layout (location = 5) in vec4 SecondaryTint;//Pre Instance
+layout (location = 2) in vec4 UvBox;        //Per Instance
+layout (location = 3) in vec4 Rotation;     //Per Instance
+layout (location = 4) in vec4 PrimaryTint;  //Per Instance
+layout (location = 5) in vec4 SecondaryTint;//Per Instance
 
 layout(std140,set=0, binding = 0) uniform CameraMat
 {

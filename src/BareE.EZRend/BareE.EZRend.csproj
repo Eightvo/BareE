@@ -30,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Flat\AdvSpriteBatch\AdvSpriteBatch.frag.spv" />
+    <None Remove="Flat\AdvSpriteBatch\AdvSpriteBatch.vert.spv" />
+    <None Remove="Flat\AdvSpriteBatch\Example.png" />
+    <None Remove="Flat\AdvSpriteBatch\Terrain.atlas" />
     <None Remove="Flat\InstancedColor\InstancedColor.frag.spv" />
     <None Remove="Flat\InstancedColor\InstancedColor.vert.spv" />
     <None Remove="fonts\Natural Mono Alt-Regular.ttf" />
@@ -68,6 +72,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Flat\AdvSpriteBatch\AdvSpriteBatch.frag.spv" />
+    <EmbeddedResource Include="Flat\AdvSpriteBatch\AdvSpriteBatch.vert.spv" />
+    <EmbeddedResource Include="Flat\AdvSpriteBatch\Example.png" />
+    <EmbeddedResource Include="Flat\AdvSpriteBatch\Terrain.atlas">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Flat\InstancedColor\InstancedColor.frag.spv" />
     <EmbeddedResource Include="Flat\InstancedColor\InstancedColor.vert.spv" />
     <EmbeddedResource Include="fonts\Natural Mono Alt-Regular.ttf" />
@@ -112,6 +122,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BareE\BareE.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Flat\InstancedSprite\" />
   </ItemGroup>
 
 </Project>

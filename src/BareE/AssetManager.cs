@@ -123,7 +123,7 @@ namespace BareE
             }
             else
             {
-                foreach (var asm in new List<System.Reflection.Assembly>() { System.Reflection.Assembly.GetEntryAssembly(), System.Reflection.Assembly.GetExecutingAssembly() })
+                foreach (var asm in _knownAssemblies)
                 {
                     try
                     {

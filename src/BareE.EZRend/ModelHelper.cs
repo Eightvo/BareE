@@ -48,7 +48,7 @@ namespace BareE.EZRend
             EZModel ret = new EZModel();
             AssimpContext ac = new AssimpContext();
             var scene = ac.ImportFile(filename, pps);
-            MultiTextureShader uvn = new MultiTextureShader(textures.Length);
+            LitUvNormalBump uvn = new LitUvNormalBump(textures.Length);
             uvn.SetOutputDescription(oDesc);
             for (int i = 0; i < scene.MeshCount; i++)
             {
@@ -88,7 +88,7 @@ namespace BareE.EZRend
             for (int i = 0; i < scene.MeshCount; i++)
             {
                 var mesh = scene.Meshes[i];
-                MultiTextureShader uvn = new MultiTextureShader(textures.Length);
+                LitUvNormalBump uvn = new LitUvNormalBump(textures.Length);
                 uvn.SetOutputDescription(oDesc);
 
                 foreach (var g in mesh.GetIndices())

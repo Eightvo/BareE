@@ -3,6 +3,8 @@ using BareE.EZRend.ModelShader.Color;
 using BareE.EZRend.VertexTypes;
 using BareE.Rendering;
 
+using SixLabors.ImageSharp;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +49,12 @@ namespace BareE.EZRend.Flat
     {
         public AdvSpriteBatchShader() : base("BareE.EZRend.Flat.AdvSpriteBatch.AdvSpriteBatch",1) {
             this.ColorTextureFilter = SamplerFilter.MinPoint_MagPoint_MipPoint;
+        }
+
+
+        public void AddSprite(RectangleF uvBox, Vector2 translation, float rotation,Vector4 PrimaryColor, Vector4 SecondaryColor, float scale=1.0f)
+        {
+            this.AddInstance(new AdvSpriteInstanceData(new Vector4(uvBox.X, uvBox.Y, uvBox.Width, uvBox.Height), new Vector4(translation.X, translation.Y, rotation, scale), PrimaryColor, SecondaryColor));
         }
 
         public override DepthStencilStateDescription DepthStencilDescription

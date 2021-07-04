@@ -43,8 +43,8 @@ void main()
 
 	FinalColor =  oClr
 	* int(noOverwrite)
-	           + tint1 * int(owriteCl1)
-			   + tint2 * int(owriteCl2)
+	           + tint1 * int(owriteCl1)*iClr.b
+			   + tint2 * int(owriteCl2)*iClr.a
 			   ;
     //FinalColor = vec4(iA,1-oA,0,1);
 	//FinalColor = oClr;tg

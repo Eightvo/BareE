@@ -54,7 +54,7 @@ namespace BareE.EZRend.Flat
 
         public void AddSprite(RectangleF uvBox, Vector2 translation, float rotation,Vector4 PrimaryColor, Vector4 SecondaryColor, float scale=1.0f)
         {
-            this.AddInstance(new AdvSpriteInstanceData(new Vector4(uvBox.X, uvBox.Y, uvBox.Width, uvBox.Height), new Vector4(translation.X, translation.Y, rotation, scale), PrimaryColor, SecondaryColor));
+            this.AddInstance(new AdvSpriteInstanceData(new Vector4(uvBox.Left, uvBox.Bottom, uvBox.Width, uvBox.Height), new Vector4(translation.X, translation.Y, rotation, scale), PrimaryColor, SecondaryColor));
         }
 
         public override DepthStencilStateDescription DepthStencilDescription

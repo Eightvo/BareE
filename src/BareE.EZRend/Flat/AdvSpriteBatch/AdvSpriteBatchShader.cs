@@ -49,6 +49,7 @@ namespace BareE.EZRend.Flat
     {
         public AdvSpriteBatchShader() : base("BareE.EZRend.Flat.AdvSpriteBatch.AdvSpriteBatch",1) {
             this.ColorTextureFilter = SamplerFilter.MinPoint_MagPoint_MipPoint;
+            
         }
 
 
@@ -60,8 +61,8 @@ namespace BareE.EZRend.Flat
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get => new DepthStencilStateDescription(
-                        depthTestEnabled: true,
-                        depthWriteEnabled: true,
+                        depthTestEnabled: false,
+                        depthWriteEnabled: false,
                         comparisonKind: ComparisonKind.Always
                         );
         }

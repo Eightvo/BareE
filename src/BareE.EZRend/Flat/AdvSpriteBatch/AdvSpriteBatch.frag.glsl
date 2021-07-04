@@ -29,12 +29,16 @@ void main()
 	int iB = (iClrBA & 240)>>4;
 	int iA = (iClrBA & 15);
 
+	
+
 	float oR = ((float(iR)/15.0));
 	float oG = ((float(iG)/15.0));
 	float oB = ((float(iB)/15.0));
 	float oA = ((float(iA)/15.00));
 
-	vec4 oClr = vec4(oR, oG, oB,oA);
+	//if (oA==0) discard;
+
+	vec4 oClr = vec4(oR, oG, oB,1);
 	//oClr=vec4(1,0,0,1);
 
 	FinalColor =  oClr
@@ -44,7 +48,7 @@ void main()
 			   ;
 
 	//FinalColor = oClr;tg
-	//FinalColor = iClr;
+	//FinalColor = oClr;
 	//FinalColor=vec4(1,0,0,1);
 	//FinalColor=vec4(iClr.r, iClr.g,0,int(oA>0));
 }

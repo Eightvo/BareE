@@ -49,7 +49,15 @@ namespace BareE.Harness
                     State = new GameState()
                 });
             }
-
+            if (IG.Button("AdvSpriteBatch Test Scene"))
+            {
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
+                {
+                    Preloaded = false,
+                    Scene = new AdvSpriteBatchTestScene(),
+                    State = new GameState()
+                });
+            }
 
             IG.End();
         }

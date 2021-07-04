@@ -34,19 +34,19 @@ void main()
 	float oR = ((float(iR)/15.0));
 	float oG = ((float(iG)/15.0));
 	float oB = ((float(iB)/15.0));
-	float oA = ((float(iA)/15.00));
+	float oA = ((float(iA)/15.0));
 
-	//if (oA==0) discard;
+	if (iA==0.0) discard;
 
-	vec4 oClr = vec4(oR, oG, oB,1);
-	//oClr=vec4(1,0,0,1);
+	vec4 oClr = vec4(oR, oG, oB,oA);
+	//vec4 oClr=vec4((iR+iG+iB)>0,0,0,1);
 
 	FinalColor =  oClr
 	* int(noOverwrite)
 	           + tint1 * int(owriteCl1)
 			   + tint2 * int(owriteCl2)
 			   ;
-
+    //FinalColor = vec4(iA,1-oA,0,1);
 	//FinalColor = oClr;tg
 	//FinalColor = oClr;
 	//FinalColor=vec4(1,0,0,1);

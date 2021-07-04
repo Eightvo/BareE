@@ -1,0 +1,92 @@
+{
+	"Name":"Char.Base",
+	"SrcRect":"0,0,832,1344",
+	"Children":[
+		{"Name":"Cast",
+		 "SrcRect":"0,0,832,64",
+		 "Children":[
+			{"Name":"0","SrcRect":"0,0,64,  64"},
+			{"Name":"1","SrcRect":"64,0,64,  64"},
+			{"Name":"2","SrcRect":"128,0,64, 64"},
+			{"Name":"3","SrcRect":"192,0,64, 64"},
+			{"Name":"4","SrcRect":"256,0,64, 64"},
+			{"Name":"5","SrcRect":"320,0,64, 64"},
+			{"Name":"6","SrcRect":"384,0,64, 64"},
+		 ]
+		 },
+		{"Name":"Stab",
+		 "SrcRect":"0,256,832,64",
+		 "Children":[
+			{"Name":"0","SrcRect":"0,256,64,  64"},
+			{"Name":"1","SrcRect":"64,256,64,  64"},
+			{"Name":"2","SrcRect":"128,256,64, 64"},
+			{"Name":"3","SrcRect":"192,256,64, 64"},
+			{"Name":"4","SrcRect":"256,256,64, 64"},
+			{"Name":"5","SrcRect":"320,256,64, 64"},
+			{"Name":"6","SrcRect":"384,256,64, 64"},
+			{"Name":"7","SrcRect":"448,256,64, 64"}
+		 ]
+		 },
+		{"Name":"Walk",
+		 "SrcRect":"0,768,832,64",
+		 "Children":[
+			{"Name":"0","SrcRect":"0,512,64,  64"},
+			{"Name":"1","SrcRect":"64,512,64,  64"},
+			{"Name":"2","SrcRect":"128,512,64, 64"},
+			{"Name":"3","SrcRect":"192,512,64, 64"},
+			{"Name":"4","SrcRect":"256,512,64, 64"},
+			{"Name":"5","SrcRect":"320,512,64, 64"},
+			{"Name":"6","SrcRect":"384,512,64, 64"},
+			{"Name":"7","SrcRect":"448,512,64, 64"},
+			{"Name":"8","SrcRect":"512,512,64, 64"}
+		 ]
+		 },
+		{"Name":"Swing",
+		 "SrcRect":"0,1024,832,64",
+		 "Children":[
+			{"Name":"0","SrcRect":"0,768,64,  64"},
+			{"Name":"1","SrcRect":"64,768,64,  64"},
+			{"Name":"2","SrcRect":"128,768,64, 64"},
+			{"Name":"3","SrcRect":"192,768,64, 64"},
+			{"Name":"4","SrcRect":"256,768,64, 64"},
+			{"Name":"5","SrcRect":"320,768,64, 64"},
+		 ]
+		 },
+		{"Name":"Shoot",
+		 "SrcRect":"0,1280,832,64",
+		 "Children":[
+			{"Name":"0","SrcRect":"0,1024,64,  64"},
+			{"Name":"1","SrcRect":"64,1024,64,  64"},
+			{"Name":"2","SrcRect":"128,1024,64, 64"},
+			{"Name":"3","SrcRect":"192,1024,64, 64"},
+			{"Name":"4","SrcRect":"256,1024,64, 64"},
+			{"Name":"5","SrcRect":"320,1024,64, 64"},
+			{"Name":"6","SrcRect":"384,1024,64, 64"},
+			{"Name":"7","SrcRect":"448,1024,64, 64"},
+			{"Name":"8","SrcRect":"512,1024,64, 64"},
+			{"Name":"9","SrcRect":"576,1024,64, 64"},
+			{"Name":"10","SrcRect":"640,1024,64, 64"},
+			{"Name":"11","SrcRect":"704,1024,64, 64"},
+			{"Name":"12","SrcRect":"768,1024,64, 64"}
+		 ]
+		 },
+		{"Name":"Die",
+		 "SrcRect":"0,1536,832,64",
+		 "Children":[
+			{"Name":"0","SrcRect":"0,1280,64,  64"},
+			{"Name":"1","SrcRect":"64,1280,64,  64"},
+			{"Name":"2","SrcRect":"128,1280,64, 64"},
+			{"Name":"3","SrcRect":"192,1280,64, 64"},
+			{"Name":"4","SrcRect":"256,1280,64, 64"},
+			{"Name":"5","SrcRect":"320,1280,64, 64"}
+		 ]
+		 }
+	],
+	"Alternatives":[
+		{"Name":"North", "Off":"0,0"},
+		{"Name":"East",  "Off":"0,192"},
+		{"Name":"South", "Off":"0,128"},
+		{"Name":"West",  "Off":"0,64"}
+	]
+	
+}

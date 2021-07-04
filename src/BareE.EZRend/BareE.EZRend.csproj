@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.58</Version>
+    <Version>1.0.59</Version>
     <PackageTags>BareE</PackageTags>
     <PackageLicenseFile>License.md</PackageLicenseFile>
     <Copyright>Greg Freedline 2021</Copyright>
@@ -33,6 +33,9 @@
     <None Remove="Flat\AdvSpriteBatch\AdvSpriteBatch.frag.spv" />
     <None Remove="Flat\AdvSpriteBatch\AdvSpriteBatch.vert.spv" />
     <None Remove="Flat\AdvSpriteBatch\Example.png" />
+    <None Remove="Flat\AdvSpriteBatch\Example2.png" />
+    <None Remove="Flat\AdvSpriteBatch\LPCChar.atlas" />
+    <None Remove="Flat\AdvSpriteBatch\prefabchar_rc.png" />
     <None Remove="Flat\AdvSpriteBatch\Terrain.atlas" />
     <None Remove="Flat\InstancedColor\InstancedColor.frag.spv" />
     <None Remove="Flat\InstancedColor\InstancedColor.vert.spv" />
@@ -75,6 +78,9 @@
     <EmbeddedResource Include="Flat\AdvSpriteBatch\AdvSpriteBatch.frag.spv" />
     <EmbeddedResource Include="Flat\AdvSpriteBatch\AdvSpriteBatch.vert.spv" />
     <EmbeddedResource Include="Flat\AdvSpriteBatch\Example.png" />
+    <EmbeddedResource Include="Flat\AdvSpriteBatch\Example2.png" />
+    <EmbeddedResource Include="Flat\AdvSpriteBatch\LPCChar.atlas" />
+    <EmbeddedResource Include="Flat\AdvSpriteBatch\prefabchar_rc.png" />
     <EmbeddedResource Include="Flat\AdvSpriteBatch\Terrain.atlas">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

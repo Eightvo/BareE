@@ -31,6 +31,15 @@ namespace BareE.GameDev
                 ControlGroupDefs.Add(v.Group, v);
             }
         }
+        public static void LoadGroup(String src)
+        {
+            ControlGroupModel group;
+            group = Newtonsoft.Json.JsonConvert.DeserializeObject<ControlGroupModel>(src);
+            if (ControlGroupDefs.ContainsKey(group.Group))
+                ControlGroupDefs[group.Group] = group;
+            else
+                ControlGroupDefs.Add(group.Group, group);
+        }
 
         /// <summary>
         /// Construct an InputHandler instance that maps aliases to values according to the specified definition groups.

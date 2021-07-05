@@ -126,6 +126,7 @@ namespace BareE.GameDev
                 hudToScreen.CreateResources(Env.Window.Device);
                 hudToScreen.SetTexture(Env.Window.Device, Env.HUDBackBuffer.ColorTargets[0].Target);
                 Env.Window.IGR = new ImGuiRenderer(Env.Window.Device, Env.HUDBackBuffer.OutputDescription, (int)Env.HUDBackBuffer.Width, (int)Env.HUDBackBuffer.Height);
+                DoOnHudRefresh(Instant, State, Env);
                 // hudToScreen.Update(Env.Window.Device);
             }
 
@@ -306,7 +307,18 @@ namespace BareE.GameDev
                 sys.Unload();
             Unload();
         }
+        public virtual void DoOnHudRefresh(Instant instant, GameState state, GameEnvironment env)
+        {
+            OnHudRefresh(instant, state, env);
+            foreach(var sys in Systems.Elements)
+            {
+                sys.OnHudRefresh(instant, state, env);
+            }
+        }
+        public virtual void OnHudRefresh(Instant instant, GameState State, GameEnvironment Env)
+        {
 
+        }
         public virtual void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
         }

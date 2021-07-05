@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 using Veldrid;
 
@@ -31,6 +32,11 @@ namespace BareE.GameDev
 
         public virtual void Unload()
         {
+        }
+
+        internal virtual void OnHudRefresh(Instant instant, GameState state, GameEnvironment env)
+        {
+            
         }
     }
 }

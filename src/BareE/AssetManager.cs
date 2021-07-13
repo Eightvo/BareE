@@ -54,7 +54,9 @@ namespace BareE
         /// <returns></returns>
         public static Texture LoadTexture(String resource, GraphicsDevice device, bool mipmap = false)
         {
-            return LoadTexture(LoadImageSharpTexture(resource, mipmap), device);
+            var v = LoadImageSharpTexture(resource, mipmap);
+            
+            return LoadTexture(v, device);
         }
         
         public static Texture LoadTexture(SixLabors.ImageSharp.Image img, GraphicsDevice device, bool mipmap=false)
@@ -70,7 +72,8 @@ namespace BareE
         /// <returns></returns>
         public static Texture LoadTexture(ImageSharpTexture imgSharpTexture, GraphicsDevice device)
         {
-            return imgSharpTexture.CreateDeviceTexture(device, device.ResourceFactory);
+            var t = imgSharpTexture.CreateDeviceTexture(device, device.ResourceFactory);
+            return t;
         }
 
         /// <summary>
@@ -79,13 +82,13 @@ namespace BareE
         /// <param name="resource"></param>
         /// <param name="mipmap"></param>
         /// <returns></returns>
-        public static ImageSharpTexture LoadImageSharpTexture(String resource, bool mipmap = false)
+        public static ImageSharpTexture LoadImageSharpTexture(String resource, bool mipmap = false, bool srgb = true)
         {
             var strm = new MemoryStream(FindFileData(resource));
-            return (new Veldrid.ImageSharp.ImageSharpTexture(strm, mipmap));
+            return (new Veldrid.ImageSharp.ImageSharpTexture(strm, mipmap, srgb));
         }
 
-        public static ImageSharpTexture LoadImageSharpTexture(SixLabors.ImageSharp.Image img, bool mipmap=false)
+        public static ImageSharpTexture LoadImageSharpTexture(SixLabors.ImageSharp.Image img, bool mipmap=false, bool srgb=true)
         {
             byte[] data;
             using (MemoryStream strm = new MemoryStream())
@@ -96,7 +99,7 @@ namespace BareE
             using (MemoryStream strm = new MemoryStream(data))
             {
                 data = strm.ToArray();
-                return new ImageSharpTexture(strm, mipmap);
+                return new ImageSharpTexture(strm, mipmap, srgb);
             }
         }
 

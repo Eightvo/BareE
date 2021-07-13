@@ -59,6 +59,16 @@ namespace BareE.Harness
                 });
             }
 
+            if (IG.Button("Line Shader Test"))
+            {
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
+                {
+                    Preloaded = false,
+                    Scene = new LineShaderTestScene(),
+                    State = new GameState()
+                });
+            }
+
             IG.End();
         }
 

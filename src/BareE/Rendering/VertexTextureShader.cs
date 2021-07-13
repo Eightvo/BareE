@@ -54,6 +54,7 @@ namespace BareE.Rendering
 
             ColorTexture = texture;
             ColorTextureView = device.ResourceFactory.CreateTextureView(ColorTexture);
+            
             ColorTextureResourceSet = device.ResourceFactory.CreateResourceSet(
                 new ResourceSetDescription(ColorTextureLayout,
                 ColorTextureView,

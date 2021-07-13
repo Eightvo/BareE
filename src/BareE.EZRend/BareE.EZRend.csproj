@@ -55,6 +55,8 @@
     <None Remove="ModelShader\Uv\UvNormal.vert.spv" />
     <None Remove="ModelShader\Uv\uvnormalbump.frag.spv" />
     <None Remove="ModelShader\Uv\UvNormalBump.vert.spv" />
+    <None Remove="Novelty\ColoredLines\Line.frag.spv" />
+    <None Remove="Novelty\ColoredLines\Line.vert.spv" />
     <None Remove="Novelty\DiskShader\DiskShader_V1.frag.spv" />
     <None Remove="Novelty\DiskShader\DiskShader_V1.vert.spv" />
     <None Remove="Novelty\SDLText\SDLFonts\Times New Roman.png" />
@@ -102,6 +104,8 @@
     <EmbeddedResource Include="ModelShader\Uv\UvNormal.vert.spv" />
     <EmbeddedResource Include="ModelShader\Uv\UvNormalBump.frag.spv" />
     <EmbeddedResource Include="ModelShader\Uv\UvNormalBump.vert.spv" />
+    <EmbeddedResource Include="Novelty\ColoredLines\Line.frag.spv" />
+    <EmbeddedResource Include="Novelty\ColoredLines\Line.vert.spv" />
     <EmbeddedResource Include="Novelty\DiskShader\DiskShader_V1.frag.spv" />
     <EmbeddedResource Include="Novelty\DiskShader\DiskShader_V1.vert.spv" />
     <EmbeddedResource Include="Novelty\SDLText\SDLFonts\Times New Roman.png" />

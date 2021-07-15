@@ -52,16 +52,16 @@ namespace BareE
         /// <param name="device"></param>
         /// <param name="mipmap"></param>
         /// <returns></returns>
-        public static Texture LoadTexture(String resource, GraphicsDevice device, bool mipmap = false)
+        public static Texture LoadTexture(String resource, GraphicsDevice device, bool mipmap = false, bool srgb=true)
         {
-            var v = LoadImageSharpTexture(resource, mipmap);
+            var v = LoadImageSharpTexture(resource, mipmap, srgb);
             
             return LoadTexture(v, device);
         }
-        
-        public static Texture LoadTexture(SixLabors.ImageSharp.Image img, GraphicsDevice device, bool mipmap=false)
+
+        public static Texture LoadTexture(SixLabors.ImageSharp.Image img, GraphicsDevice device, bool mipmap = false, bool srgb = true)
         {
-            return LoadTexture(AssetManager.LoadImageSharpTexture(img, mipmap), device);
+            return LoadTexture(AssetManager.LoadImageSharpTexture(img, mipmap,srgb), device);
         }
 
         /// <summary>

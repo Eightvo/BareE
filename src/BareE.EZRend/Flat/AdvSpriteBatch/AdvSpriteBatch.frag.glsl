@@ -41,8 +41,7 @@ void main()
 	vec4 oClr = vec4(oR, oG, oB,oA);
 	//vec4 oClr=vec4((iR+iG+iB)>0,0,0,1);
 
-	FinalColor =  oClr
-	* int(noOverwrite)
+	FinalColor =  oClr * int(noOverwrite)
 	           + tint1 * int(owriteCl1)*iClr.b
 			   + tint2 * int(owriteCl2)*iClr.a
 			   ;

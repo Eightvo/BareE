@@ -26,6 +26,8 @@ namespace BareE.Harness.Scenes
         SpriteAtlas actorAtlas;
         AdvSpriteBatchShader actorSpriteBatch;
 
+        AdvSpriteBatchShader actorSpriteBatch2;
+
         Vector4 Color1=new Vector4(1,0,0,1);
         Vector4 Color2 = new Vector4(1, 0, 0,1);
 
@@ -43,7 +45,7 @@ namespace BareE.Harness.Scenes
             actorSpriteBatch = new AdvSpriteBatchShader();
             actorSpriteBatch.SetOutputDescription(Env.GetBackbufferOutputDescription());
             actorSpriteBatch.CreateResources(Env.Window.Device);
-            actorSpriteBatch.SetTexture(0, Env.Window.Device, AssetManager.LoadTexture(actorAtlas.AtlasSheet, Env.Window.Device));
+            actorSpriteBatch.SetTexture(0, Env.Window.Device, AssetManager.LoadTexture(actorAtlas.AtlasSheet, Env.Window.Device,false,false));
             foreach (var v in BareE.GeometryFactory.QuadVerts())
                 actorSpriteBatch.AddVertex(new Float3_Float2(v, new Vector2(v.X < 0 ? 0 : 1, v.Y < 0 ? 1 : 0)));
         }

@@ -91,7 +91,18 @@
         "Type": "Button",
         "Def": "[tab]"
       },
-
+      {
+        "Alias": "Button2",
+        "src": "Keyboard",
+        "Type": "Button",
+        "Def": "P"
+      },
+      {
+        "Alias": "Button1",
+        "src": "Keyboard",
+        "Type": "Button",
+        "Def": "O"
+      }
     ]
   }
 

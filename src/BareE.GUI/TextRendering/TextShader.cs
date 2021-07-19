@@ -239,11 +239,11 @@ namespace BareE.GUI.TextRendering
             yield return SettingsResourceSet;
         }
 
-        public void LoadFont(GraphicsDevice device, String resource)
+        public void LoadFont(GraphicsDevice device, String resource, bool srgb = false)
         {
             ActiveFont = Newtonsoft.Json.JsonConvert.DeserializeObject<FontData>(AssetManager.ReadFile(resource));
             var fontTextureFileName = System.IO.Path.ChangeExtension(resource, "png");
-            var texture = AssetManager.LoadTexture(fontTextureFileName, device, true);
+            var texture = AssetManager.LoadTexture(fontTextureFileName, device, true, srgb);
             var sett = Settings;
             sett.TextureResolution = new Vector2(texture.Width, texture.Height);
             sett.Type = (int)ActiveFont.FontType;

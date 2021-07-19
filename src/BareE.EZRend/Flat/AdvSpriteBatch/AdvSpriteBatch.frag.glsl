@@ -45,6 +45,7 @@ void main()
 	           + tint1 * int(owriteCl1)*iClr.b
 			   + tint2 * int(owriteCl2)*iClr.a
 			   ;
+	FinalColor.a=oA;
     //FinalColor = vec4(iA,1-oA,0,1);
 	//FinalColor = oClr;tg
 	//FinalColor = oClr;

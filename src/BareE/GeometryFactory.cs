@@ -80,8 +80,26 @@ namespace BareE
         }
     }
 
+    
     public static class GeometryFactory
     {
+        public static IEnumerable<Tri> ConeTriangulation(int res,float r, float d)
+        {
+            float delta = 360.0f / (float)res;
+
+            for (int i = 0; i < res;i++)
+            {
+
+
+                yield return new Tri()
+                {
+                    Pt1 = new Vector3(0, 0, 0),
+                    Pt2 = new Vector3((float)Math.Sin(MathHelper.DegToRad(delta * i))*r, (float)Math.Cos(MathHelper.DegToRad(delta * i))*r ,-d),
+                    Pt3 = new Vector3((float)Math.Sin(MathHelper.DegToRad((delta* (i+1))))*r, (float)Math.Cos(MathHelper.DegToRad((delta) * (i+1)))*r,-d),
+                };
+            }
+        }
+
         public static IEnumerable<Tri> CubeTriangulation
         {
             get

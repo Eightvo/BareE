@@ -26,7 +26,12 @@ namespace BareE.Harness.Scenes
         SpriteAtlas actorAtlas;
         AdvSpriteBatchShader actorSpriteBatch;
 
+
         AdvSpriteBatchShader actorSpriteBatch2;
+
+        Framebuffer offscreenBuffer;
+
+        private IntPtr offScreenColorTexturePtr;
 
         Vector4 Color1=new Vector4(1,0,0,1);
         Vector4 Color2 = new Vector4(1, 0, 0,1);
@@ -42,12 +47,24 @@ namespace BareE.Harness.Scenes
             actorAtlas.Merge("Ship", actorModel, "BareE.EZRend.Flat.AdvSpriteBatch.prefabchar_rc.png");
             actorAtlas.Build(0, false);
 
+            offscreenBuffer = GameEnvironment.CreateFlatbuffer(Env.Window.Device, (uint)Env.Window.Window.Width, (uint)Env.Window.Window.Height, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
+
+            offScreenColorTexturePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, offscreenBuffer.ColorTargets[0].Target);
+
             actorSpriteBatch = new AdvSpriteBatchShader();
             actorSpriteBatch.SetOutputDescription(Env.GetBackbufferOutputDescription());
             actorSpriteBatch.CreateResources(Env.Window.Device);
             actorSpriteBatch.SetTexture(0, Env.Window.Device, AssetManager.LoadTexture(actorAtlas.AtlasSheet, Env.Window.Device,false,false));
             foreach (var v in BareE.GeometryFactory.QuadVerts())
                 actorSpriteBatch.AddVertex(new Float3_Float2(v, new Vector2(v.X < 0 ? 0 : 1, v.Y < 0 ? 1 : 0)));
+
+            actorSpriteBatch2 = new AdvSpriteBatchShader();
+            actorSpriteBatch2.SetOutputDescription(offscreenBuffer.OutputDescription);
+            actorSpriteBatch2.CreateResources(Env.Window.Device);
+            actorSpriteBatch2.SetTexture(0, Env.Window.Device, AssetManager.LoadTexture(actorAtlas.AtlasSheet, Env.Window.Device, false, false));
+            foreach (var v in BareE.GeometryFactory.QuadVerts())
+                actorSpriteBatch2.AddVertex(new Float3_Float2(v, new Vector2(v.X < 0 ? 0 : 1, v.Y < 0 ? 1 : 0)));
+
         }
 
 
@@ -55,6 +72,7 @@ namespace BareE.Harness.Scenes
         {
             InputHandler.Build("System");
             actorSpriteBatch.Update(Env.Window.Device);
+            actorSpriteBatch2.Update(Env.Window.Device);
         }
 
         bool AB = false;
@@ -65,8 +83,13 @@ namespace BareE.Harness.Scenes
             Vector4 Tint2 = Color2;
 
             actorSpriteBatch.ClearInstanceData();
-            actorSpriteBatch.AddSprite(actorAtlas[$"Ship.North.Cast.0"], new Vector2(0, 0), 0, Color1, Color2, 0.5f);
+            actorSpriteBatch.AddSprite(actorAtlas[$"Ship.South.Cast.0"], new Vector2(0, 0), 0, Color1, Color2, 0.5f);
             actorSpriteBatch.Update(Env.Window.Device);
+
+
+            actorSpriteBatch2.ClearInstanceData();
+            actorSpriteBatch2.AddSprite(actorAtlas[$"Ship.South.Cast.0"], new Vector2(0, 0), 0, Color1, Color2, 0.5f);
+            actorSpriteBatch2.Update(Env.Window.Device);
 
 
             if (State.Input.ReadOnce("Cancel") > 0)
@@ -79,6 +102,8 @@ namespace BareE.Harness.Scenes
             IG.Begin("Colors");
             IG.ColorEdit4("Color1", ref Color1);
             IG.ColorEdit4("Color2", ref Color2);
+
+            ImGuiNET.ImGui.Image(offScreenColorTexturePtr, new Vector2(offscreenBuffer.Width / 1.0f, offscreenBuffer.Height / 1.0f), new Vector2(0, 1), new Vector2(1, 0));
             IG.End();
             
         }
@@ -87,6 +112,7 @@ namespace BareE.Harness.Scenes
         {
 
             actorSpriteBatch.Render(outbuffer, cmds, null, eyeMat, Matrix4x4.Identity);
+            actorSpriteBatch2.Render(offscreenBuffer, cmds, null, eyeMat, Matrix4x4.Identity);
         }
     }
 }

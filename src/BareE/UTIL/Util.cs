@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 using Veldrid;
@@ -44,6 +45,49 @@ namespace BareE.UTIL
         public static Framebuffer CreateFramebuffer(GraphicsDevice device, uint resolutionX, uint resolutionY)
         {
             return CreateFramebuffer(device, resolutionX, resolutionY, GetNativePixelFormat(device), TextureSampleCount.Count1);
+        }
+
+
+        public static Framebuffer CreateFramebuffer(GraphicsDevice device, uint resX, uint resY, PixelFormat[] piexlFormats, TextureSampleCount sampleCount, PixelFormat? depthFormat = PixelFormat.R32_Float)
+        {
+            FramebufferAttachmentDescription[] clrTargets = new FramebufferAttachmentDescription[piexlFormats.Length];
+            for (int i = 0; i < piexlFormats.Length; i++)
+            {
+                var pxlFormat = piexlFormats[i];
+                clrTargets[i] = new FramebufferAttachmentDescription()
+                {
+                    ArrayLayer = 0,
+                    MipLevel = 0,
+                    Target = device.ResourceFactory.CreateTexture(
+                        new TextureDescription(resX, resY, 1, 1, 1, pxlFormat, TextureUsage.RenderTarget | TextureUsage.Sampled, TextureType.Texture2D, sampleCount)
+                    )
+                };
+            }
+            FramebufferAttachmentDescription? depTrg=null;
+            if (depthFormat.HasValue)
+            {
+                depTrg = new FramebufferAttachmentDescription()
+                {
+                    ArrayLayer = 0,
+                    MipLevel = 0,
+                    Target = device.ResourceFactory.CreateTexture(
+                    new TextureDescription(resX,
+                                           resY,
+                                           1, 1, 1,
+                                           PixelFormat.R32_Float,
+                                           TextureUsage.DepthStencil,
+                                           TextureType.Texture2D,
+                                           sampleCount)
+                        )
+                };
+            }
+            var frameBuffDesc = new FramebufferDescription()
+            {
+                ColorTargets = clrTargets,
+                DepthTarget = depTrg
+            };
+            var offscreenBuffer = device.ResourceFactory.CreateFramebuffer(frameBuffDesc);
+            return offscreenBuffer;
         }
 
         public static Framebuffer CreateFramebuffer(GraphicsDevice device, uint resolutionX, uint resolutionY, PixelFormat pixelFormat, TextureSampleCount sampleCount)

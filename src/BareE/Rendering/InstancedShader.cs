@@ -77,7 +77,7 @@ namespace BareE.Rendering
             }
             base.Update(device);
         }
-
+        
         public override void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData, Matrix4x4 CameraMatrix, Matrix4x4 ModelMatrix)
         {
             cmds.SetVertexBuffer(1, InstanceDataBuffer);

@@ -11,6 +11,10 @@ namespace BareE.Rendering
         private float FieldOfView { get; set; } = 1.5f;
         public bool useLeftHanded = false;
 
+        public float NearPlane { get; set; } = 0.25f;
+        public float FarPlane { get; set; } = 1024.0f;
+
+
         private Matrix4x4 LookAtMatrix
         {
             get
@@ -25,7 +29,7 @@ namespace BareE.Rendering
         {
             get
             {
-                return Matrix4x4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, 0.25f, 1024.0f);
+                return Matrix4x4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, NearPlane, FarPlane);
             }
         }
 

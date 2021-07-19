@@ -85,37 +85,26 @@ namespace BareE.Harness.Scenes
             Vector4 Tint2 = Color2;
 
             linesShader.Clear();
-            // linesShader.AddVertex(new EZRend.VertexTypes.Float3_Float4(new Vector3(0, 0, -1), Color1));
-            //  linesShader.AddVertex(new EZRend.VertexTypes.Float3_Float4(new Vector3(1, 1, -1), Color1));
-            //  linesShader.AddVertex(new EZRend.VertexTypes.Float3_Float4(new Vector3(0, 0, -1), Color2));
-            //  linesShader.AddVertex(new EZRend.VertexTypes.Float3_Float4(new Vector3(0, 1, -1), Color2));
-
-            var sz = 1024.0f;
-            linesShader.AddVertex(new Float3_Float4(new Vector3(0 - (sz / 2.0f), 0 - (sz / 2.0f), 0), new Vector4(1, 0, 0, 1)));
-            linesShader.AddVertex(new Float3_Float4(new Vector3(sz - (sz / 2.0f), 0 - (sz / 2.0f), 0), new Vector4(1, 0, 0, 1)));
-
-            linesShader.AddVertex(new Float3_Float4(new Vector3(sz - (sz / 2.0f), 0 - (sz / 2.0f), 0), new Vector4(1, 0, 0, 1)));
-            linesShader.AddVertex(new Float3_Float4(new Vector3(sz - (sz / 2.0f), sz - (sz / 2.0f), 0), new Vector4(1, 0, 0, 1)));
-            linesShader.AddVertex(new Float3_Float4(new Vector3(sz - (sz / 2.0f), sz - (sz / 2.0f), 0), new Vector4(1, 0, 0, 1)));
-            linesShader.AddVertex(new Float3_Float4(new Vector3(0 - (sz / 2.0f), sz - (sz / 2.0f), 0), new Vector4(1, 0, 0, 1)));
-            linesShader.AddVertex(new Float3_Float4(new Vector3(0 - (sz / 2.0f), sz - (sz / 2.0f), 0), new Vector4(1, 0, 0, 1)));
-            linesShader.AddVertex(new Float3_Float4(new Vector3(0 - (sz / 2.0f), 0 - (sz / 2.0f), 0), new Vector4(1, 0, 0, 1)));
+             linesShader.AddVertex(new EZRend.VertexTypes.Float3_Float4(new Vector3(0, 0, -1), Color1));
+              linesShader.AddVertex(new EZRend.VertexTypes.Float3_Float4(new Vector3(1, 1, -1), Color1));
+              linesShader.AddVertex(new EZRend.VertexTypes.Float3_Float4(new Vector3(0, 0, -1), Color2));
+              linesShader.AddVertex(new EZRend.VertexTypes.Float3_Float4(new Vector3(0, 1, -1), Color2));
 
             linesShader.Update(Env.Window.Device);
-            Random rng = new Random(346);
+//            Random rng = new Random(346);
 
 
-            vshade.ClearInstanceData();
-            for (int ii = 0; ii <= 400; ii++)
-            {
-                vshade.AddSeed(new Vector2(rng.Next(0, 2000) - 1000, rng.Next(0, 2000) - 1000), new Vector4((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble(), 1));
+//            vshade.ClearInstanceData();
+//            for (int ii = 0; ii <= 400; ii++)
+//            {
+//                vshade.AddSeed(new Vector2(rng.Next(0, 2000) - 1000, rng.Next(0, 2000) - 1000), new Vector4((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble(), 1));
 //                vshade.AddSeed(new Vector2(rng.Next(0, 2000) - 1000, rng.Next(0, 2000) - 1000), new Vector4(0, 0, 1, 1));
 //                vshade.AddSeed(new Vector2(rng.Next(0, 2000) - 1000, rng.Next(0, 2000) - 1000), new Vector4(0, 1, 1, 1));
 //                vshade.AddSeed(new Vector2(rng.Next(0, 2000) - 1000, rng.Next(0, 2000) - 1000), new Vector4(1, 0, 1, 1));
 //                vshade.AddSeed(new Vector2(rng.Next(0, 2000) - 1000, rng.Next(0, 2000) - 1000), new Vector4(1, 1, 0, 1));
 //                vshade.AddSeed(new Vector2(rng.Next(0, 2000) - 1000, rng.Next(0, 2000) - 1000), new Vector4(0, 1, 0, 1));
-            }
-            vshade.Update(Env.Window.Device);
+//            }
+//            vshade.Update(Env.Window.Device);
 
 
             if (State.Input.ReadOnce("Cancel") > 0)

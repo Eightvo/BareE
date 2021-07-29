@@ -76,9 +76,9 @@ namespace BareE
         /// <param name="game"></param>
         public void Run(Game game)
         {
+            ActiveGame = game;
             //ImGuiNET.ImGui.GetIO().ConfigFlags = ImGuiNET.ImGuiConfigFlags.
             game.Environment.Window.Window.Resized += Window_Resized;
-            ActiveGame = game;
             Instant instant = game.State.Clock.CaptureInstant();
             game.State.Messages.AddListener<Messages.ExitGame>(HandleExitGameMessage);
             game.State.Messages.AddListener<Messages.TransitionScene>(HandleTransitionScene);
@@ -123,6 +123,9 @@ namespace BareE
 
         private void Window_Resized()
         {
+            ActiveGame.Environment.Window.Width = ActiveGame.Environment.Window.Window.Width;
+            ActiveGame.Environment.Window.Height= ActiveGame.Environment.Window.Window.Height;
+
         }
 
         private void HandleEvent(ref SDL_Event ev)

@@ -32,8 +32,6 @@ namespace BareE.Harness
         }
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
-            State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput($"{p++}"));
-
         }
 
         public override void RenderEye(Instant Instant, GameState State, GameEnvironment Env, Matrix4x4 eyeMat, Framebuffer outbuffer, CommandList cmds)
@@ -45,6 +43,7 @@ namespace BareE.Harness
         {
             IG.Begin("Simple Scene");
             IG.Text("Text");
+            IG.Text($"Window: {Env.Window.Size.X} {Env.Window.Size.Y}");
             if (IG.Button("Home"))
             {
                 State.Messages.EmitMsg<Messages.TransitionScene>(new Messages.TransitionScene()

@@ -134,10 +134,6 @@ namespace BareE
                     yield return ConsumeComment(rdr);
                 }
             }
-            if (curr == '#')
-            {
-                //PreProcessor Directive
-            }
             yield return ConsumeToken(rdr, curr);
         }
 
@@ -171,7 +167,12 @@ namespace BareE
             if (whitespace.Length > 0)
                 yield return CreateToken(LexerTokenType.Whitespace, whitespace.ToString());
         }
+        private LexerToken ConsumeDirective(StreamReader rdr)
+        {
 
+            var directive = MoveNext(rdr);
+            return CreateToken(LexerTokenType.Directive, $"{directive}");
+        }
         private LexerToken ConsumeComment(StreamReader rdr)
         {
             switch ((char)rdr.Peek())
@@ -255,6 +256,8 @@ namespace BareE
                 return ConsumeStringLiteral(rdr);
             if (curr.isDecimalDigit() || curr == '-')
                 return ConsumeNumericLiteral(rdr);
+            if (curr == '#')
+                return ConsumeDirective(rdr);
             return ConsumeUnknownLiteral(rdr);
             //throw new Exception("Unexpected.");
         }
@@ -361,9 +364,7 @@ namespace BareE
                 curr = MoveNext(rdr);
             }
             var text = result.ToString();
-            LexerTokenType tokenType = LexerTokenType.Identifier;
-            if (Keywords.Contains(text))
-                tokenType = LexerTokenType.Keyword;
+            LexerTokenType tokenType = LexerTokenType.String_Literal;
             return CreateToken(tokenType, text);
         }
 

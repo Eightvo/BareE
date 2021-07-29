@@ -9,7 +9,8 @@ namespace BareE.Rendering
         {
             get;
         }
-
+        public virtual float NearPlane { get; set; }
+        public virtual float FarPlane { get; set; } 
         public virtual bool LockUp { get; set; }
 
         public abstract void Zoom(float amount);
@@ -31,7 +32,7 @@ namespace BareE.Rendering
         public virtual Vector3 Position { get; set; }
         public virtual Vector3 Forward { get; }
         public virtual Vector3 Up { get; }
-
+        /*
         public virtual Vector3 ToEyespace(Vector3 pt)
         {
             throw new NotImplementedException();
@@ -41,8 +42,12 @@ namespace BareE.Rendering
         {
             throw new NotImplementedException();
         }
-
+        */
         public virtual Vector3 Project(Vector3 pt)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual Vector3 Unproject(Vector3 pt)
         {
             throw new NotImplementedException();
         }

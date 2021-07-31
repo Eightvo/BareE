@@ -1,8 +1,10 @@
 ﻿using BareE.DataStructures;
 
 using BareE.Rendering;
+using BareE.Widgets;
 
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 using Veldrid;
@@ -16,6 +18,11 @@ namespace BareE.GameDev
     public abstract class GameSceneBase : IDisposable
     {
         public PriorityQueue<GameSystem> Systems = new PriorityQueue<GameSystem>();
+        List<IWidget> _widgets = new List<IWidget>();
+        public void AddWidget(IWidget widget)
+        {
+            _widgets.Add(widget);
+        }
         public GameState State { get; set; }
         private FramebufferToScreen leftEyeToScreen;
         private FramebufferToScreen rightEyeToScreen;
@@ -137,6 +144,15 @@ namespace BareE.GameDev
             Update(Instant, State, Env);
             foreach (var sys in Systems.Elements)
                 sys.Update(Instant, State, Env);
+            List<IWidget> toBeRemoved=new List<IWidget>();
+            foreach (var wid in _widgets)
+            {
+                wid.Update(Instant, State, Env);
+                if (wid.Closed) toBeRemoved.Add(wid);
+            }
+            foreach (var v in toBeRemoved)
+                _widgets.Remove(v);
+
         }
 
         internal void DoRender(Instant Instant, GameState State, GameEnvironment Env)
@@ -215,7 +231,8 @@ namespace BareE.GameDev
             RenderHud(Instant, State, Env, Env.HUDBackBuffer, hudCmds);
             foreach (var sys in Systems.Elements)
                 sys.RenderHud(Instant, State, Env, Env.HUDBackBuffer, hudCmds);
-
+            foreach (var wid in _widgets)
+                wid.Render(Instant, State, Env, Env.HUDBackBuffer, hudCmds);
             Env.Window.IGR.Render(Env.Window.Device, hudCmds);
             hudCmds.End();
             Env.Window.Device.SubmitCommands(hudCmds);

@@ -7,16 +7,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Veldrid;
+
 using IG = ImGuiNET.ImGui;
 
 namespace BareE.Widgets
 {
-    public class Credits
+    public class Credits:IWidget
     {
         public string Name { get; set; } = "ImGuiCreditsScreen";
         public bool IsVisible { get; set; } = false;
         private HashSet<AssetCredits> _allCredits = new HashSet<AssetCredits>();
-
+        public bool Closed { get { return IsVisible; } }
         private static IEnumerable<AssetCredits> FILEFREECREDITS()
         {
             yield return new AssetCredits()
@@ -85,8 +87,12 @@ namespace BareE.Widgets
             //foreach(.);
             //Union(FILEFREECREDITS();
         }
+        public void Update(Instant instant, GameState state, GameEnvironment env)
+        {
 
-        public void Render(Instant instant, GameState state, GameEnvironment env)
+        }
+
+        public void Render(Instant instant, GameState state, GameEnvironment env, Framebuffer outbuffer, CommandList cmds)
         {
             if (!IsVisible) return;
             int tPx = (int)(env.Window.Width * 0.1f);

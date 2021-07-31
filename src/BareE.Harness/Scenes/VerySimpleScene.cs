@@ -16,6 +16,7 @@ namespace BareE.Harness
     {
 
         FullScreenTexture BGTexture;
+       
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
             this.Systems.Enqueue(new ConsoleSystem(), 1);
@@ -39,6 +40,32 @@ namespace BareE.Harness
                     {
                         new BareE.Components.MenubarItem()
                         {
+                            MenuIdentifierName="File>Open",
+                            Callback=(i,s,e)=>{
+                                AddWidget(
+                                new Widgets.OpenFileDialog.GetFilepathDialog(
+                                    (i, s, e, d) =>
+                                        {
+                                            State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput()
+                                            {
+                                                    System= false,
+                                                    Text=$"From File Open: {d.Result} {d.SelectedFullPath}"
+                                            });
+
+                                        }
+                                        , new Widgets.OpenFileDialog.GetFilepathDialogSettings()
+                                        {
+                                             AllowAccessSubdirectories=true,
+                                             DefaultExtention=".txt",
+                                             RootDirectory=@"G:\TestData"
+                                        }
+
+                                    )); ;
+
+                            }
+                        },
+                        new BareE.Components.MenubarItem()
+                        {
                              MenuIdentifierName="File>Quit",
                               Callback=(i,s,e)=>{ State.Messages.EmitMsg(new ExitGame()); }
                         },
@@ -55,6 +82,7 @@ namespace BareE.Harness
         }
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
+
         }
 
         public override void RenderEye(Instant Instant, GameState State, GameEnvironment Env, Matrix4x4 eyeMat, Framebuffer outbuffer, CommandList cmds)
@@ -64,6 +92,7 @@ namespace BareE.Harness
 
         public override void RenderHud(Instant Instant, GameState State, GameEnvironment Env, Framebuffer outbuffer, CommandList cmds)
         {
+
             IG.Begin("Simple Scene");
             IG.Text("Text");
             IG.Text($"Window: {Env.Window.Size.X} {Env.Window.Size.Y}");

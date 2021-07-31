@@ -289,7 +289,7 @@ namespace BareE.Systems
         public unsafe override void RenderHud(Instant Instant, GameState State, GameEnvironment env, Framebuffer Target, CommandList cmds)
         {
             RenderMenuBars(Instant, State, env);
-            CreditsWidget.Render(Instant, State, env);
+            CreditsWidget.Render(Instant, State, env, Target, cmds);
             if (!IsShowingConsoleWindow)
                 return;
             ImGui.Begin($"Console");

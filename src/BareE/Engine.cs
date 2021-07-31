@@ -125,17 +125,13 @@ namespace BareE
         {
             ActiveGame.Environment.Window.Width = ActiveGame.Environment.Window.Window.Width;
             ActiveGame.Environment.Window.Height= ActiveGame.Environment.Window.Window.Height;
-
+            ActiveGame.Environment.Window.IGR.WindowResized(ActiveGame.Environment.Window.Window.Width, ActiveGame.Environment.Window.Window.Height);
         }
 
         private void HandleEvent(ref SDL_Event ev)
         {
-            //if (ev.type!= SDL_EventType.MouseMotion)
-            //    Log.EmitTrace($"<event> Window:[{ev.windowID}] Type:{ev.type} Timestamp:{ev.timestamp}");
             switch (ev.type)
             {
-                //case SDL_EventType.Quit:
-                //     ActiveGame.ExecutionState = GameExecutionState.Quitting;
                 case SDL_EventType.FirstEvent:
                 case SDL_EventType.Terminating:
 

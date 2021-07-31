@@ -199,6 +199,16 @@ namespace BareE
             throw new FileNotFoundException($"File not found: {name}", name);
         }
 
+        internal static IEnumerable<String> GetAssetsByPath(string currDirectory)
+        {
+            foreach (var asm in _knownAssemblies)
+            {
+                foreach (var v in asm.GetManifestResourceNames())
+                    yield return v;
+                
+            }
+        }
+
         /// <summary>
         /// Read an Entire asset into a string.
         /// </summary>

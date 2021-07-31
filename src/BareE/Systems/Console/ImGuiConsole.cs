@@ -13,6 +13,8 @@ using System.Text;
 
 using Veldrid;
 
+using IG = ImGuiNET.ImGui;
+
 namespace BareE.Systems
 {
     /// <summary>
@@ -22,6 +24,7 @@ namespace BareE.Systems
     public partial class ConsoleSystem : GameSystem
     {
         private bool Echo = true;
+        
         private bool PropagateToLog = false;
         private RingBuffer<String> _outputBuffer;
         private RingBuffer<String> _history;
@@ -35,9 +38,9 @@ namespace BareE.Systems
         private String cmdText = String.Empty;
 
         public bool IsShowingConsoleWindow = true;
-
+        public bool IsShowingMainMenuBar = true;
         private bool cycleModeRequested;
-
+        public void RefreshMainMenuBar() { root = null; }
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
             if (cycleModeRequested)
@@ -199,8 +202,93 @@ namespace BareE.Systems
         public override void RenderEye(Instant instant, GameState state, GameEnvironment env, Matrix4x4 eyeMat, Framebuffer Target, CommandList commands)
         { }
 
+        class MenuNode
+        {
+            public String nodeTitle;
+            public Dictionary<String, MenuNode> Children = new Dictionary<string, MenuNode>();
+            public Action<Instant, GameState,GameEnvironment> action;
+            public MenuNode(String nodeT)
+            {
+                nodeTitle = nodeT;
+            }
+
+        }
+        private MenuNode AddNode(String[] parts, Action<Instant, GameState,GameEnvironment> act, int currPart, Dictionary<String, MenuNode> trgt)
+        {
+            MenuNode n = null;
+            if (!trgt.ContainsKey(parts[currPart]))
+            {
+                n = new MenuNode(parts[currPart]);
+                trgt.Add(parts[currPart], n);
+            }
+            else
+            {
+                n = trgt[parts[currPart]];
+            }
+            if (parts.Count() - 1 > currPart)
+                return AddNode(parts, act, currPart + 1, n.Children);
+            n.action = act;
+            return n;
+        }
+        private void RenderNode(MenuNode c, Instant Instant, GameState State, GameEnvironment env)
+        {
+            if (c.Children.Count > 0)
+            {
+                if (IG.BeginMenu(c.nodeTitle))
+                {
+                    foreach (var ch in c.Children.Values)
+                    {
+                        RenderNode(ch, Instant, State, env);
+                    }
+                    IG.End();
+                }
+            }
+            else
+            {
+                if (IG.MenuItem(c.nodeTitle))
+                {
+                    if (c.action != null)
+                        c.action(Instant, State, env);
+                }
+            }
+        }
+
+
+        MenuNode root;
+
+        public void RenderMenuBars(Instant Instant, GameState State, GameEnvironment env)
+        {
+            if (!IsShowingMainMenuBar) return;
+            if (root==null)
+            {
+                root = new MenuNode("Root");
+                var items = new List<MenubarItem>();
+                foreach(var v in State.ECC.Components.GetEntitiesByComponentType<MenubarItemSet>())
+                    items.AddRange(v.Value.Items);
+                foreach(var v in items.OrderBy(x=>x.MenuIdentifierName))
+                {
+                    AddNode(v.MenuIdentifierName.Split('>'), v.Callback, 0, root.Children);
+                }
+            }
+
+            if (ImGui.BeginMainMenuBar())
+            {
+                bool started = false;
+                string prev = String.Empty;
+                int depth = 0;
+
+                foreach (var c in root.Children.OrderBy(x => x.Key))
+                {
+
+                    RenderNode(c.Value, Instant,State,env);
+                }
+                ImGui.EndMainMenuBar();
+            }
+        }
+
         public unsafe override void RenderHud(Instant Instant, GameState State, GameEnvironment env, Framebuffer Target, CommandList cmds)
         {
+            RenderMenuBars(Instant, State, env);
             CreditsWidget.Render(Instant, State, env);
             if (!IsShowingConsoleWindow)
                 return;

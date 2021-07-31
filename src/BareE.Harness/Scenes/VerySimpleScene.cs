@@ -3,6 +3,7 @@ using BareE.Messages;
 using BareE.Rendering;
 using BareE.Systems;
 
+using System.Collections.Generic;
 using System.Numerics;
 
 using Veldrid;
@@ -29,6 +30,28 @@ namespace BareE.Harness
         public override void Initialize(Instant Instant, GameState State, GameEnvironment Env)
         {
             BGTexture.Update(Env.Window.Device);
+
+            State.ECC.SpawnEntity("MenuBarItems",
+                new BareE.Components.MenubarItemSet()
+                {
+                    SetName = "IDK",
+                    Items = new List<BareE.Components.MenubarItem>()
+                    {
+                        new BareE.Components.MenubarItem()
+                        {
+                             MenuIdentifierName="File>Quit",
+                              Callback=(i,s,e)=>{ State.Messages.EmitMsg(new ExitGame()); }
+                        },
+                        new BareE.Components.MenubarItem()
+                        {
+                             MenuIdentifierName="File>Home",
+                              Callback=(i,s,e)=>{ State.Messages.EmitMsg(new TransitionScene(){ Scene= new SceneSelectorScene(), State=new GameState()}); }
+                        },
+
+                    }.ToArray()
+                }
+                );
+
         }
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {

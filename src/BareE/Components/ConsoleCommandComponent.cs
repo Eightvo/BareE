@@ -7,6 +7,21 @@ using System;
 
 namespace BareE.Components
 {
+    [Component("MenubarItemSet")]
+    public struct MenubarItemSet
+    {
+        public String SetName { get; set; }
+        public MenubarItem[] Items { get; set; }
+    }
+    public struct MenubarItem
+    {
+        public String MenuIdentifierName { get; set; }
+
+        [JsonIgnore]
+        public Action<Instant, GameState, GameEnvironment> Callback { get; set; }
+
+    }
+
     /// <summary>
     /// Defines a set of Console Commands.
     /// </summary>

@@ -19,6 +19,9 @@ namespace BareE.Widgets
         public bool IsVisible { get; set; } = false;
         private HashSet<AssetCredits> _allCredits = new HashSet<AssetCredits>();
         public bool Closed { get { return IsVisible; } }
+
+        public DialogResult Result { get =>  DialogResult.Ok; }
+
         private static IEnumerable<AssetCredits> FILEFREECREDITS()
         {
             yield return new AssetCredits()

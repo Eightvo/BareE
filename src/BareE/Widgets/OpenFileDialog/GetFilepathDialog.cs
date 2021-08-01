@@ -11,13 +11,7 @@ using Veldrid;
 using IG = ImGuiNET.ImGui;
 namespace BareE.Widgets.OpenFileDialog
 {
-    [Flags]
-    public enum DialogResult
-    {
-        Cancel=0,
-        Abort=1,
-        Ok=2
-    }
+
     public struct GetFilepathDialogSettings
     {
         public String RootDirectory { get; set; }
@@ -36,7 +30,7 @@ namespace BareE.Widgets.OpenFileDialog
         String MyId = $"ofd{ofdV}";
 
         private bool closing;
-        public DialogResult Result = DialogResult.Cancel;
+        public DialogResult Result { get; set; }= DialogResult.Cancel;
 
         //String _selectedFullPath = String.Empty;
         public String SelectedFullPath {
@@ -63,9 +57,13 @@ namespace BareE.Widgets.OpenFileDialog
         Action<Instant, GameState, GameEnvironment, GetFilepathDialog> Callback { get; set; }
         bool DirectoryAllowed(String dir)
         {
+            if (String.IsNullOrEmpty(dir)) return false;
             if (!System.IO.Path.IsPathFullyQualified(dir) || dir.Contains(".."))
                 return DirectoryAllowed(System.IO.Path.GetFullPath(dir));
-            
+
+            if (!System.IO.Directory.Exists(dir))
+                return false;
+
             if (Settings.AllowAccessOutsideRoot)
                 return true;
             if (!dir.StartsWith(Settings.RootDirectory, StringComparison.OrdinalIgnoreCase))

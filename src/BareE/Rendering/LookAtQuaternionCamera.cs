@@ -3,6 +3,97 @@ using System.Numerics;
 
 namespace BareE.Rendering
 {
+    public class OrthographicCamera : Camera
+    {
+        public OrthographicCamera(float camWidth, float camHeight, float camDepth)
+        {
+            CameraSize = new Vector3(camWidth, camHeight, camDepth);
+        }
+        Vector3 CameraPosition { get; set; }
+        Vector3 CameraSize { get; set; }
+
+        float boundsLeft
+        {
+            get { return CameraPosition.X - (CameraSize.X / 2.0f); }
+        }
+        float boundsRight
+        {
+            get { return CameraPosition.X + (CameraSize.X / 2.0f); }
+        }
+        float boundsBottom
+        {
+            get { return CameraPosition.Y - (CameraSize.Y / 2.0f); }
+        }
+
+        float boundsTop
+        {
+            get { return CameraPosition.Y + (CameraSize.Y / 2.0f); }
+        }
+
+        float boundsNear
+        {
+            get { return CameraPosition.Z; }
+        }
+
+        float boundsFar
+        {
+            get { return CameraPosition.Z + (CameraSize.Z); }
+        }
+
+        public override Matrix4x4 CamMatrix
+        {
+            get
+            {
+                return Matrix4x4.CreateOrthographicOffCenter(boundsLeft, boundsRight, boundsBottom, boundsTop, boundsNear, boundsFar);
+            }
+        }
+
+        public override void Move(Vector3 amount)
+        {
+            CameraPosition += amount;
+        }
+
+        public override void Pan(float v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Pitch(float v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Roll(float v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Set(Vector3 position, Vector3 lookat, Vector3 up)
+        {
+            CameraPosition = position;
+        }
+
+        public override void Tilt(float v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Yaw(float v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Zoom(float amount)
+        {
+            if (CameraSize.X + amount < 0)
+                return;
+            CameraSize = new Vector3(
+                CameraSize.X+amount,
+                CameraSize.Y+(amount*(CameraSize.Y/CameraSize.X)),
+                CameraSize.Z
+                );
+        }
+    }
     public class LookAtQuaternionCamera : Camera
     {
         private float AspectRatio

@@ -33,10 +33,16 @@ namespace BareE.DataStructures
             get { return _Pages.Keys; }
         }
 
-        public void Merge(String name, SpriteModel sprite, String TextureSrc)
+        public void Merge(String name, SpriteModel sprite, String TextureSrc, float scale=1.0f)
         {
             AtlasPage newPage = new AtlasPage();
             newPage.model = sprite;
+            if (scale != 1) newPage.model.Scale(scale);
+
+            
+
+
+
             newPage.src = GetTextureSrcImage(sprite, TextureSrc);
             if (!_Pages.ContainsKey(name))
                 _Pages.Add(name, newPage);
@@ -52,19 +58,25 @@ namespace BareE.DataStructures
                 Image<Rgba32> img = Image.Load<Rgba32>(strm);
                 if (sprite.SrcRect.Left <= 0 && sprite.SrcRect.Width >= img.Width && sprite.SrcRect.Bottom <= 0 && sprite.SrcRect.Top >= img.Height)
                     return img;
+                
 
                 img.Mutate(x =>
                 {
+                    
                     x.Crop(new Rectangle(Math.Max(0, sprite.SrcRect.X),
                                                               Math.Max(0, sprite.SrcRect.Y),
-                                                              Math.Min(img.Width, sprite.SrcRect.Width),
-                                                              Math.Min(img.Height, sprite.SrcRect.Height)));
+                                                              Math.Min(img.Width, sprite.SrcRect.X+sprite.SrcRect.Width),
+                                                              Math.Min(img.Height, sprite.SrcRect.Y + sprite.SrcRect.Height)));
                 });
                 return img;
             }
         }
 
         public void Build(int maxWidth = 0, bool save = false)
+        {
+            Build(maxWidth, save ? $"newImage{ DateTime.Now.ToString("yyyyMMddhhmmss")}.png" : String.Empty);
+        }
+        public void Build(int maxWidth = 0, String saveFile = null)
         {
             var maxW = 0;
             foreach (var v in _Pages)
@@ -82,7 +94,7 @@ namespace BareE.DataStructures
                 v.Value.PageRect = layout.AddRectangle(new System.Drawing.Size(v.Value.src.Width, v.Value.src.Height));
             }
             layout.Crop();
-            Image<Rgba32> newImage = new Image<Rgba32>(layout.Space.Width, layout.Space.Height);
+            Image<Rgba32> newImage = new Image<Rgba32>((int)MathHelper.NxtPowerOfTwo(layout.Space.Width), (int)MathHelper.NxtPowerOfTwo(layout.Space.Height));
             foreach (var v in _Pages)
             {
                 newImage.Mutate<Rgba32>(x =>
@@ -96,11 +108,8 @@ namespace BareE.DataStructures
                 });
             }
             AtlasSheet = newImage;
-            if (save)
-            {
-                var saveTo = $"newImage{DateTime.Now.ToString("yyyyMMddhhmmss")}.png";
-                AtlasSheet.Save(saveTo);
-            }
+            if (!String.IsNullOrEmpty(saveFile))
+                AtlasSheet.Save(saveFile);
             _dirty = false;
         }
 
@@ -146,7 +155,7 @@ namespace BareE.DataStructures
         public class SpriteModel
         {
             public String Name { get; set; }
-
+            
             [JsonProperty("Children")]
             private SpriteModel[] _Children { get; set; }
 
@@ -212,7 +221,18 @@ namespace BareE.DataStructures
                     return new Rectangle(0, 0, 0, 0);
                 }
             }
-
+            public void Scale(float scale)
+            {
+                SrcRect = new Rectangle((int)(SrcRect.X * scale), (int)(SrcRect.Y * scale),(int)(SrcRect.Width * scale),(int)(SrcRect.Height * scale));
+                foreach(var c in _Children)
+                {
+                    c.Scale(scale);
+                }
+                foreach(var a in _Alternatives)
+                {
+                    a.Off = new Point((int)(a.Off.X * scale), (int)(a.Off.Y * scale));
+                }
+            }
             public static SpriteModel LoadSpriteModel(String filename)
             {
                 return JsonConvert.DeserializeObject<SpriteModel>(

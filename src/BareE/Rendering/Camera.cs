@@ -45,11 +45,18 @@ namespace BareE.Rendering
         */
         public virtual Vector3 Project(Vector3 pt)
         {
-            throw new NotImplementedException();
+            var v = Vector4.Transform(new Vector4(pt, 1), CamMatrix);
+            return new Vector3(v.X / v.W, v.Y / v.W, v.Z / v.W);
         }
+
+        //Point in NDC Sent to Worldspace
         public virtual Vector3 Unproject(Vector3 pt)
         {
-            throw new NotImplementedException();
+            Matrix4x4 mC = CamMatrix;
+            Matrix4x4.Invert(mC, out mC);
+            var v = Vector4.Transform(new Vector4(pt, 1), mC);
+            return new Vector3(v.X / v.W, v.Y / v.W, v.Z / v.W);
         }
+
     }
 }

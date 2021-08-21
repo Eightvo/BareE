@@ -79,6 +79,12 @@
         "Src": "Mouse",
         "Type": "Axis",
         "Def": "X"
+      },
+      {
+        "Alias": "Zoom",
+        "Src": "Mouse",
+        "Type": "Axis",
+        "Def": "Wheel"
       }
     ]
   },

@@ -69,6 +69,15 @@ namespace BareE.Harness
                 });
             }
 
+            if (IG.Button("Ortho camera Test"))
+            {
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
+                {
+                    Preloaded = false,
+                    Scene = new OrthoCamTestScene(),
+                    State = new GameState()
+                });
+            }
             IG.End();
         }
 

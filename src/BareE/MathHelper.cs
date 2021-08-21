@@ -24,7 +24,14 @@ namespace BareE
         {
             return Vector2.Normalize(new Vector2(-(float)Math.Cos(rad), (float)Math.Sin(rad)));
         }
-
+        public static uint NxtPowerOfTwo(int i)
+        {
+            uint p = 1;
+            while (p <= i)
+                p = p * 2;
+            return p;
+            //return (uint)(i + (16 - (i % 16)));
+        }
         public static uint NxtMultipleOfSixteen(int i)
         {
             return (uint)(i + (16 - (i % 16)));
@@ -48,5 +55,16 @@ namespace BareE
             if (f.X > 0) return MathHelper.DegToRad(90);
             return MathHelper.DegToRad(180);
         }
+        public static Vector2 AngleToUnitVector(float rotation)
+        {
+            return Vector2.Normalize(new Vector2((float)Math.Sin(rotation), (float)Math.Cos(rotation)));
+        }
+
+        public static Vector2 ToVelocityVector(float thrust, float angle)
+        {
+            var v = AngleToUnitVector(angle) * thrust;
+            return new Vector2((float)Math.Round(v.X, 5), (float)Math.Round(v.Y, 5));
+        }
+
     }
 }

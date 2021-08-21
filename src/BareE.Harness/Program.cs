@@ -1,4 +1,5 @@
-﻿using BareE.GameDev;
+﻿using BareE.DataStructures;
+using BareE.GameDev;
 
 using SharpAudio;
 using SharpAudio.Codec;
@@ -14,6 +15,10 @@ namespace BareE.Harness
     {
         public static void Main(String[] args)
         {
+
+            EntityComponentContext ECC = new EntityComponentContext();
+            ECC.SpawnFromAsset("ABC", "BareE.Harness.Assets.Def.humanmale.actor");
+
             var engine = new BareE.Engine();
             var g = new TestGame(new GameState(), GameEnvironment.Load());
             engine.Run(g);

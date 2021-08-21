@@ -1,0 +1,23 @@
+{
+	AdvCompositeSprite:{
+		Children:[
+			{
+				Root:HumanMale,
+				PrimaryColor:"#883010"
+				SecondaryColor:"#00FF00"
+				Scale:1
+			},
+			{
+				Root:MalePants,
+				PrimaryColor:"#FF00FF",
+				SecondaryColor:"#00FF00",
+				Scale:1
+			}
+		]
+	},
+	Animation:
+	{
+		AnimationName:LPCChar,
+		State:Idle
+	}
+}

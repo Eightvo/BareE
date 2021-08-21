@@ -11,6 +11,7 @@
   <ItemGroup>
     <None Remove="Assets\Def\default.controls" />
     <None Remove="Assets\Def\default.radio" />
+    <None Remove="Assets\Def\humanmale.actor" />
     <None Remove="Assets\Fonts\SDF\b.fnt" />
     <None Remove="Assets\Fonts\SDF\b.png" />
     <None Remove="Assets\Fonts\SDF\Comic Sans MS.png" />
@@ -41,6 +42,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Assets\Def\default.controls" />
     <EmbeddedResource Include="Assets\Def\default.radio" />
+    <EmbeddedResource Include="Assets\Def\humanmale.actor" />
     <EmbeddedResource Include="Assets\Models\chest3-final.fbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

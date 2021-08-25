@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 using IG = ImGuiNET.ImGui;
@@ -45,6 +46,34 @@ namespace BareE.UTIL
            //     new System.Numerics.Vector2(b.X, b.Y + lh),
            //     clr, 1);
             IG.PopStyleColor();
+            return ret;
+        }
+
+
+        public static T ComboFromEnum<T>(String name, T preview)
+     where T : struct, Enum
+        {
+            var ret = preview;
+            if (IG.BeginCombo($"##{name}", preview.ToString()))
+            {
+                foreach (var v in Enum.GetNames<T>())
+                    if (IG.Selectable(v))
+                        ret = Enum.Parse<T>(v);
+
+                IG.EndCombo();
+            }
+            return ret;
+        }
+        public static T ComboFromCollection<T>(String name, T preview, IEnumerable<T> collection)
+        {
+            var ret = preview;
+            if (IG.BeginCombo($"##{name}", preview.ToString()))
+            {
+                foreach (var v in collection)
+                    if (IG.Selectable(v.ToString()))
+                        ret = v;
+                IG.EndCombo();
+            }
             return ret;
         }
     }

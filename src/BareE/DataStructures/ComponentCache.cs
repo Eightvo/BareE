@@ -301,7 +301,15 @@ namespace BareE.DataStructures
             foreach (var v in _components[i])
                 yield return new KeyValuePair<int, T>(v.Key, (T)v.Value);
         }
+        public IEnumerable<KeyValuePair<int, object>> GetEntitiesByComponentType(Type t)
+        {
+            int i = ComponentTypeData[t].CTypeID;
+            if (!_components.ContainsKey(i))
+                yield break;
 
+            foreach (var v in _components[i])
+                yield return new KeyValuePair<int, object>(v.Key, v.Value);
+        }
         /// <summary>
         /// Removes all components from the cache by EntityId.
         /// </summary>

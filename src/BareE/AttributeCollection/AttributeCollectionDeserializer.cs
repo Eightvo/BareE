@@ -186,12 +186,16 @@ namespace BareE.DataStructures
 
         private static String ReadReference(IEnumerator<LexerToken> tokens, ParserState state)
         {
-            if (tokens.Current.Type ==   LexerToken.LexerTokenType.String_Literal)
+            if (tokens.Current.Type == LexerToken.LexerTokenType.String_Literal)
                 return ReadString(tokens, state);
             else
             {
                 var sb = new StringBuilder();
                 //sb.Append(tokens.Current.Text);
+                if (tokens.Current.Type != LexerToken.LexerTokenType.Directive)
+                {
+                    sb.Append(tokens.Current.Text);
+                }
                 while (tokens.Current.Type== LexerToken.LexerTokenType.Directive || tokens.MoveNext())
                 {
                     switch (tokens.Current.Type)

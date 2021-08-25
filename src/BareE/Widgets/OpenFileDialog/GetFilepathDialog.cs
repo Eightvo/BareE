@@ -21,6 +21,7 @@ namespace BareE.Widgets.OpenFileDialog
         public bool AllowCreateFolder { get; set; }
         public bool AllowCreateFile { get; set; }
         public bool AllowSelectFolder { get; set; }
+        public bool AllowAccessEmbedded { get; set; }
         
     }
 
@@ -186,24 +187,25 @@ namespace BareE.Widgets.OpenFileDialog
                     IG.EndChild();
                     IG.EndTabItem();
                 }
-                if (IG.BeginTabItem("Embedded"))
+                if (Settings.AllowAccessEmbedded)
                 {
-                    IG.BeginChild($"##frame{MyId}", new System.Numerics.Vector2(IG.GetWindowWidth(), IG.GetWindowHeight() * 0.75f), true);
-
-
-                    foreach (var v in AssetManager.GetAssetsByPath(CurrDirectory))
+                    if (IG.BeginTabItem("Embedded"))
                     {
-                        if (v.StartsWith(currFile))
+                        IG.BeginChild($"##frame{MyId}", new System.Numerics.Vector2(IG.GetWindowWidth(), IG.GetWindowHeight() * 0.75f), true);
+                        foreach (var v in AssetManager.GetAssetsByPath(CurrDirectory))
                         {
-                            if (UTIL.IGHelper.Link(v, new System.Numerics.Vector4(1, 1, 1, 1)))
+                            if (v.Contains(currFile, StringComparison.CurrentCultureIgnoreCase))
                             {
-                                currFile = v;
-                                IsEmbeddedAsset = true;
+                                if (UTIL.IGHelper.Link(v, new System.Numerics.Vector4(1, 1, 1, 1)))
+                                {
+                                    currFile = v;
+                                    IsEmbeddedAsset = true;
+                                }
                             }
                         }
+                        IG.EndChild();
+                        IG.EndTabItem();
                     }
-                    IG.EndChild();
-                    IG.EndTabItem();
                 }
                 IG.EndTabBar();
             }

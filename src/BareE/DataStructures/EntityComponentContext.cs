@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.IO;
 using BareE.Components;
+using SixLabors.ImageSharp;
 
 namespace BareE.DataStructures
 {
@@ -205,6 +206,8 @@ namespace BareE.DataStructures
             foreach(var v in t.GetProperties())
             {
                 if (!v.CanWrite) continue;
+                if (src[v.Name]==null)
+                    continue;
                 if (v.PropertyType.IsPrimitive)
                 {
                     v.SetValue(ret, src[v.Name]);
@@ -222,7 +225,6 @@ namespace BareE.DataStructures
                     v.SetValue(ret, arryObj);
                     continue;
                 }
-
                 v.SetValue(ret, AttributeAsObject(v.PropertyType, (object)src[v.Name]));
             }
             return ret;
@@ -244,6 +246,11 @@ namespace BareE.DataStructures
                     return Helper.DecodeColor(src.ToString());
                 }
             }
+            if (t==typeof(RectangleF) && src.GetType()==typeof(Vector4))
+            {
+                Vector4 v = (Vector4)src;
+                return new RectangleF(v.X, v.Y, v.Z, v.W);
+            }
             return AttributeCollectionAs(t, (AttributeCollection)src);
         }
         private object AttributeAsArrayOf(Type t, object[] src)
@@ -263,6 +270,12 @@ namespace BareE.DataStructures
                     ret.SetValue(src[i].ToString(), i);
                     continue;
                 }
+                if (t == typeof(RectangleF) && src.Length>0 && src[0].GetType()==typeof(Vector4))
+                {
+                    Vector4 v = (Vector4)src[i];
+                    ret.SetValue(new RectangleF(v.X, v.Y, v.Z, v.W),i);
+                    continue;
+                }
                 var val = AttributeCollectionAs(t, (AttributeCollection)src[i]);
                 ret.SetValue(val, i);
             }
@@ -275,9 +288,9 @@ namespace BareE.DataStructures
         {
             EntityComponentContext ecc = new EntityComponentContext();
             var compMap = ReadAliasIdMapFromStream(rdr);
-            var entCount = rdr.ReadInt32();
+            //var entCount = rdr.ReadInt32();
             Dictionary<int, int> eIdMap = new Dictionary<int, int>();
-            for(int i=0;i<entCount;i++)
+            while(rdr.ReadBoolean())
             {
                 InsertEntityFromStream(rdr, ecc, compMap, eIdMap);
             }
@@ -300,19 +313,19 @@ namespace BareE.DataStructures
             int ogEntID = rdr.ReadInt32();
             int ogEntIdeal = rdr.ReadInt32();
             int ogEntParent = rdr.ReadInt32();
-            int entCompCount = rdr.ReadInt32();
-            object[] componentList = new object[entCompCount];
-            for(int i=0;i<entCompCount;i++)
+            //int entCompCount = rdr.ReadInt32();
+            List<object> componentList = new List<object>();
+            while(rdr.ReadBoolean())
             {
                 int compId = rdr.ReadInt32();
                 Type tt = ComponentCache.ComponentAliasMap[cMap[compId]].OriginatingType;
-                componentList[i] = rdr.ReadPrimitiveType(tt);
+                componentList.Add(rdr.ReadPrimitiveType(tt));
             }
             Entity newEnt;
             if (!string.IsNullOrEmpty(alias))
-                newEnt = ecc.SpawnEntity(alias, componentList);
+                newEnt = ecc.SpawnEntity(alias, componentList.ToArray());
             else
-                newEnt = ecc.SpawnEntity(componentList);
+                newEnt = ecc.SpawnEntity(componentList.ToArray());
             newEnt.Ideal = ogEntIdeal;
             newEnt.Parent = ogEntParent;
             entIdMap.Add(ogEntID, newEnt.Id);
@@ -321,8 +334,8 @@ namespace BareE.DataStructures
         {
             Dictionary<int, string> ret = new Dictionary<int, string>();
 
-            var count = rdr.ReadInt32();
-            for(int i=0;i<count;i++)
+            
+            while(rdr.ReadBoolean())
             {
                 var val = rdr.ReadString();
                 var key = rdr.ReadInt32();
@@ -338,19 +351,25 @@ namespace BareE.DataStructures
         }
         private void WriteToStream(BinaryWriter wtr)
         {
-            wtr.Write(ComponentCache.ComponentAliasMap.Count-1);                          //Write the number of types of components to expect
+            //wtr.Write(ComponentCache.ComponentAliasMap.Count-1);                          //Write the number of types of components to expect
             foreach(string v in ComponentCache.ComponentAliasMap.Keys())                   //Foreach of the components to expect
-            {  
+            {
+                wtr.Write(true);
                 wtr.Write(v);                                                                  //name of component
                 wtr.Write(ComponentCache.ComponentAliasMap[v].CTypeID);                        //mapped to Integer
             }
-            wtr.Write(Entities.Count-1);                                                 //Write the number of Entities to expect (in total).
+            wtr.Write(false);
+            //wtr.Write(Entities.Count-1);                                                 //Write the number of Entities to expect (in total).
             HashSet<int> written = new HashSet<int>();
             foreach(var v in Entities.Keys())                                                 //Foreach entity that is named.
             {
+                Entity ent = Entities[v];
+                if (!ShouldWrite(ent))
+                    continue;
+                wtr.Write(true);
                 wtr.Write(true);                                                              //Write flag that it is aliased
                 wtr.Write(v);                                                                 //Write Alias
-                Entity ent = Entities[v];
+                
                 written.Add(ent.Id);
                 WriteToStream(wtr, ent);
             }
@@ -359,23 +378,45 @@ namespace BareE.DataStructures
                 if (v == null) continue;
                 if (!written.Add(v.Id))
                     continue;
+                if (!ShouldWrite(v))
+                    continue;
+                wtr.Write(true);
                 wtr.Write(false);
                 WriteToStream(wtr, v);
             }
+            wtr.Write(false);
         }
+
+        private bool ShouldWrite(Entity e)
+        {
+            if (e == null) return false;
+            foreach(var v in this.Components.GetComponentsByEntity(e))
+            {
+                if (!((ComponentCache.ComponentTypeData[v.GetType()].Flags & ComponentFlags.DoNotSerialize) == ComponentFlags.DoNotSerialize))
+                    return true;
+            }
+            return false;
+        }
+
         private void WriteToStream(BinaryWriter wtr, Entity ent)
         {
             wtr.Write(ent.Id);                                                           //Write Id
             wtr.Write(ent.Ideal);                                                        //Write Ideal
             wtr.Write(ent.Parent);                                                       //Write Parent
             var componentList = Components.GetComponentsByEntity(ent);
-            wtr.Write(componentList.Count());
+            //wtr.Write(componentList.Count());
             foreach(var component in componentList)
             {
+                
                 var compTypeDat = ComponentCache.ComponentTypeData[component.GetType()];
+                if ((compTypeDat.Flags & ComponentFlags.DoNotSerialize) == ComponentFlags.DoNotSerialize)
+                    continue;
+
+                wtr.Write(true); 
                 wtr.Write(compTypeDat.CTypeID);
                 wtr.WritePrimative(component);
             }
+            wtr.Write(false);
         }
         
         public IEnumerable<Tuple<String,String>> ExtractReferences()

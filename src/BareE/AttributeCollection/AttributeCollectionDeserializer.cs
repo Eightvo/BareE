@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -229,6 +230,33 @@ namespace BareE.DataStructures
                 return sb.ToString();
             }
         }
+        private static object ReadVector(IEnumerator<LexerToken> tokens, ParserState state)
+        {
+            List<float> read = new List<float>();
+            object ret=0;
+            while(tokens.Current.Text!=">")
+            {
+                read.Add(ReadFloat(tokens, state));
+                ConsumeWhitespace(tokens, state);
+                if (tokens.Current.Text == ",")
+                {
+                    tokens.MoveNext();
+                    ConsumeWhitespace(tokens, state);
+                }
+                //if (!tokens.MoveNext()) Unexpected("End of file", tokens.Current, state);
+            }
+            switch(read.Count())
+            {
+                case 2: ret =new Vector2(read[0], read[1]); break;
+                case 3: ret =new Vector3(read[0], read[1], read[2]); break;
+                case 4: ret =new Vector4(read[0], read[1], read[2],read[3]); break;
+                default:
+                    Unexpected($"Expected vectors with only 2, 3 or 4 dimentions. Found {read.Count()}", tokens.Current, state);
+                    break;
+            }
+            tokens.MoveNext();
+            return ret;
+        }
 
         private static object[] BuildArray(IEnumerator<LexerToken> tokens, ParserState state)
         {
@@ -290,6 +318,11 @@ namespace BareE.DataStructures
                                 ConsumeWhitespace(tokens, state);
                                 var r = ReadReference(tokens, state);
                                 return AttributeCollectionDeserializer.FromAsset(r);
+                                break;
+                            case "<":
+                                tokens.MoveNext();
+                                ConsumeWhitespace(tokens, state);
+                                return (ReadVector(tokens, state));
                                 break;
                             default:
                                 Unexpected(opTxt, tokens.Current, state);

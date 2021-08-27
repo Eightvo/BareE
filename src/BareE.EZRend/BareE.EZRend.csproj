@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.71</Version>
+    <Version>1.0.72</Version>
     <PackageTags>BareE</PackageTags>
     <PackageLicenseFile>License.md</PackageLicenseFile>
     <Copyright>Greg Freedline 2021</Copyright>
@@ -135,11 +135,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BareE\BareE.csproj" />
+    <Folder Include="Flat\InstancedSprite\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Flat\InstancedSprite\" />
+    <ProjectReference Include="..\BareE\BareE.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@ using System;
 
 namespace BareE.Components
 {
-    [Component("MenubarItemSet")]
+    [Component("MenubarItemSet", ComponentFlags.DoNotSerialize)]
     public struct MenubarItemSet
     {
         public String SetName { get; set; }
@@ -25,7 +25,7 @@ namespace BareE.Components
     /// <summary>
     /// Defines a set of Console Commands.
     /// </summary>
-    [Component("ConsoleCommandSet")]
+    [Component("ConsoleCommandSet", ComponentFlags.DoNotSerialize)]
     public struct ConsoleCommandSet
     {
         public String SetName { get; set; }

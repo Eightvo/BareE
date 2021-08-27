@@ -10,6 +10,7 @@ namespace BareE.DataStructures
     public enum ComponentFlags
     {
         None = 0,
+        DoNotSerialize=1,
     }
 
     /// <summary>

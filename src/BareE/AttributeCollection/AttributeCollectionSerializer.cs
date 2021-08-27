@@ -1,6 +1,9 @@
-﻿using System;
+﻿using SixLabors.ImageSharp;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,6 +65,31 @@ namespace BareE.DataStructures
                 wtr.Write(Enum.GetName(o.GetType(), o));
                 return;
             }
+            if (o.GetType() == typeof(Vector2))
+            {
+                var v = (Vector2)o;
+                wtr.Write($"<{v.X}, {v.Y}>");
+                return;
+            }
+            if (o.GetType() == typeof(Vector3))
+            {
+                var v = (Vector3)o;
+                wtr.Write($"<{v.X}, {v.Y}, {v.Z}>");
+                return;
+            }
+            if (o.GetType() == typeof(Vector4))
+            {
+                var v = (Vector4)o;
+                wtr.Write($"<{v.X}, {v.Y}, {v.Z}, {v.W}>");
+                return;
+            }
+            if (o.GetType() == typeof(RectangleF))
+            {
+                var v = (RectangleF)o;
+                wtr.Write($"<{v.X}, {v.Y}, {v.Width}, {v.Height}>");
+                return;
+            }
+
             if (o.GetType().IsArray)
             {
                 wtr.WriteLine($"[");

@@ -1,5 +1,7 @@
 ﻿using BareE.DataStructures;
 
+using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,9 @@ namespace LilScrapper.Components
     public struct AdvSprite
     {
         public String Root { get; set; }
+        [JsonIgnore]
         public String Frame { get; set; }
+        [JsonIgnore]
         public String Alias { get { return $"{Root}{Frame}"; } }
         public Vector4 PrimaryColor { get; set; }
         public Vector4 SecondaryColor { get; set; }
@@ -22,6 +26,7 @@ namespace LilScrapper.Components
     [Component("AdvCompositeSprite")]
     public struct AdvCompositeSprite
     {
+        [JsonIgnore]
         public String Frame { get; set; }
         public ACSData[] Children { get; set; }
     }

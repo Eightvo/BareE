@@ -1,4 +1,5 @@
-﻿using BareE.DataStructures;
+﻿using BareE.Calculator;
+using BareE.DataStructures;
 using BareE.GameDev;
 
 using SharpAudio;
@@ -11,6 +12,8 @@ using System.Reflection;
 
 namespace BareE.Harness
 {
+
+
     public class Program
     {
         public static void LoadZone(String filename)
@@ -48,7 +51,31 @@ namespace BareE.Harness
         public static void Main(String[] args)
         {
 
+            BareE.Calculator.Calculator c = new Calculator.Calculator(new CalendarCalculatorHelper());
+            foreach (var str in new List<String>()
+            {
 
+               // "1-1",
+               // "-1",
+               // "2*3-1",
+               // "2*pi",
+                "now",
+                "AddDays(now,-3)",
+                "AddDays(now,3)"
+            })
+            {
+                try
+                {
+                    Console.WriteLine($"{str} = {c.Calculate(str)}");
+                } catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                Console.WriteLine("--------");
+
+            }
+            Console.ReadKey();
+            
 
             LoadZone(@"G:\TestData\PGonGen\zone1.zone");
 

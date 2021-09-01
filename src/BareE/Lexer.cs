@@ -248,13 +248,13 @@ namespace BareE
             if (curr.isIdentifierStartChar())
                 return ConsumeIdentifierOrKeyword(rdr);
             if (OperatorMatch($"{curr}"))
-                if (!((curr == '-') && !((char)rdr.Peek()).isDecimalDigit()))
+                //if (!((curr == '-') && !((char)rdr.Peek()).isDecimalDigit()))
                     return ConsumeOperator(rdr);
             if (curr == '\'')
                 return ConsumeCharacterLiteral(rdr);
             if (curr == '"')
                 return ConsumeStringLiteral(rdr);
-            if (curr.isDecimalDigit() || curr == '-')
+            if (curr.isDecimalDigit()) //|| curr == '-')
                 return ConsumeNumericLiteral(rdr);
             if (curr == '#')
                 return ConsumeDirective(rdr);

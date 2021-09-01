@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--<section name="sqRl" type="sqRl.Config.sqRlConfigSection,sqRl"/>-->
+
+<xs:schema id="sqRlSchema" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+
+
+  <xs:element name="sqRl">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Connections" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Connection" minOccurs="1" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="Type" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>
+                              Default: Oracle
+                            </xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Name" type="xs:string" use="required">
+                          <xs:annotation>
+                            <xs:documentation>Name of connection.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Server" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Database Server</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Port" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>[Oracle] Port Number for Database connection.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Database" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>[Sql] Database on Server to connect to. [Oracle] Schema in Database to use by default.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Service" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>[Oracle] Service name of database</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="TNS" type="xs:string">
+                            <xs:annotation>
+                              <xs:documentation>[Oracle] TNS name for connection, when using a TNS File for connections.</xs:documentation>
+                            </xs:annotation>
+                          </xs:attribute>
+
+                        <xs:attribute name="User" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>
+                              Database Login Username.
+                            </xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Pass" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Password for Login Username</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Schema" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>[Oracle] Schema in Database to use by default.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="TraceLog" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Anylog Log Group Name to use for logging database interaction.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Attempts" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>Number of times to retry failed sql statements before giving up. Default = 1</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Wait" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>Number of seconds to wait between failed sql statement attempts.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="EncryptedPass" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>[Not Yet Implemented]Encrypted Password for Login Username, obtained through CryptoLib generate password.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="Timeout" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>Connection Timeout value.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="CommandTimeout">
+                          <xs:annotation>
+                            <xs:documentation>Command Timeout value.</xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="LogQuery" type="xs:boolean">
+                          <xs:annotation>
+                            <xs:documentation>
+                              Log query strings to trace log. default = true
+                            </xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name ="LogParams" type="xs:boolean">
+                          <xs:annotation>
+                            <xs:documentation>
+                              Log values of parameters in parameterized queries to trace log. Default = true
+                            </xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="LogResults" type="xs:boolean">
+                          <xs:annotation>
+                            <xs:documentation>
+                              Log results of query to trace log. Default=false
+                            </xs:documentation>
+                          </xs:annotation>
+                        </xs:attribute>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+</xs:schema>

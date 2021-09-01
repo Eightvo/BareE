@@ -51,7 +51,16 @@ namespace BareE.Calculator
                 return _cmds;
             }
         }
-
+        public CalculatorHelperFunctionInfo GetFunctionInfo(String functionName)
+        {
+            foreach (var helper in _helpers)
+            {
+                var dat= helper.GetFunction(functionName);
+                if (dat != null)
+                    return dat;
+            }
+            return null;
+        }
         /// <summary>
         /// Key a list of all known variables and their values
         /// </summary>
@@ -113,7 +122,11 @@ namespace BareE.Calculator
                                 opStack.Pop();
                                 if (opStack.Count > 0)
                                     if (fList.Contains(opStack.Peek().Text))
+                                    {
+                                        //var funcDat = Func
                                         outputQ.Enqueue(opStack.Pop());
+
+                                    }
                                 break;
                             case ",":
                                 break;
@@ -141,7 +154,12 @@ namespace BareE.Calculator
             var genericComparer = new System.Collections.Comparer(System.Globalization.CultureInfo.CurrentCulture);
             var termStack = new Stack<String>();
             var termStream = ConvertInfixToRPN(Lexer.DefaultLexer.Tokenize(expression)).GetEnumerator();
-            
+
+            while (termStream.MoveNext())
+            {
+                Console.WriteLine($"{termStream.Current.Text}");
+            }
+            termStream = ConvertInfixToRPN(Lexer.DefaultLexer.Tokenize(expression)).GetEnumerator();
             while (termStream.MoveNext())
             {
                 if (termStream.Current.Type == LexerToken.LexerTokenType.Whitespace)
@@ -152,6 +170,11 @@ namespace BareE.Calculator
                 String s = termStream.Current.Text;
                 object opL;
                 object opR;
+                if ((termStream.Current.Type&(LexerToken.LexerTokenType.Integer_Literal | LexerToken.LexerTokenType.Real_Literal))!=0)
+                {
+                    termStack.Push(s);
+                    continue;
+                }
                 switch (s)
                 {
                     case "+":
@@ -292,7 +315,7 @@ namespace BareE.Calculator
                             {
                                 if (helperFuncInfo.ParameterCount == null)
                                 {
-                                    if (termStack.Count < 1 || termStack.Count < (int)GetTermValue(termStack.Peek()))
+                                    if (termStack.Count < 1 || termStack.Count < (Decimal)GetTermValue(termStack.Peek()))
                                         throw new InvalidOperationException("Invalid expression: " + expression);
                                 }
                                 else
@@ -300,9 +323,9 @@ namespace BareE.Calculator
                                     if (termStack.Count < helperFuncInfo.ParameterCount)
                                         throw new InvalidOperationException("Invalid expression: " + expression);
                                 }
-                                var args = new object[helperFuncInfo.ParameterCount ?? (int)GetTermValue(termStack.Pop())];
+                                var args = new object[helperFuncInfo.ParameterCount ?? (int)((Decimal)GetTermValue(termStack.Pop()))];
                                 for (int i = 0; i < args.Length; i++)
-                                    args[i] = GetTermValue(termStack.Pop());
+                                    args[(args.Length-1)-i] = GetTermValue(termStack.Pop());
                                 termStack.Push(helperFuncInfo.Function(args).ToString());
                                 goto __COMPLETED__;
                             }
@@ -327,7 +350,8 @@ namespace BareE.Calculator
                 return (Decimal)opL + (Decimal)opR;
             if (opR is Decimal && opL is Decimal)
                 return (Decimal)opL + (Decimal)opR;
-
+            if (opR is String && opL is String)
+                return (String)opL + (String)opR;
             throw new Exception("Unexpected");
         }
         private object SubtractTerms(object opR, object opL)

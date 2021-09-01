@@ -33,12 +33,18 @@ namespace BareE.Harness
         {
             _variables = new Dictionary<String, Object>(StringComparer.CurrentCultureIgnoreCase)
                              {
-                                {"y2k", new DateTime(2000,1,1)},
                              };
 
             _functions = new Dictionary<string, CalculatorHelperFunctionInfo>(StringComparer.CurrentCultureIgnoreCase)
                              {
                                  {"now", new CalculatorHelperFunctionInfo(0, Now)},
+                                 {"today", new CalculatorHelperFunctionInfo(0, Today)},
+                                 {"tommorrow", new CalculatorHelperFunctionInfo(0, Tommorrow)},
+                                 {"yesterday", new CalculatorHelperFunctionInfo(0, Yesterday)},
+                                 {"thismonth", new CalculatorHelperFunctionInfo(0, StartOfMonth)},
+                                 {"nextmonth", new CalculatorHelperFunctionInfo(0, StartOfNextMonth)},
+                                 {"thisweek", new CalculatorHelperFunctionInfo(0, StartOfWeek)},
+                                 {"nextweek", new CalculatorHelperFunctionInfo(0, StartOfNextWeek)},
                                  {"AddDays", new CalculatorHelperFunctionInfo(2, DateAddDays)},
                              };
         }
@@ -59,6 +65,39 @@ namespace BareE.Harness
         {
             return DateTime.Now;
         }
+        public object Today(params object[] parameters)
+        {
+            return DateTime.Today;
+        }
+        public object Tommorrow(params object[] parameters)
+        {
+            return DateTime.Today.AddDays(1);
+        }
+        public object Yesterday(params object[] parameters)
+        {
+            return DateTime.Today.AddDays(-1);
+        }
+        public object StartOfMonth(params object[] parameters)
+        {
+            var t = DateTime.Today;
+            return new DateTime(t.Year, t.Month, 1);
+        }
+        public object StartOfNextMonth(params object[] parameters)
+        {
+            DateTime t = (DateTime)StartOfMonth();
+            t.AddMonths(1);
+            return t;
+        }
+        public object StartOfWeek(params object[] parameters)
+        {
+            return DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+
+        }
+        public object StartOfNextWeek(params object[] parameters)
+        {
+            return ((DateTime)StartOfWeek()).AddDays(7);
+        }
+
         public object DateAddDays(params object[] parameters)
         {
             var s = (DateTime)(parameters[0]);

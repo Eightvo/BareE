@@ -54,14 +54,10 @@ namespace BareE.Harness
             BareE.Calculator.Calculator c = new Calculator.Calculator(new CalendarCalculatorHelper());
             foreach (var str in new List<String>()
             {
+                "AddDays(now(),3)",
+                "AddDays(\"8/8/2021\",3)",
+                "sum(41,10,4,3)",
 
-               // "1-1",
-               // "-1",
-               // "2*3-1",
-               // "2*pi",
-                "now",
-                "AddDays(now,-3)",
-                "AddDays(now,3)"
             })
             {
                 try

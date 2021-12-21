@@ -41,7 +41,7 @@ namespace BareE.Rendering
         private bool MaxVertexCountDirty = true;
         private bool VertexContentDirty = false;
 
-        public virtual bool UseDepthStencil { get { return true; } }
+        public virtual bool UseDepthStencil { get; set; } = true;
 
         private PixelFormat NativePixelFormat;
         private Pipeline GraphicsPipeline;
@@ -125,7 +125,7 @@ namespace BareE.Rendering
 
         public virtual BlendStateDescription BlendState { get; set; } = BlendStateDescription.SingleOverrideBlend;
 
-        public virtual DepthStencilStateDescription DepthStencilDescription { get; } =
+        public virtual DepthStencilStateDescription DepthStencilDescription { get; set; } =
             new DepthStencilStateDescription(
                 depthTestEnabled: false,
                 depthWriteEnabled: false,
@@ -374,12 +374,13 @@ namespace BareE.Rendering
 
         public virtual BlendStateDescription BlendState { get; set; } = BlendStateDescription.SingleOverrideBlend;
 
-        public virtual DepthStencilStateDescription DepthStencilDescription { get; } =
+        
+        public virtual DepthStencilStateDescription DepthStencilDescription { get; set; } =
             new DepthStencilStateDescription(
                 depthTestEnabled: false,
                 depthWriteEnabled: false,
                 comparisonKind: ComparisonKind.Always);
-
+        
         public RasterizerStateDescription RastorizerDescription { get; set; } =
             new RasterizerStateDescription(
                     cullMode: FaceCullMode.Back,

@@ -7,7 +7,7 @@ namespace BareE.Rendering
     /// </summary>
     public class FramebufferToScreen : VertexTextureShader<Pos3_Uv2>
     {
-        public override bool UseDepthStencil { get => false; }
+        public override bool UseDepthStencil { get; set; }
 
         public FramebufferToScreen() : base("BareE.Rendering.FullScreenTexture")
         {

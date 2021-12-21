@@ -347,7 +347,8 @@ namespace BareE
                 wtr.Write(v.AttributeName);//Name of the attribute
 
                 KeyValuePair<byte,Type> k = primitiveTypeMap.Where(x => x.Value == v.Type).FirstOrDefault();
-
+                if (v.Type.IsEnum)
+                    k = primitiveTypeMap.Where(x => x.Value == typeof(int)).FirstOrDefault();
                 if (k.Value == null)
                 {
                     if (IsSameOrSubclass(typeof(AttributeCollectionBase), v.Type))

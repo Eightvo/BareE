@@ -260,6 +260,3 @@ Session.vim
 launchSettings.json
 
 # Generated shaders
-Shaders.Generated
-/src/BareE.EZRend/Flat/AdvSpriteBatch/InstSpriteBatch.frag.spv
-/src/BareE.EZRend/Flat/AdvSpriteBatch/InstSpriteBatch.vert.spv

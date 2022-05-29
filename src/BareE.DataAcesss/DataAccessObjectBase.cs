@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using System.Data.SqlClient;
-using System.Security.Principal;
 using BareE.Log;
-using System.Configuration;
 using BareE.DataAcess.Config;
 using BareE.DataAcess.Exceptions;
 

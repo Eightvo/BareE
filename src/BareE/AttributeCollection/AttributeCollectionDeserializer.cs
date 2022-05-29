@@ -11,6 +11,20 @@ namespace BareE.DataStructures
 {
     public static class AttributeCollectionDeserializer
     {
+        public static Func<String,ParserState, String> TranslateReference = null;
+        public static Func<BareE.Lexer> CreateLexer = null;
+        public static String RawFile(String asset, AttributeCollection stateData = null)
+        {
+            return AssetManager.ReadFile(asset);
+
+        }
+        public static AttributeCollection FromAsset(String asset, object statData)
+        {
+            AttributeCollection ac = new AttributeCollection();
+            ac["Data"] = statData;
+            return FromAsset(asset, ac);
+        }
+
         public static AttributeCollection FromAsset(String asset, AttributeCollection stateData = null)
         {
             if (stateData==null)
@@ -22,7 +36,9 @@ namespace BareE.DataStructures
             };
 
             AttributeCollection ac = new AttributeCollection();
-            BareE.Lexer lexer = new BareE.Lexer();
+            BareE.Lexer lexer;
+            if (CreateLexer == null) lexer = new BareE.Lexer();
+            else lexer = CreateLexer();
 
             var txt = String.Empty;
             try
@@ -54,6 +70,12 @@ namespace BareE.DataStructures
             var tokenList = lexer.Tokenize(AssetManager.ReadFile(asset)).GetEnumerator();
             return ReadTokens<T>(tokenList, state);
         }
+        public static AttributeCollection FromSrc(String src, object statData)
+        {
+            AttributeCollection ac = new AttributeCollection();
+            ac["Data"] = statData;
+            return FromSrc(src, ac);
+        }
         public static AttributeCollection FromSrc(String src, AttributeCollection stateData = null)
         {
             if (stateData == null)
@@ -66,7 +88,9 @@ namespace BareE.DataStructures
             };
 
             AttributeCollection ac = new AttributeCollection();
-            BareE.Lexer lexer = new BareE.Lexer();
+            BareE.Lexer lexer;
+            if (CreateLexer==null) lexer=  new BareE.Lexer();
+            else lexer= CreateLexer();
 
             var tokenList = lexer.Tokenize(src).GetEnumerator();
             tokenList.MoveNext();
@@ -108,7 +132,7 @@ namespace BareE.DataStructures
 
 
 
-        private class ParserState
+        public class ParserState
         {
             public String Asset { get; set; }
             public Dictionary<String, List<LexerToken>> macros = new Dictionary<String, List<LexerToken>>( StringComparer.CurrentCultureIgnoreCase);
@@ -189,6 +213,7 @@ namespace BareE.DataStructures
         {
             if (tokens.Current.Type == LexerToken.LexerTokenType.String_Literal)
                 return ReadString(tokens, state);
+
             else
             {
                 var sb = new StringBuilder();
@@ -317,6 +342,8 @@ namespace BareE.DataStructures
                                 tokens.MoveNext();
                                 ConsumeWhitespace(tokens, state);
                                 var r = ReadReference(tokens, state);
+                                if (TranslateReference != null)
+                                    r = TranslateReference(r,state);
                                 return AttributeCollectionDeserializer.FromAsset(r);
                                 break;
                             case "<":
@@ -344,13 +371,15 @@ namespace BareE.DataStructures
                     break;                   
                 case LexerToken.LexerTokenType.Identifier:
                 case LexerToken.LexerTokenType.String_Literal:
-                
                 case LexerToken.LexerTokenType.Unknown:
+                case LexerToken.LexerTokenType.FreeForm:
                     return (ReadString(tokens, state));
                     break;
                 case LexerToken.LexerTokenType.Directive:
                     tokens = ConsumeDirective(tokens, state);
                     return ConsumeObject(tokens, state);
+                    break;
+
                     break;
             }
             Unexpected("Object", tokens.Current, state);
@@ -515,10 +544,21 @@ namespace BareE.DataStructures
                         value = ConsumeObject(tokens, state);
                         break;
                     case "@":
-                        ConsumeWhitespace(tokens, state);
-                        var fk = ReadString(tokens, state);
-                        value = AttributeCollectionDeserializer.FromAsset(fk);
-                        break;
+                        {
+                            ConsumeWhitespace(tokens, state);
+                            var fk = ReadReference(tokens, state);
+                            if (TranslateReference != null) fk = TranslateReference(fk, state);
+                            value = AttributeCollectionDeserializer.FromAsset(fk);
+                            break;
+                        }
+                    case "<":
+                        {
+                            ConsumeWhitespace(tokens, state);
+                            var fk = ReadReference(tokens, state);
+                            if (TranslateReference != null) fk = TranslateReference(fk, state);
+                            value = AttributeCollectionDeserializer.RawFile(fk);
+                            break;
+                        }
                     default:
                         Unexpected(opText, tokens.Current, state);
                         break;

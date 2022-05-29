@@ -799,6 +799,38 @@ namespace BareE.DataStructures
             this[name] = new List<Object>();
         }
 
+        public void Merge(AttributeCollection with)
+        {
+            foreach (var attr in with.Attributes)
+            {
+                if (!_data.ContainsKey(attr.AttributeName))
+                {
+                    this[attr.AttributeName] = attr.Value;
+                    continue;
+                }
+                var cVal = this[attr.AttributeName];
+                if (cVal == null)
+                {
+                    this[attr.AttributeName] = attr.Value;
+                    continue;
+                }
+                if (cVal.GetType() == typeof(AttributeCollection))
+                {
+                    if (attr.Value.GetType() == typeof(AttributeCollection))
+                    {
+                        ((AttributeCollection)cVal).Merge((AttributeCollection)attr.Value);
+                    }
+                    else
+                    {
+                        this[attr.AttributeName] = attr.Value;
+                    }
+                }
+                else
+                {
+                    this[attr.AttributeName] = attr.Value;
+                }
+            }
+        }
     }
 
 }

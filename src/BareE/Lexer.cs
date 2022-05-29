@@ -10,8 +10,27 @@ namespace BareE
     public class Lexer
     {
         public bool KeywordsCaseInsensitive { get; set; }
+        /// <summary>
+        /// When set to false the lexer will expect a single character after a single quote. 
+        /// When set to true the lexer will treat a single quote similiar to a double quote.
+        /// A string literal that starts with a single quote must end with a single quote and single quotes within the text must be escaped.
+        /// A string literal that starts with a double quote must end with a double quote and double quotes within the text must be escaped.
+        /// </summary>
+        public bool SingleQuoteDeliminatesWords { get; set; } = false;
+        /// <summary>
+        /// When set to false, the input source -1 will be split into tokens "Operator:-" and Number:1
+        /// When set to true, the input source -1 will become a single token Number:-1
+        /// </summary>
+        public bool AllowNegativeNumbers { get; set; } = false;
         public static Lexer DefaultLexer = new Lexer();
-
+        /// <summary>
+        /// Specify the token that indicates the start of a free form read.
+        /// </summary>
+        public String FreeFormStartToken = "<<FREEFORM>>";
+        /// <summary>
+        /// Specify the token that indicates the end of a free form read.
+        /// </summary>
+        public String FreeFormEndToken = "<<ENDFREEFORM>>";
         public IEnumerable<LexerToken> Tokenize(String query)
         {
             return Tokenize(query, Encoding.ASCII);
@@ -63,6 +82,7 @@ namespace BareE
             {
                 if (s.StartsWith(partialOperator)) return true;
             }
+            if (FreeFormStartToken.StartsWith(partialOperator) || FreeFormEndToken.StartsWith(partialOperator)) return true;
             return false;
         }
 
@@ -134,7 +154,15 @@ namespace BareE
                     yield return ConsumeComment(rdr);
                 }
             }
-            yield return ConsumeToken(rdr, curr);
+            var nxtTkn = ConsumeToken(rdr, curr);
+            if (String.Compare(nxtTkn.Text, FreeFormStartToken)==0)
+            {
+                yield return ConsumeFreeForm(rdr);
+            } else
+            {
+                yield return nxtTkn;
+            }
+            //yield return ConsumeToken(rdr, curr);
         }
 
         #region Whitespace
@@ -172,6 +200,40 @@ namespace BareE
 
             var directive = MoveNext(rdr);
             return CreateToken(LexerTokenType.Directive, $"{directive}");
+        }
+        private LexerToken ConsumeFreeForm(StreamReader rdr)
+        {
+            StringBuilder freeform = new StringBuilder();
+            bool done = false;
+            while(!done)
+            {
+                var curr = ((char)rdr.Peek());
+                if (curr == FreeFormEndToken[0])
+                {
+                    Queue<char> chars = new Queue<char>();
+                    int i = 0;
+
+                    while(i<FreeFormEndToken.Length && curr==FreeFormEndToken[i])
+                    
+                    {
+                        chars.Enqueue(curr);
+                        MoveNext(rdr);
+                            curr = (char)rdr.Peek();
+                        i++;
+
+                    }
+                    if (chars.Count == FreeFormEndToken.Length)
+                        return CreateToken(LexerTokenType.FreeForm, freeform.ToString());
+                    while (chars.Count > 0)
+                        freeform.Append(chars.Dequeue());
+                }
+                freeform.Append(curr);
+                curr = MoveNext(rdr);
+                if (rdr.EndOfStream)
+                    done = true;
+            }
+            throw new Exception($"Unexpected End of File. Expected end of FreeFormToken {FreeFormEndToken}");
+            //return CreateToken(LexerTokenType.FreeForm, freeform.ToString());
         }
         private LexerToken ConsumeComment(StreamReader rdr)
         {
@@ -248,23 +310,35 @@ namespace BareE
             if (curr.isIdentifierStartChar())
                 return ConsumeIdentifierOrKeyword(rdr);
             if (OperatorMatch($"{curr}"))
-                if (!((curr == '-') && !((char)rdr.Peek()).isDecimalDigit()))
-                    return ConsumeOperator(rdr);
+                if (curr != '-') { return ConsumeOperator(rdr); }
+                else
+                {
+                    if (AllowNegativeNumbers)
+                    {
+                        MoveNext(rdr);
+                        if (((char)rdr.Peek()).isDecimalDigit())
+                        { return ConsumeNumericLiteral(rdr,"-"); }
+                        else ConsumeOperator(rdr, "-");
+                    } 
+                    else
+                        return ConsumeOperator(rdr);
+                }
             if (curr == '\'')
                 return ConsumeCharacterLiteral(rdr);
             if (curr == '"')
                 return ConsumeStringLiteral(rdr);
-            if (curr.isDecimalDigit() || curr == '-')
+            if (curr.isDecimalDigit())
                 return ConsumeNumericLiteral(rdr);
             if (curr == '#')
                 return ConsumeDirective(rdr);
+            
             return ConsumeUnknownLiteral(rdr);
-            //throw new Exception("Unexpected.");
         }
 
-        private LexerToken ConsumeNumericLiteral(StreamReader rdr)
+        private LexerToken ConsumeNumericLiteral(StreamReader rdr, String prefix="")
         {
             StringBuilder text = new StringBuilder();
+            text.Append(prefix);
             LexerTokenType t = LexerTokenType.Integer_Literal;
             var curr = MoveNext(rdr);
             if (curr == '-')
@@ -372,13 +446,31 @@ namespace BareE
         {
             var nxt = MoveNext(rdr);
             nxt = MoveNext(rdr);
-            String txt = String.Empty;
-            if (nxt == '\\')
-                txt = ConsumeEscapeSequence(rdr);
-            else
-                txt = nxt.ToString();
-            MoveNext(rdr);
-            return CreateToken(LexerTokenType.Character_Literal, txt);
+            StringBuilder txt = new StringBuilder();
+            if (!SingleQuoteDeliminatesWords)
+            {
+                if (nxt == '\\')
+                    txt = txt.Append(ConsumeEscapeSequence(rdr));
+                else
+                    txt = txt.Append(nxt.ToString());
+                MoveNext(rdr);
+            } else
+            {
+                while (nxt != '\'')
+                {
+                    if (nxt == '\\')
+                    {
+                        txt.Append(ConsumeEscapeSequence(rdr));
+                    }
+                    else
+                        txt.Append(nxt);
+                    nxt= MoveNext(rdr);
+                }
+                var text = txt.ToString();
+                LexerTokenType tokenType = LexerTokenType.String_Literal;
+                return CreateToken(tokenType, text);
+            }
+            return CreateToken(LexerTokenType.Character_Literal, txt.ToString());
         }
 
         private LexerToken ConsumeUnknownLiteral(StreamReader rdr)
@@ -388,9 +480,9 @@ namespace BareE
             return CreateToken(LexerTokenType.Unknown, txt);
         }
 
-        private LexerToken ConsumeOperator(StreamReader rdr)
+        private LexerToken ConsumeOperator(StreamReader rdr, string opStart="")
         {
-            StringBuilder text = new StringBuilder();
+            StringBuilder text = new StringBuilder(opStart);
 
             while (OperatorMatch($"{text}{(char)rdr.Peek()}"))
             {

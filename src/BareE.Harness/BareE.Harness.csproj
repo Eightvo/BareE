@@ -12,6 +12,10 @@
     <None Remove="Assets\Def\default.controls" />
     <None Remove="Assets\Def\default.radio" />
     <None Remove="Assets\Def\humanmale.actor" />
+    <None Remove="Assets\Def\HumanMale.asset" />
+    <None Remove="Assets\Def\HumanMaleActor.asset" />
+    <None Remove="Assets\Def\LPCAnim.asset" />
+    <None Remove="Assets\Def\LPCAtlas.asset" />
     <None Remove="Assets\Fonts\SDF\b.fnt" />
     <None Remove="Assets\Fonts\SDF\b.png" />
     <None Remove="Assets\Fonts\SDF\Comic Sans MS.png" />
@@ -43,6 +47,10 @@
     <EmbeddedResource Include="Assets\Def\default.controls" />
     <EmbeddedResource Include="Assets\Def\default.radio" />
     <EmbeddedResource Include="Assets\Def\humanmale.actor" />
+    <EmbeddedResource Include="Assets\Def\HumanMale.asset" />
+    <EmbeddedResource Include="Assets\Def\HumanMaleActor.asset" />
+    <EmbeddedResource Include="Assets\Def\LPCAnim.asset" />
+    <EmbeddedResource Include="Assets\Def\LPCAtlas.asset" />
     <EmbeddedResource Include="Assets\Models\chest3-final.fbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

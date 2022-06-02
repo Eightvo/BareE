@@ -1,4 +1,22 @@
 {
+	"Meta": {
+		"Ico": {
+			"asset": "LilScrapper.Assets.Textures.Icons.IconBang_rc.png",
+			"PrimaryColor": "#00AAAA",
+			"SecondaryColor": "#FFFFFF"
+		},
+		"Indicies": [
+		]
+	},
+	"Alias": "HumanMale",
+	"Type": "ActorDef",
+	"Asset": {
+	References : [
+        @BareE.Harness.Assets.Def.LPCAtlas.asset,
+		@BareE.Harness.Assets.Def.LPCAnim.asset,
+        @BareE.Harness.Assets.Def.HumanMale.asset,
+		
+      ],
 	AdvCompositeSprite:{
 		Children:[
 			{
@@ -6,18 +24,19 @@
 				PrimaryColor:"#883010"
 				SecondaryColor:"#00FF00"
 				Scale:1
-			},
-			{
-				Root:MalePants,
-				PrimaryColor:"#FF00FF",
-				SecondaryColor:"#00FF00",
-				Scale:1
 			}
 		]
 	},
 	Animation:
 	{
+		Source:LPCAnim,
 		AnimationName:LPCChar,
 		State:Idle
+	},
+	SpritePhysics:{
+		Mass:100,
+		BoundingBoxes:[<0,-0.25,0.5,0.25>]
+		FootPrint: <0,0,1,0.5>
 	}
+}
 }

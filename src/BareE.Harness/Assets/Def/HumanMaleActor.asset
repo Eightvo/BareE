@@ -1,0 +1,22 @@
+﻿{
+	"Meta": {
+		"Ico": {
+			"asset": "LilScrapper.Assets.Textures.Icons.IconMale_rc.png",
+			"PrimaryColor": "#0000AA",
+			"SecondaryColor": "#FFFFFF"
+		},
+		"Indicies": [
+			{
+				"Type": "LpcBase",
+				"Name": "Human Male",
+				"Cost": 0,
+				"CanFight": true,
+				"IsBase": true
+			}
+		]
+	},
+	"Alias": "HumanMaleActor",
+	"Type": "ActorDef",
+	"Asset": "Bare.Assets.Def.humanmale.actor",
+
+	}

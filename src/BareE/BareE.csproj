@@ -50,7 +50,7 @@
     <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="sdl2" Version="2.0.5" />
-    <PackageReference Include="SharpAudio" Version="1.0.27-beta" />
+    <PackageReference Include="SharpAudio" Version="1.0.53-beta" />
     <PackageReference Include="SharpAudio.Codec" Version="1.0.27-beta" />
     <PackageReference Include="System.Windows.Extensions" Version="5.0.0" />
     <PackageReference Include="Veldrid" Version="4.9.0-gffcf1cdb33" />

@@ -26,8 +26,6 @@ namespace BareE.Harness.Scenes
 {
     public class LineShaderTestScene : GameSceneBase 
     {
-
-
         ColoredLineShader linesShader;
         VoronoiShader vshade;
         Vector4 Color1=new Vector4(0,1,0,1);
@@ -35,7 +33,6 @@ namespace BareE.Harness.Scenes
 
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
-
             Systems.Enqueue(new BareE.Systems.ConsoleSystem(),1);
             Env.WorldCamera = new BareE.Rendering.LookAtQuaternionCamera(new Vector2(800, 600));
             ((LookAtQuaternionCamera)Env.WorldCamera).FarPlane = 1024.0f * 10.0f;
@@ -52,7 +49,6 @@ namespace BareE.Harness.Scenes
 
         public override void Initialize(Instant Instant, GameState State, GameEnvironment Env)
         {
-
             State.Input = InputHandler.Build("System", "Cam", "Test");
             linesShader.Update(Env.Window.Device);
             vshade.Update(Env.Window.Device);

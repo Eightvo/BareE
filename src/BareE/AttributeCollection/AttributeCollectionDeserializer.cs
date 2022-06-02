@@ -194,6 +194,12 @@ namespace BareE.DataStructures
             float f = 0;
             switch (tokens.Current.Text[0])
             {
+                case '-':
+                    tokens.MoveNext();
+                    if (!float.TryParse(tokens.Current.Text, out f))
+                        Unexpected("float", tokens.Current, state);
+                    f = -f;
+                    break;
                 default:
                     if (!float.TryParse(tokens.Current.Text, out f))
                         Unexpected("float", tokens.Current, state);

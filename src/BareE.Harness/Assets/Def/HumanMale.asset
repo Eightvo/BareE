@@ -1,0 +1,9 @@
+﻿{
+	"References": [
+		@BareE.Harness.Assets.Def.LPCAtlas.asset
+	],
+	"Alias": "HumanMale",
+	"Type": "ActorSprite",
+	"Asset": "LilScrapper.Assets.Textures.SpriteSheets.Actors.Body.human_male_rc.png",
+	"Model": "Char.Base"
+}

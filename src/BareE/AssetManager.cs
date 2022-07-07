@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 using Veldrid;
 using Veldrid.ImageSharp;
@@ -100,6 +101,29 @@ namespace BareE
             {
                 data = strm.ToArray();
                 return new ImageSharpTexture(strm, mipmap, srgb);
+            }
+        }
+
+        public static unsafe void UpdateTextureData(GraphicsDevice device, Texture tex, SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> image)
+        {
+            if (!image.TryGetSinglePixelSpan(out Span<SixLabors.ImageSharp.PixelFormats.Rgba32> pixelSpan))
+            {
+                throw new VeldridException("Unable to get image pixelspan.");
+            }
+            fixed (void* pin = &MemoryMarshal.GetReference(pixelSpan))
+            {
+                device.UpdateTexture(
+                    tex,
+                    (IntPtr)pin,
+                    (uint)(sizeof(byte) * 4 * image.Width * image.Height),
+                    0,
+                    0,
+                    0,
+                    (uint)image.Width,
+                    (uint)image.Height,
+                    1,
+                    (uint)0,
+                    0);
             }
         }
 

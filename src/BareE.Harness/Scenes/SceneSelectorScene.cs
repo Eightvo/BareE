@@ -78,6 +78,16 @@ namespace BareE.Harness
                     State = new GameState()
                 });
             }
+            if (IG.Button("GUI Test"))
+            {
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
+                {
+                    Preloaded = false,
+                    Scene = new GUITestScene(),
+                    State = new GameState()
+                });
+            }
+
             IG.End();
         }
 

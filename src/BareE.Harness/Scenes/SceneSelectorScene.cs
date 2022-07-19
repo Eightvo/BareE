@@ -2,6 +2,9 @@
 using BareE.Harness.Scenes;
 using BareE.Messages;
 
+using System;
+using System.Collections.Generic;
+
 using Veldrid;
 
 using IG = ImGuiNET.ImGui;
@@ -10,6 +13,20 @@ namespace BareE.Harness
 {
     public class SceneSelectorScene : GameSceneBase
     {
+
+        List<Exception> _exceptions = new List<Exception>();
+        public override void Load(Instant Instant, GameState State, GameEnvironment Env)
+        {
+            State.Messages.AddListener<EmitException>(CollectExceptions);
+            base.Load(Instant, State, Env);
+        }
+
+        private bool CollectExceptions(EmitException msg, GameState state, Instant instant)
+        {
+            _exceptions.Add(msg.Exception);
+            return true;
+        }
+
         public override void RenderHud(Instant Instant, GameState State, GameEnvironment Env, Framebuffer outbuffer, CommandList cmds)
         {
             IG.Begin("Scenes");
@@ -89,6 +106,18 @@ namespace BareE.Harness
             }
 
             IG.End();
+
+            if (_exceptions.Count>0)
+            {
+                IG.Begin("Exceptions");
+                foreach(var v in _exceptions)
+                    IG.Text(v.Message);
+                if (IG.Button("Clear"))
+                    _exceptions.Clear();
+                IG.End();
+            }
+
+
         }
 
         void RenderSceneButton<T>(string text)

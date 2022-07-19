@@ -53,12 +53,13 @@ namespace BareE.DataStructures
 
         private PQNode Head;
 
-        public void Enqueue(T value, long weight)
+        public T Enqueue(T value, long weight)
         {
             if (Head == null)
                 Head = new PQNode(value, weight);
             else
                 Head.Enqueue(new PQNode(value, weight));
+            return value;
         }
 
         public T Dequeue()

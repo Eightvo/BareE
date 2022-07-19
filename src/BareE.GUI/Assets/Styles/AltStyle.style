@@ -1,0 +1,9 @@
+﻿{
+	CloseButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/close.png"},
+	CollapseButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/Collapse.png"},
+	ExpandButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/Expand.png"},
+	ResizeButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/resize.png"},
+	Frame:{Sprite:"MinGui.NineFrame", Src:"./Assets/Styles/R2Frame.png"},
+	Titlebar:{Sprite:"MinGUi.NineFrame", Src:"./Assets/Styles/squareFrame.png"},
+	Font:{Src:"./Assets/Fonts/EduSABeginner-Regular.ttf"},
+}

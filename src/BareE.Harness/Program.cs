@@ -50,6 +50,7 @@ namespace BareE.Harness
 
         public static void Main(String[] args)
         {
+            
 
             var v = BareE.DataStructures.AttributeCollectionDeserializer.FromAsset("BareE.Harness.Assets.Def.humanmale.actor");
             var q = v["Asset"];
@@ -57,6 +58,7 @@ namespace BareE.Harness
             
 
             var engine = new BareE.Engine();
+            
             var g = new TestGame(new GameState(), GameEnvironment.Load());
             engine.Run(g);
         }

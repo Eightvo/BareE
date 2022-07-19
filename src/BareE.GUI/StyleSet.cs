@@ -6,32 +6,40 @@ using System.Threading.Tasks;
 
 namespace BareE.GUI
 {
-    public class StyleSet
+    public class StyleTree
     {
-        Stack<StyleNode> StylePriority = new Stack<StyleNode>();
+        Dictionary<String,Stack<StyleNode>> StylePriority = new Dictionary<String,Stack<StyleNode>>(StringComparer.CurrentCultureIgnoreCase);
+        Stack<Stack<StyleNode>> opOrder = new Stack<Stack<StyleNode>>();
         public void PushStyles(params StyleNode[] styles)
         {
-            foreach(var style in styles)
-                StylePriority.Push(style);
+            foreach (var style in styles)
+            {
+                if (!StylePriority.ContainsKey(style.Element))
+                    StylePriority.Add(style.Element, new Stack<StyleNode>());
+                StylePriority[style.Element].Push(style);
+                opOrder.Push(StylePriority[style.Element]);
+           }
         }
         public void PopStyles(int stylesToPop=1)
         {
-            for(int i=0;i<stylesToPop;i++)
-                if (StylePriority.Count>0)
-                    StylePriority.Pop();
+            int popped = 0;
+            while(opOrder.Count > 0 && popped<stylesToPop)
+            {
+                (opOrder.Pop()).Pop();
+            }
         }
         public String GetStyle(String Element)
         {
-            foreach (StyleNode style in StylePriority)
-                if (String.Compare(Element, style.Element, true) == 0)
-                    return style.Style;
+            if (StylePriority.ContainsKey(Element) && StylePriority[Element].Count>0)
+                return StylePriority[Element].Peek().Style;
             return "Default";
         }
         public void ClearStyles()
         {
-            while (StylePriority.Count > 0)
-                StylePriority.Pop();
+            while (opOrder.Count > 0)
+                (opOrder.Pop()).Pop();
         }
+        public String this[String Element] { get { return GetStyle(Element); } }
     }
 
     public struct StyleNode

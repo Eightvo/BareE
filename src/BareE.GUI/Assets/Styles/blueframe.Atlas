@@ -1,0 +1,40 @@
+﻿[
+{
+	"Name":"MinGui.NineFrame",
+	"SrcRect":"0,0,26,26",
+	"Children":[
+		{"Name":"TL","SrcRect":" 0, 0,9,9"},
+		{"Name":"TM","SrcRect":" 9, 0,8,9"},
+		{"Name":"TR","SrcRect":"17, 0,9,9"},
+		{"Name":"ML","SrcRect":" 0, 9,9,8"},
+		{"Name":"MM","SrcRect":" 9, 9,8,8"},
+		{"Name":"MR","SrcRect":"17, 9,9,8"},
+		{"Name":"BL","SrcRect":" 0,17,9,9"},
+		{"Name":"BM","SrcRect":" 9,17,8,9"},
+		{"Name":"BR","SrcRect":"17,17,9,9"}
+	]
+
+},
+{
+	"Name":"MinGui.HorizontalThreeFrame",
+	"SrcRect":"0,0,26,26",
+	"Children":[
+		{"Name":"L","SrcRect":" 0,0,9,26"},
+		{"Name":"L","SrcRect":" 9,0,8,26"},
+		{"Name":"L","SrcRect":"17,0,9,26"}
+	]
+},
+{
+	"Name":"MinGui.VerticalThreeFrame",
+	"SrcRect":"0,0,26,26",
+	"Children":[
+		{"Name":"L","SrcRect":"0, 0,26,9"},
+		{"Name":"L","SrcRect":"0, 9,26,8"},
+		{"Name":"L","SrcRect":"0,17,26,9"}
+	]
+},
+{
+	"Name":"MinGui.Glyph",
+	"SrcRect":"0,0,10,10"
+}
+]

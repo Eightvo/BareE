@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <PackageLicenseFile>License.md</PackageLicenseFile>
     <Copyright>Greg Freedline 2021</Copyright>
@@ -16,6 +16,16 @@
     <None Remove="Assets\Def\HumanMaleActor.asset" />
     <None Remove="Assets\Def\LPCAnim.asset" />
     <None Remove="Assets\Def\LPCAtlas.asset" />
+    <None Remove="Assets\Fonts\Bitmap\Cookie\Cookie.atlas" />
+    <None Remove="Assets\Fonts\Bitmap\Cookie\Cookie.bff" />
+    <None Remove="Assets\Fonts\Bitmap\Cookie\Cookie.credits" />
+    <None Remove="Assets\Fonts\Bitmap\Cookie\Cookie.fnt" />
+    <None Remove="Assets\Fonts\Bitmap\Cookie\Cookie.png" />
+    <None Remove="Assets\Fonts\Bitmap\Neuton\Neuton.atlas" />
+    <None Remove="Assets\Fonts\Bitmap\Neuton\Neuton.bff" />
+    <None Remove="Assets\Fonts\Bitmap\Neuton\Neuton.credits" />
+    <None Remove="Assets\Fonts\Bitmap\Neuton\Neuton.fnt" />
+    <None Remove="Assets\Fonts\Bitmap\Neuton\Neuton.png" />
     <None Remove="Assets\Fonts\SDF\b.fnt" />
     <None Remove="Assets\Fonts\SDF\b.png" />
     <None Remove="Assets\Fonts\SDF\Comic Sans MS.png" />
@@ -51,6 +61,16 @@
     <EmbeddedResource Include="Assets\Def\HumanMaleActor.asset" />
     <EmbeddedResource Include="Assets\Def\LPCAnim.asset" />
     <EmbeddedResource Include="Assets\Def\LPCAtlas.asset" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Cookie\Cookie.atlas" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Cookie\Cookie.bff" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Cookie\Cookie.credits" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Cookie\Cookie.fnt" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Cookie\Cookie.png" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Neuton\Neuton.atlas" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Neuton\Neuton.bff" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Neuton\Neuton.credits" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Neuton\Neuton.fnt" />
+    <EmbeddedResource Include="Assets\Fonts\Bitmap\Neuton\Neuton.png" />
     <EmbeddedResource Include="Assets\Models\chest3-final.fbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

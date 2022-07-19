@@ -33,22 +33,25 @@ namespace BareE.DataStructures
             get { return _Pages.Keys; }
         }
 
-        public void Merge(String name, SpriteModel sprite, String TextureSrc, float scale=1.0f)
+        public void Merge(String name, SpriteModel sprite, Image<Rgba32> image, float scale=1.0f)
         {
             AtlasPage newPage = new AtlasPage();
             newPage.model = sprite;
             if (scale != 1) newPage.model.Scale(scale);
 
-            
 
+            newPage.src = image;
 
-
-            newPage.src = GetTextureSrcImage(sprite, TextureSrc);
             if (!_Pages.ContainsKey(name))
                 _Pages.Add(name, newPage);
             else
                 _Pages[name] = newPage;
             _dirty = true;
+
+        }
+        public void Merge(String name, SpriteModel sprite, String TextureSrc, float scale=1.0f)
+        {
+            Merge(name, sprite,GetTextureSrcImage(sprite, TextureSrc),scale);
         }
 
         public Image<Rgba32> GetTextureSrcImage(SpriteModel sprite, String TextureSrc)
@@ -158,7 +161,7 @@ namespace BareE.DataStructures
             
             [JsonProperty("Children")]
             private SpriteModel[] _Children { get; set; }
-
+            public void SetChildren(SpriteModel[] ch) { _Children = ch; }
             [JsonIgnore]
             public IEnumerable<SpriteModel> Children
             {
@@ -242,12 +245,18 @@ namespace BareE.DataStructures
 
             public static Dictionary<String, SpriteModel> LoadSpriteModels(String filename, StringComparer cmp = null)
             {
-                Dictionary<String, SpriteModel> ret = new Dictionary<string, SpriteModel>(cmp ?? StringComparer.InvariantCultureIgnoreCase);
-                foreach (var v in JsonConvert.DeserializeObject<SpriteModel[]>(System.IO.File.ReadAllText(filename)))
+                var src = System.IO.File.ReadAllText(filename);
+                return LoadSpriteModelsFromSrc(src);
+            }
+            public static Dictionary<String, SpriteModel> LoadSpriteModelsFromSrc(String src)
+            {
+                Dictionary<String, SpriteModel> ret = new Dictionary<string, SpriteModel>(StringComparer.InvariantCultureIgnoreCase);
+                foreach (var v in JsonConvert.DeserializeObject<SpriteModel[]>(src))
                 {
                     ret.Add(v.Name, v);
                 }
                 return ret;
+
             }
         }
 

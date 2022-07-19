@@ -2,15 +2,16 @@
   "PrefferedBackend": "OpenGL",
   "DisplayMode": "MonitorOnly",
   "TargetFramerate": "75",
+  "PrefferedTextureCount": "Count8",
   "Window": {
     "Title": "BareE [{BACKEND}-{DISPLAYMODE}]",
-    "Width": "1280",
-    "Height": "720",
+    "Width": "1024",
+    "Height": "768",
     "Left": "10",
     "Top": "10",
     "Resolution": {
-      "Width": "1280",
-      "Height": "720"
+      "Width": "1024",
+      "Height": "768"
     }
   },
   "VR": {

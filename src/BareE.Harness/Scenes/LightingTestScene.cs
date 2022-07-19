@@ -58,6 +58,8 @@ namespace BareE.Harness
                 }
             });
             this.Systems.Enqueue(new BareE.Systems.ConsoleSystem(), 1);
+            this.Systems.Enqueue(new BareE.GUI.BareEGUISystem(Env.Window.Resolution), 1);
+
             this.Systems.Enqueue(new BareE.Systems.SoundSystem(), 2);
             this.Systems.Enqueue(new BareE.Systems.MusicSystem("BareE.Harness.Assets.Def.default.radio"), 3);
             State.Messages.EmitMsg<ConsoleInput>(new ConsoleInput() { System = true, Text = "BOOT" });

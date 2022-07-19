@@ -11,11 +11,28 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>G:\git\BareE\BareE\bin\BareE.GUI</OutputPath>
+    <OutputPath>C:\AA_Main\Git\Eightvo\BareE\BareE\bin\BareE.GUI</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Styles\AltStyle.style" />
+    <None Remove="Assets\Styles\blueframe.Atlas" />
+    <None Remove="Assets\Styles\close.png" />
+    <None Remove="Assets\Styles\Collapse.png" />
+    <None Remove="Assets\Styles\Down.png" />
+    <None Remove="Assets\Styles\Expand.png" />
+    <None Remove="Assets\Styles\MinGui.Atlas" />
+    <None Remove="Assets\Styles\minGui.credits" />
+    <None Remove="Assets\Styles\OvalEmpty.png" />
+    <None Remove="Assets\Styles\Oval_Checked.png" />
+    <None Remove="Assets\Styles\Oval_Filled.png" />
+    <None Remove="Assets\Styles\R2Frame.png" />
+    <None Remove="Assets\Styles\resize.png" />
+    <None Remove="Assets\Styles\Right.png" />
+    <None Remove="Assets\Styles\squareFrame.png" />
+    <None Remove="BaseGuiShader\BaseGui.frag.spv" />
+    <None Remove="BaseGuiShader\BaseGui.vert.spv" />
     <None Remove="TextRendering\Text.frag.spv" />
     <None Remove="TextRendering\Text.vert.spv" />
     <None Include="..\..\License.md">
@@ -25,6 +42,53 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets\Styles\AltStyle.style">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\blueframe.Atlas">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\close.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\Collapse.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\Down.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\Expand.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\MinGui.Atlas">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\minGui.credits">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\OvalEmpty.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\Oval_Checked.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\Oval_Filled.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\R2Frame.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\resize.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\Right.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\squareFrame.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BaseGuiShader\BaseGui.frag.spv" />
+    <EmbeddedResource Include="BaseGuiShader\BaseGui.vert.spv" />
     <EmbeddedResource Include="TextRendering\Text.frag.spv" />
     <EmbeddedResource Include="TextRendering\Text.vert.spv" />
   </ItemGroup>
@@ -32,11 +96,39 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta17" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BareE.EZRend\BareE.EZRend.csproj" />
     <ProjectReference Include="..\BareE\BareE.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\Fonts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\DefaultStyleAtlas.Atlas">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\EduSABeginner-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\Roboto-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Styles\blueframe2.credits">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Styles\blueframe2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Widgets\MessageBox.widget">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

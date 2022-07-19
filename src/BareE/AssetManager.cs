@@ -106,11 +106,11 @@ namespace BareE
 
         public static unsafe void UpdateTextureData(GraphicsDevice device, Texture tex, SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> image)
         {
-            if (!image.TryGetSinglePixelSpan(out Span<SixLabors.ImageSharp.PixelFormats.Rgba32> pixelSpan))
+            if (!image.DangerousTryGetSinglePixelMemory(out Memory<SixLabors.ImageSharp.PixelFormats.Rgba32> pixelSpan))
             {
                 throw new VeldridException("Unable to get image pixelspan.");
             }
-            fixed (void* pin = &MemoryMarshal.GetReference(pixelSpan))
+            fixed (void* pin = &MemoryMarshal.GetReference(pixelSpan.Span))
             {
                 device.UpdateTexture(
                     tex,
@@ -169,10 +169,10 @@ namespace BareE
                             }
                         }
                     }
-                    catch (Exception e) { throw new FileNotFoundException("File not found", name, e); }
+                    catch (Exception e) { throw new FileNotFoundException($"File not found {name}", e); }
                 }
             }
-            throw new FileNotFoundException("File not found", name);
+            throw new FileNotFoundException($"File not found {name}");
         }
 
         /// <summary>

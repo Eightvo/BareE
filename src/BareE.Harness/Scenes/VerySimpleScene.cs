@@ -57,7 +57,7 @@ namespace BareE.Harness
                                         {
                                              AllowAccessSubdirectories=true,
                                              DefaultExtention=".txt",
-                                             RootDirectory=@"G:\TestData"
+                                             RootDirectory=@"C:\TestData"
                                         }
 
                                     )); ;

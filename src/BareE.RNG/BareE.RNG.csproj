@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>G:\git\BareE\BareE\bin\BareE.RNG</OutputPath>
+    <OutputPath>C:\AA_Main\Git\Eightvo\BareE\BareE\bin\BareE.RNG</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

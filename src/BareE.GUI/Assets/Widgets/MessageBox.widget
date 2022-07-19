@@ -1,0 +1,72 @@
+﻿{
+	Resources:{
+	//Example:
+	BGImg:{Type:Image, Src:"./Assets/Styles/blueframe2.png", Region:<0,0,800,600>},
+	//OnMessageAppear:{Type:Script, Src:"file.xyz"}
+	Alt:{Type:Style, Src:"./Assets/Styles/AltStyle.style"},
+	
+	MinGui:{Type:Atlas, Src:"./Assets/Styles/MinGui.Atlas"},
+	
+	//Styles can also be defined inline
+	//Styles should always contain a default
+		Default:{
+			Type:Style,
+			Src:{
+				CloseButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/close.png"},
+				CollapseButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/Collapse.png"},
+				ExpandButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/Expand.png"},
+				ResizeButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/resize.png"},
+				Frame:{Sprite:"MinGui.NineFrame", Src:"./Assets/Styles/squareFrame.png"},
+				Titlebar:{Sprite:"MinGUi.NineFrame", Src:"./Assets/Styles/R2Frame.png"},
+				Font:{Src:"./Assets/Fonts/Bitmap/Cookie/Cookie.bff"},
+			}
+
+		}
+
+	},
+	Root:{
+	    /*
+			Types:
+				<Root types>
+				Panel  - Just a quad with no border or title.
+				Frame  - A quad with a border.
+				Border - Just a border.
+				Window - A quad with a border and also a title bar.
+							Only windows can be Moved/Resized.
+
+				<Widget types>
+				Text       - A region in which text will be rendered
+				MarkupText - A region in which markup text will be rendered
+				Button     - A region which will allow the user to press it
+				InputText  - A region which allows users to input Text.
+		*/
+		Type:Window,
+		Name:MessageBox,
+		Size:"50%,25%",
+		Position:Centered,
+		Text:MessageBox,
+		AllowClose:false,
+		AllowResize:false,
+		AllowMove:false,
+		AllowCollapse:false,
+		Children:[
+			{
+				Name:Message,
+				Type:Text,
+				Size:"95%,75%",
+				Position: TopCenter,
+				Text:"This is a message",
+				TextAlign:Centered
+			},
+			{
+				Name:OkButton,
+				Type:Button,
+				Size:"10%,10%",
+				Position: BottomCenter,
+				Text:"Ok",
+				TextAlign:Centered
+			}
+		]
+	}
+
+}

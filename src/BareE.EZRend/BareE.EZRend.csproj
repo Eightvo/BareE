@@ -15,7 +15,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputPath>G:\git\BareE\BareE\bin\BareE.EZRend</OutputPath>
+    <OutputPath>C:\AA_Main\git\Eightvo\BareE\BareE\bin\BareE.EZRend</OutputPath>
     <NoWarn>1701;1702;Nu5104;</NoWarn>
   </PropertyGroup>
 
@@ -131,11 +131,11 @@
   <ItemGroup>
     <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Veldrid" Version="4.9.0-gffcf1cdb33" />
-    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-gffcf1cdb33" />
-    <PackageReference Include="Veldrid.ImGui" Version="5.72.0-gffcf1cdb33" />
-    <PackageReference Include="Veldrid.SPIRV" Version="1.0.14" />
-    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-gffcf1cdb33" />
+    <PackageReference Include="Veldrid" Version="4.9.0-beta1-gb881f7dcb4" />
+    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-beta1-gb881f7dcb4" />
+    <PackageReference Include="Veldrid.ImGui" Version="5.87.0-gb881f7dcb4" />
+    <PackageReference Include="Veldrid.SPIRV" Version="1.0.15" />
+    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-beta1-gb881f7dcb4" />
   </ItemGroup>
 
   <ItemGroup>

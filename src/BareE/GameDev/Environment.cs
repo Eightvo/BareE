@@ -34,8 +34,9 @@ namespace BareE.GameDev
         {
             Width = w; Height = h;
         }
+        public static implicit operator Resolution(System.Drawing.Size sz) {  return new Resolution(sz.Width, sz.Height); }
+        public static implicit operator System.Drawing.Size(Resolution r) { return new System.Drawing.Size(r.Width, r.Height); }
     }
-
     public class GameEnvironmentWindow
     {
         [JsonIgnore]
@@ -134,6 +135,9 @@ namespace BareE.GameDev
         public float TargetFramerate { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
+        public Veldrid.TextureSampleCount PrefferedTextureCount { get; set; } 
+
+        [JsonConverter(typeof(StringEnumConverter))]
         [JsonProperty("DisplayMode")]
         public DisplayMode DisplayMode { get; set; }
 
@@ -174,7 +178,7 @@ namespace BareE.GameDev
             {
                 ColorAttachments = d.ColorAttachments,
                 DepthAttachment = d.DepthAttachment,
-                SampleCount = TextureSampleCount.Count1
+                SampleCount =PrefferedTextureCount
             };
             return d;
         }
@@ -247,6 +251,7 @@ namespace BareE.GameDev
 
         public static GameEnvironment Load(String resource)
         {
+            
             var ret = Newtonsoft.Json.JsonConvert.DeserializeObject<GameEnvironment>(AssetManager.ReadFile(resource));
             ret.Window.Title = ret.Window.Title
                                        .Replace("{BACKEND}", ret.PrefferedBackend.ToString())

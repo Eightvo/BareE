@@ -2,6 +2,7 @@
 using BareE.Messages;
 
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,8 +41,11 @@ namespace BareE
             }catch(Exception e)
             {
                 Log.EmitError(e);
+                ActiveState.Messages.EmitMsg<EmitException>(new EmitException(e));
+                isTransitioning = false;
             }
-            finally{
+            finally
+            {
 
             }
         }
@@ -77,6 +81,7 @@ namespace BareE
         public void Run(Game game)
         {
             ActiveGame = game;
+            SixLabors.ImageSharp.Configuration.Default.PreferContiguousImageBuffers = true;
             //ImGuiNET.ImGui.GetIO().ConfigFlags = ImGuiNET.ImGuiConfigFlags.
             game.Environment.Window.Window.Resized += Window_Resized;
             Instant instant = game.State.Clock.CaptureInstant();
@@ -126,6 +131,7 @@ namespace BareE
             ActiveGame.Environment.Window.Width = ActiveGame.Environment.Window.Window.Width;
             ActiveGame.Environment.Window.Height= ActiveGame.Environment.Window.Window.Height;
             ActiveGame.Environment.Window.IGR.WindowResized(ActiveGame.Environment.Window.Window.Width, ActiveGame.Environment.Window.Window.Height);
+            ActiveGame.State.Messages.EmitMsg<Messages.ChangeSetting>(new ChangeSetting() { Setting = "Resolution", Value =Newtonsoft.Json.JsonConvert.SerializeObject( new Vector2(ActiveGame.Environment.Window.Width, ActiveGame.Environment.Window.Height)) });
         }
 
         private void HandleEvent(ref SDL_Event ev)

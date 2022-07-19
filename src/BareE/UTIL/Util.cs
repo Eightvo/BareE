@@ -95,7 +95,7 @@ namespace BareE.UTIL
             var drawTrgt = device.ResourceFactory.CreateTexture(
                 new TextureDescription(resolutionX,
                                        resolutionY,
-                                       1, 1, 1,
+                                       1, 4, 1,
                                        pixelFormat,
                                        TextureUsage.RenderTarget | TextureUsage.Sampled,
                                        TextureType.Texture2D,
@@ -105,7 +105,7 @@ namespace BareE.UTIL
             var depthTrgt = device.ResourceFactory.CreateTexture(
                 new TextureDescription(resolutionX,
                                        resolutionY,
-                                       1, 1, 1,
+                                       1, 4, 1,
                                        PixelFormat.R32_Float,
                                        TextureUsage.DepthStencil,
                                        TextureType.Texture2D,

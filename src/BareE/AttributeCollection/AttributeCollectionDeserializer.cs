@@ -130,8 +130,6 @@ namespace BareE.DataStructures
 
         }
 
-
-
         public class ParserState
         {
             public String Asset { get; set; }

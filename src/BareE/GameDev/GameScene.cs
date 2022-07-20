@@ -182,6 +182,10 @@ namespace BareE.GameDev
                 Env.Window.IGR = new ImGuiRenderer(Env.Window.Device, Env.HUDBackBuffer.OutputDescription, (int)Env.HUDBackBuffer.Width, (int)Env.HUDBackBuffer.Height);
                 DoOnHudRefresh(Instant, State, Env);
                 // hudToScreen.Update(Env.Window.Device);
+                leftEyePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.LeftEyeBackBuffer.ColorTargets[0].Target);
+                rightEyePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.RightEyeBackBuffer.ColorTargets[0].Target);
+                hudPtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.HUDBackBuffer.ColorTargets[0].Target);
+
             }
 
             leftEyeToScreen.Update(Env.Window.Device);
@@ -204,6 +208,7 @@ namespace BareE.GameDev
 
         internal void DoRender(Instant Instant, GameState State, GameEnvironment Env)
         {
+
             if ((Env.DisplayMode & (DisplayMode.MonitorOnly | DisplayMode.Emulate)) == 0)
             {
                 Env.VRSettings.Pose = Env.VRSettings.Context.WaitForPoses();
@@ -303,7 +308,10 @@ namespace BareE.GameDev
 
                     Env.Window.Cmds.Begin();
                     //cmds.GenerateMipmaps(Env.ScreenBackBuffer.ColorTargets[0].Target);
-                    cmds.ResolveTexture(Env.ScreenBackBuffer.ColorTargets[0].Target, resolvedTexture);
+                    if (Env.ScreenBackBuffer.ColorTargets[0].Target.SampleCount == TextureSampleCount.Count1)
+                        cmds.CopyTexture(Env.ScreenBackBuffer.ColorTargets[0].Target, resolvedTexture);
+                    else
+                        cmds.ResolveTexture(Env.ScreenBackBuffer.ColorTargets[0].Target, resolvedTexture);
                     Env.Window.Cmds.End();
                     Env.Window.Device.SubmitCommands(Env.Window.Cmds);
                     Env.Window.Cmds.Begin();
@@ -377,6 +385,20 @@ namespace BareE.GameDev
                     //Env.Window.Device.SubmitCommands(Env.Window.Cmds, f);
                     //Env.Window.Device.WaitForFence(f);
                     //Env.Window.Device.ResetFence(f);
+
+                    Env.Window.Cmds.Begin();
+                    //cmds.GenerateMipmaps(Env.ScreenBackBuffer.ColorTargets[0].Target);
+                    if (Env.ScreenBackBuffer.ColorTargets[0].Target.SampleCount == TextureSampleCount.Count1)
+                        cmds.CopyTexture(Env.ScreenBackBuffer.ColorTargets[0].Target, resolvedTexture);
+                    else
+                        cmds.ResolveTexture(Env.ScreenBackBuffer.ColorTargets[0].Target, resolvedTexture);
+                    Env.Window.Cmds.End();
+                    Env.Window.Device.SubmitCommands(Env.Window.Cmds);
+                    Env.Window.Cmds.Begin();
+                    ScreenToMonitor.Render(Env.Window.Device.MainSwapchain.Framebuffer, cmds, null, Matrix4x4.Identity, Matrix4x4.Identity);
+                    Env.Window.Cmds.End();
+                    Env.Window.Device.SubmitCommands(Env.Window.Cmds);
+
 
                     Env.Window.Device.SwapBuffers();
                     break;

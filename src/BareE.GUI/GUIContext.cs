@@ -52,7 +52,7 @@ namespace BareE.GUI
         Camera guiCam;
 
 
-        TextureSampleCount GuiBufferTextureCount = TextureSampleCount.Count8;
+        TextureSampleCount GuiBufferTextureCount = TextureSampleCount.Count1;
 
         public StyleTree Styles { get; set; }
         Dictionary<String, GuiWidgetBase> Widgets { get; set; }=new Dictionary<String, GuiWidgetBase>(StringComparer.InvariantCultureIgnoreCase);
@@ -107,7 +107,7 @@ namespace BareE.GUI
 
             GuiBuffer = UTIL.Util.CreateFramebuffer(env.Window.Device, (uint)Resolution.Width, (uint)Resolution.Height, PixelFormat.R8_G8_B8_A8_UNorm, GuiBufferTextureCount);
             //GUICanvas.SetTexture(env.Window.Device, GuiBuffer.ColorTargets[0].Target);
-            GUICanvas.SetTexture(env.Window.Device, resolvedTexture);
+            GUICanvas.SetTexture(env.Window.Device, GuiBuffer.ColorTargets[0].Target);
             GUICanvas.Update(env.Window.Device);
 
             StyleAtlas = new SpriteAtlas();
@@ -170,7 +170,7 @@ namespace BareE.GUI
                                        TextureType.Texture2D,
                                        TextureSampleCount.Count1));
 
-                GUICanvas.SetTexture(env.Window.Device, resolvedTexture);
+                GUICanvas.SetTexture(env.Window.Device, GuiBuffer.ColorTargets[0].Target);
                 GUICanvas.Update(env.Window.Device);
                 _setNextResolution = false;
             }
@@ -483,7 +483,7 @@ namespace BareE.GUI
             
             //cmds.ClearColorTarget(0, RgbaFloat.Green);
             //cmds.ClearDepthStencil(0);
-            cmds.ResolveTexture(GuiBuffer.ColorTargets[0].Target, resolvedTexture);
+            //cmds.ResolveTexture(, resolvedTexture);
             cmds.SetFramebuffer(outbuffer); 
             GUICanvas.Render(outbuffer, cmds, null, Matrix4x4.Identity, Matrix4x4.Identity);
             //cmds.SetFramebuffer(GuiBuffer);

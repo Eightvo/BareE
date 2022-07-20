@@ -40,11 +40,11 @@ namespace BareE.Harness.Scenes
             Env.WorldCamera = new BareE.Rendering.LookAtQuaternionCamera(new Vector2(800, 600));
             ((LookAtQuaternionCamera)Env.WorldCamera).FarPlane = 1024.0f * 10.0f;
             linesShader = new ColoredLineShader();
-            linesShader.SetOutputDescription(Env.GetBackbufferOutputDescription());
+            linesShader.SetOutputDescription(Env.LeftEyeBackBuffer.OutputDescription);
             linesShader.CreateResources(Env.Window.Device);
 
             vshade = new VoronoiShader();
-            vshade.SetOutputDescription(Env.GetBackbufferOutputDescription());
+            vshade.SetOutputDescription(Env.LeftEyeBackBuffer.OutputDescription);
             vshade.CreateResources(Env.Window.Device);
 
         }

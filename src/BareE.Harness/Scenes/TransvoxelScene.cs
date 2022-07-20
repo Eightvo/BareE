@@ -46,6 +46,7 @@ namespace BareE.Harness
             viewer.Initialize(Cloud, Vector3.Zero);
 
             colorShader = new TriplanarPBump();
+            colorShader.SetOutputDescription(Env.LeftEyeBackBuffer.OutputDescription);
             colorShader.CreateResources(Env.Window.Device);
             colorShader.SetTexture(Env.Window.Device, CurrentTexture(Env.Window.Device));
             colorShader.ColorTextureFilter = SamplerFilter.MinLinear_MagLinear_MipLinear;

@@ -23,6 +23,7 @@ namespace BareE.Harness
             this.Systems.Enqueue(new SoundSystem(), 2);
             this.Systems.Enqueue(new MusicSystem("BareE.Harness.Assets.Def.default.radio"), 3);
             BGTexture = new BareE.Rendering.FullScreenTexture();
+            BGTexture.SetOutputDescription(Env.LeftEyeBackBuffer.OutputDescription);
             BGTexture.CreateResources(Env.Window.Device);
             BGTexture.SetTexture(Env.Window.Device, AssetManager.LoadTexture("BareE.Harness.Assets.Textures.brickVoxelTexture.png", Env.Window.Device));
         }

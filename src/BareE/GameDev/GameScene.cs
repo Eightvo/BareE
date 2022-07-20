@@ -3,12 +3,21 @@
 using BareE.Rendering;
 using BareE.Widgets;
 
+using SixLabors.ImageSharp.PixelFormats;
+
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 using Veldrid;
 using Veldrid.VirtualReality;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using Image = SixLabors.ImageSharp.Image;
+using BareE.UTIL;
 
 namespace BareE.GameDev
 {
@@ -24,9 +33,11 @@ namespace BareE.GameDev
             _widgets.Add(widget);
         }
         public GameState State { get; set; }
-        private FramebufferToScreen leftEyeToScreen;
-        private FramebufferToScreen rightEyeToScreen;
-        private FramebufferToScreen hudToScreen;
+        private FullScreenTexture leftEyeToScreen;
+        private FullScreenTexture rightEyeToScreen;
+        private FullScreenTexture hudToScreen;
+        private FullScreenTexture ScreenToMonitor;
+        
         private IntPtr leftEyePtr;
         private IntPtr rightEyePtr;
         private IntPtr hudPtr;
@@ -35,13 +46,25 @@ namespace BareE.GameDev
         private bool rebuildHud;
 
         private ISceneDataProvider tranfserSceneData = new DefaultSceneDataProvider();
+        private Texture resolvedTexture;
 
         internal void DoLoad(Instant Instant, GameState State, GameEnvironment Env)
         {
+            resolvedTexture = Env.Window.Device.ResourceFactory.CreateTexture(
+                new TextureDescription((uint)Env.Window.Width, (uint)Env.Window.Height, 1, 1, 1, PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Sampled, TextureType.Texture2D)
+            );
+            resolvedTexture.Name = "Resolved Texture";
+            ScreenToMonitor = new FullScreenTexture();
+            ScreenToMonitor.SetOutputDescription(Env.Window.Device.MainSwapchain.Framebuffer.OutputDescription);
+            ScreenToMonitor.CreateResources(Env.Window.Device);
+            ScreenToMonitor.SetTexture(Env.Window.Device, resolvedTexture);
+            
+
             Env.Window.Window.Resized += Window_Resized;
-            leftEyeToScreen = new FramebufferToScreen();
-            rightEyeToScreen = new FramebufferToScreen();
-            hudToScreen = new FramebufferToScreen();
+            leftEyeToScreen = new FullScreenTexture();
+            rightEyeToScreen = new FullScreenTexture();
+            hudToScreen = new FullScreenTexture();
+            
             var vrODesc = Env.Window.Device.MainSwapchain.Framebuffer.OutputDescription;
             var SampDesc = new SamplerDescription()
             {
@@ -63,9 +86,9 @@ namespace BareE.GameDev
                 vrODesc = Env.VRSettings.Context.LeftEyeFramebuffer.OutputDescription;
             }
 
-            leftEyeToScreen.SetOutputDescription(vrODesc);
-            rightEyeToScreen.SetOutputDescription(vrODesc);
-            hudToScreen.SetOutputDescription(vrODesc);
+            leftEyeToScreen.SetOutputDescription(Env.ScreenBackBuffer.OutputDescription);
+            rightEyeToScreen.SetOutputDescription(Env.ScreenBackBuffer.OutputDescription);
+            hudToScreen.SetOutputDescription(Env.ScreenBackBuffer.OutputDescription);
             leftEyeToScreen.SampDesc = SampDesc;
             rightEyeToScreen.SampDesc = SampDesc;
             rightEyeToScreen.SampDesc = SampDesc;
@@ -85,6 +108,11 @@ namespace BareE.GameDev
             leftEyePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.LeftEyeBackBuffer.ColorTargets[0].Target);
             rightEyePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.RightEyeBackBuffer.ColorTargets[0].Target);
             hudPtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, Env.HUDBackBuffer.ColorTargets[0].Target);
+
+
+            leftEyeToScreen.SetTexture(Env.Window.Device, Env.LeftEyeBackBuffer.ColorTargets[0].Target);
+            rightEyeToScreen.SetTexture(Env.Window.Device, Env.RightEyeBackBuffer.ColorTargets[0].Target);
+            hudToScreen.SetTexture(Env.Window.Device, Env.HUDBackBuffer.ColorTargets[0].Target);
 
             //WinGuiPtr = ImGuiNET.ImGui.CreateContext();
             // ImGuiNET.ImGui.SetCurrentContext(WinGuiPtr);
@@ -113,6 +141,7 @@ namespace BareE.GameDev
 
         internal void DoInitialize(Instant Instant, GameState State, GameEnvironment Env)
         {
+            ScreenToMonitor.Update(Env.Window.Device);
             Initialize(Instant, State, Env);
             foreach (var sys in Systems.Elements)
                 sys.Initialize(Instant, State, Env);
@@ -124,12 +153,30 @@ namespace BareE.GameDev
             {
                 rebuildHud = false;
                 //hudToScreen.Dispose(); //Todo:Make renderunits disposable
+                resolvedTexture.Dispose();
+                resolvedTexture = Env.Window.Device.ResourceFactory.CreateTexture(
+                    new TextureDescription((uint)Env.Window.Width, (uint)Env.Window.Height, 1, 1, 1, PixelFormat.R8_G8_B8_A8_UNorm, TextureUsage.Sampled, TextureType.Texture2D)
+                );
+                resolvedTexture.Name = "ResolvedTexture";
+                ScreenToMonitor.SetTexture(Env.Window.Device, resolvedTexture);
 
                 Env.HUDBackBuffer.Dispose();
-                Env.HUDBackBuffer = GameEnvironment.CreateFlatbuffer(Env.Window.Device, (uint)Env.Window.Window.Width, (uint)Env.Window.Window.Height, Env.VRPixelFormat, TextureSampleCount.Count1);
+                Env.HUDBackBuffer = GameEnvironment.CreateFlatbuffer(Env.Window.Device, (uint)Env.Window.Window.Width, (uint)Env.Window.Window.Height, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
+                Env.HUDBackBuffer.Name = "Hud Backbuffer";
 
-                hudToScreen = new FramebufferToScreen();
-                hudToScreen.SetOutputDescription(Env.Window.Device.MainSwapchain.Framebuffer.OutputDescription);
+                Env.ScreenBackBuffer.Dispose();
+                Env.ScreenBackBuffer = Util.CreateFramebuffer(Env.Window.Device, Env.Window.Device.ResourceFactory.CreateTexture(new TextureDescription((uint)Env.Window.Width,
+                                           (uint)Env.Window.Height,
+                                           1, 1, 1,
+                                           PixelFormat.R8_G8_B8_A8_UNorm,
+                                           TextureUsage.RenderTarget | TextureUsage.Sampled,
+                                           TextureType.Texture2D,
+                                           Env.PrefferedTextureCount)));
+                Env.ScreenBackBuffer.Name = "Screen Backbuffer";
+                Env.ScreenBackBuffer.ColorTargets[0].Target.Name = "Screen Backbuffer tex";
+
+                hudToScreen = new FullScreenTexture();
+                hudToScreen.SetOutputDescription(Env.ScreenBackBuffer.OutputDescription);
                 hudToScreen.CreateResources(Env.Window.Device);
                 hudToScreen.SetTexture(Env.Window.Device, Env.HUDBackBuffer.ColorTargets[0].Target);
                 Env.Window.IGR = new ImGuiRenderer(Env.Window.Device, Env.HUDBackBuffer.OutputDescription, (int)Env.HUDBackBuffer.Width, (int)Env.HUDBackBuffer.Height);
@@ -159,6 +206,7 @@ namespace BareE.GameDev
         {
             if ((Env.DisplayMode & (DisplayMode.MonitorOnly | DisplayMode.Emulate)) == 0)
             {
+                Env.VRSettings.Pose = Env.VRSettings.Context.WaitForPoses();
                 Env.VRSettings.Pose = Env.VRSettings.Context.WaitForPoses();
             }
 
@@ -244,17 +292,72 @@ namespace BareE.GameDev
             {
                 //None: No VR. Only a single 3D Window output.
                 case DisplayMode.MonitorOnly:
-                    cmds.Begin();
-                    cmds.SetFramebuffer(Env.Window.Device.MainSwapchain.Framebuffer);
-                    cmds.ClearColorTarget(0, RgbaFloat.Pink);
-                    leftEyeToScreen.Render(Env.Window.Device.MainSwapchain.Framebuffer, cmds, tranfserSceneData, Matrix4x4.Identity, Matrix4x4.Identity);
-                    hudToScreen.Render(Env.Window.Device.MainSwapchain.Framebuffer, cmds, tranfserSceneData, Matrix4x4.Identity, Matrix4x4.Identity);
+                    cmds.Begin(); //Env.Window.Device.MainSwapchain.Framebuffer
+                    cmds.SetFramebuffer(Env.ScreenBackBuffer);
+                    cmds.ClearColorTarget(0, RgbaFloat.CornflowerBlue);
+                    leftEyeToScreen.Render(Env.ScreenBackBuffer, cmds, tranfserSceneData, Matrix4x4.Identity, Matrix4x4.Identity);
+                    hudToScreen.Render(Env.ScreenBackBuffer, cmds, tranfserSceneData, Matrix4x4.Identity, Matrix4x4.Identity);
 
                     Env.Window.Cmds.End();
                     Env.Window.Device.SubmitCommands(Env.Window.Cmds);
-                    //Env.Window.Device.SubmitCommands(Env.Window.Cmds, f);
-                    //Env.Window.Device.WaitForFence(f);
-                    //Env.Window.Device.ResetFence(f);
+
+                    Env.Window.Cmds.Begin();
+                    //cmds.GenerateMipmaps(Env.ScreenBackBuffer.ColorTargets[0].Target);
+                    cmds.ResolveTexture(Env.ScreenBackBuffer.ColorTargets[0].Target, resolvedTexture);
+                    Env.Window.Cmds.End();
+                    Env.Window.Device.SubmitCommands(Env.Window.Cmds);
+                    Env.Window.Cmds.Begin();
+                    ScreenToMonitor.Render(Env.Window.Device.MainSwapchain.Framebuffer, cmds, null, Matrix4x4.Identity, Matrix4x4.Identity);
+                    Env.Window.Cmds.End();
+                    Env.Window.Device.SubmitCommands(Env.Window.Cmds);
+
+
+
+                    if (false)
+                    {
+                        //this._screenshotQueued = false;
+                        int i = 0;
+                        foreach (var t in new List<Texture>() { Env.ScreenBackBuffer.ColorTargets[0].Target, Env.HUDBackBuffer.ColorTargets[0].Target, Env.LeftEyeBackBuffer.ColorTargets[0].Target, Env.RightEyeBackBuffer.ColorTargets[0].Target, resolvedTexture })
+                        {
+                            i++;
+                            TextureDescription desc = TextureDescription.Texture2D(
+                                t.Width,
+                                t.Height,
+                                t.MipLevels,
+                                t.ArrayLayers,
+                                t.Format,
+                                TextureUsage.Staging,
+                                t.SampleCount
+
+                            );
+
+                            Texture? tex = Env.Window.Device.ResourceFactory.CreateTexture(desc);
+
+                            Env.Window.Cmds.Begin();
+                            Env.Window.Cmds.CopyTexture(t, tex);
+                            Env.Window.Cmds.End();
+                            Env.Window.Device.SubmitCommands(Env.Window.Cmds);
+
+                            MappedResource mapped = Env.Window.Device.Map(tex, MapMode.Read);
+
+                            byte[] bytes = new byte[mapped.SizeInBytes];
+                            Marshal.Copy(mapped.Data, bytes, 0, (int)mapped.SizeInBytes);
+
+                            Image img = Image.LoadPixelData<Rgba32>(bytes, (int)tex.Width, (int)tex.Height);
+                            Env.Window.Device.Unmap(tex);
+
+                            img = img.CloneAs<Rgb24>();
+
+                            if (!Env.Window.Device.IsUvOriginTopLeft)
+                            {
+                                img.Mutate(x => x.Flip(FlipMode.Vertical));
+                            }
+                            img.SaveAsBmp($"C:\\TestData\\SS{i}.bmp");
+                            //this.InvokeScreenshotTaken(img);
+
+                            tex.Dispose();
+                        }
+                    }
 
                     Env.Window.Device.SwapBuffers();
 
@@ -262,10 +365,10 @@ namespace BareE.GameDev
                 //Should Left and Right VR On screen
                 case DisplayMode.Emulate:
                     cmds.Begin();
-                    cmds.SetFramebuffer(Env.Window.Device.MainSwapchain.Framebuffer);
+                    cmds.SetFramebuffer(Env.ScreenBackBuffer);
                     cmds.ClearColorTarget(0, RgbaFloat.Cyan);
 
-                    hudToScreen.Render(Env.Window.Device.MainSwapchain.Framebuffer, cmds, tranfserSceneData, Matrix4x4.Identity, Matrix4x4.Identity);
+                    hudToScreen.Render(Env.ScreenBackBuffer, cmds, tranfserSceneData, Matrix4x4.Identity, Matrix4x4.Identity);
 
                     //Env.Window.IGR.Render(Env.Window.Device, Env.Window.Cmds);
 
@@ -280,9 +383,9 @@ namespace BareE.GameDev
                 //Show mirror texture on screen, Show left and Right buffer in VR.
                 case DisplayMode.Mirror:
                     cmds.Begin();
-                    cmds.SetFramebuffer(Env.Window.Device.MainSwapchain.Framebuffer);
+                    cmds.SetFramebuffer(Env.ScreenBackBuffer);
                     cmds.ClearColorTarget(0, RgbaFloat.Pink);
-                    Env.VRSettings.Context.RenderMirrorTexture(cmds, Env.Window.Device.MainSwapchain.Framebuffer, Env.VRSettings.MirrorTexEyeSource);
+                    Env.VRSettings.Context.RenderMirrorTexture(cmds, Env.ScreenBackBuffer, Env.VRSettings.MirrorTexEyeSource);
                     Env.Window.Cmds.End();
                     Env.Window.Device.SubmitCommands(Env.Window.Cmds);
                     //Env.Window.Device.SubmitCommands(Env.Window.Cmds, f);
@@ -316,6 +419,7 @@ namespace BareE.GameDev
                     Env.VRSettings.Context.SubmitFrame();
                     break;
             }
+
         }
 
         public void Dispose()
@@ -329,6 +433,7 @@ namespace BareE.GameDev
             OnHudRefresh(instant, state, env);
             foreach(var sys in Systems.Elements)
             {
+                
                 sys.OnHudRefresh(instant, state, env);
             }
         }

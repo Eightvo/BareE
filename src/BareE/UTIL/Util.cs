@@ -89,13 +89,49 @@ namespace BareE.UTIL
             var offscreenBuffer = device.ResourceFactory.CreateFramebuffer(frameBuffDesc);
             return offscreenBuffer;
         }
+        public static Framebuffer CreateFramebuffer(GraphicsDevice device, Texture colorTarget)
+        {
+            var depthTrgt = device.ResourceFactory.CreateTexture(
+                new TextureDescription(colorTarget.Width,
+                                       colorTarget.Height,
+                                       1, colorTarget.MipLevels, 1,
+                                       PixelFormat.R32_Float,
+                                       TextureUsage.DepthStencil,
+                                       TextureType.Texture2D,
+                                       colorTarget.SampleCount)
+            );
 
+            FramebufferAttachmentDescription[] cltTrgs = new FramebufferAttachmentDescription[1]
+            {
+                new FramebufferAttachmentDescription()
+                {
+                    ArrayLayer=0,
+                    MipLevel=0,
+                    Target=colorTarget
+                }
+            };
+
+            FramebufferAttachmentDescription depTrg = new FramebufferAttachmentDescription()
+            {
+                ArrayLayer = 0,
+                MipLevel = 0,
+                Target = depthTrgt
+            };
+
+            var frameBuffDesc = new FramebufferDescription()
+            {
+                ColorTargets = cltTrgs,
+                DepthTarget = depTrg
+            };
+            var offscreenBuffer = device.ResourceFactory.CreateFramebuffer(frameBuffDesc);
+            return offscreenBuffer;
+        }
         public static Framebuffer CreateFramebuffer(GraphicsDevice device, uint resolutionX, uint resolutionY, PixelFormat pixelFormat, TextureSampleCount sampleCount)
         {
             var drawTrgt = device.ResourceFactory.CreateTexture(
                 new TextureDescription(resolutionX,
                                        resolutionY,
-                                       1, 4, 1,
+                                       1, 1, 1,
                                        pixelFormat,
                                        TextureUsage.RenderTarget | TextureUsage.Sampled,
                                        TextureType.Texture2D,
@@ -105,7 +141,7 @@ namespace BareE.UTIL
             var depthTrgt = device.ResourceFactory.CreateTexture(
                 new TextureDescription(resolutionX,
                                        resolutionY,
-                                       1, 4, 1,
+                                       1, 1, 1,
                                        PixelFormat.R32_Float,
                                        TextureUsage.DepthStencil,
                                        TextureType.Texture2D,

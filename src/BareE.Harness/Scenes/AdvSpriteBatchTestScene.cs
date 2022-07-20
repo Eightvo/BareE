@@ -47,19 +47,19 @@ namespace BareE.Harness.Scenes
             actorAtlas.Merge("Ship", actorModel, "BareE.EZRend.Flat.AdvSpriteBatch.prefabchar_rc.png");
             actorAtlas.Build(0, false);
 
-            offscreenBuffer = GameEnvironment.CreateFlatbuffer(Env.Window.Device, (uint)Env.Window.Window.Width, (uint)Env.Window.Window.Height, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
+            offscreenBuffer = UTIL.Util.CreateFramebuffer(Env.Window.Device, (uint)Env.Window.Resolution.Width, (uint)Env.Window.Resolution.Height, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
 
             offScreenColorTexturePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, offscreenBuffer.ColorTargets[0].Target);
 
             actorSpriteBatch = new AdvSpriteBatchShader();
-            actorSpriteBatch.SetOutputDescription(Env.GetBackbufferOutputDescription());
+            actorSpriteBatch.SetOutputDescription(Env.LeftEyeBackBuffer.OutputDescription);
             actorSpriteBatch.CreateResources(Env.Window.Device);
             actorSpriteBatch.SetTexture(0, Env.Window.Device, AssetManager.LoadTexture(actorAtlas.AtlasSheet, Env.Window.Device,false,false));
             foreach (var v in BareE.GeometryFactory.QuadVerts())
                 actorSpriteBatch.AddVertex(new Float3_Float2(v, new Vector2(v.X < 0 ? 0 : 1, v.Y < 0 ? 1 : 0)));
 
             actorSpriteBatch2 = new AdvSpriteBatchShader();
-            actorSpriteBatch2.SetOutputDescription(offscreenBuffer.OutputDescription);
+            actorSpriteBatch2.SetOutputDescription(Env.LeftEyeBackBuffer.OutputDescription);
             actorSpriteBatch2.CreateResources(Env.Window.Device);
             actorSpriteBatch2.SetTexture(0, Env.Window.Device, AssetManager.LoadTexture(actorAtlas.AtlasSheet, Env.Window.Device, false, false));
             foreach (var v in BareE.GeometryFactory.QuadVerts())
@@ -78,6 +78,7 @@ namespace BareE.Harness.Scenes
         bool AB = false;
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
+            offScreenColorTexturePtr = Env.Window.IGR.GetOrCreateImGuiBinding(Env.Window.Device.ResourceFactory, offscreenBuffer.ColorTargets[0].Target);
 
             Vector4 Tint1 = Color1;
             Vector4 Tint2 = Color2;

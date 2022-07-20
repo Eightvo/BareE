@@ -59,6 +59,7 @@ namespace BareE.Harness.Scenes
                 }
             });
             text = new TextShader(new Vector2(Env.Window.Resolution.Width, Env.Window.Resolution.Height));
+            text.SetOutputDescription(Env.LeftEyeBackBuffer.OutputDescription);
             text.CreateResources(Env.Window.Device);
             text.LoadFont(Env.Window.Device, ActiveFontName);
 

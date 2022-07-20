@@ -163,6 +163,9 @@ namespace BareE.GameDev
         public Framebuffer HUDBackBuffer { get; internal set; }
 
         [JsonIgnore]
+        public Framebuffer ScreenBackBuffer { get; internal set; }
+
+        [JsonIgnore]
         public BareE.Rendering.Camera WorldCamera { get; set; }
 
         [JsonIgnore]
@@ -262,9 +265,26 @@ namespace BareE.GameDev
             var vrPixelFormat = ret.IsVR ? ret.VRSettings.Context.LeftEyeFramebuffer.ColorTargets[0].Target.Format : ret.Window.Device.SwapchainFramebuffer.ColorTargets[0].Target.Format;
             var winPixelFormat = ret.Window.Device.SwapchainFramebuffer.ColorTargets[0].Target.Format;
 
-            ret.HUDBackBuffer = CreateFlatbuffer(ret.Window.Device, (uint)ret.Window.Resolution.Width, (uint)ret.Window.Resolution.Height, vrPixelFormat, TextureSampleCount.Count1);
-            ret.LeftEyeBackBuffer = Util.CreateFramebuffer(ret.Window.Device, (uint)ret.Window.Resolution.Width, (uint)ret.Window.Resolution.Height, vrPixelFormat, TextureSampleCount.Count1);
-            ret.RightEyeBackBuffer = Util.CreateFramebuffer(ret.Window.Device, (uint)ret.Window.Resolution.Width, (uint)ret.Window.Resolution.Height, vrPixelFormat, TextureSampleCount.Count1);
+            ret.HUDBackBuffer = CreateFlatbuffer(ret.Window.Device, (uint)ret.Window.Resolution.Width, (uint)ret.Window.Resolution.Height, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
+            ret.HUDBackBuffer.ColorTargets[0].Target.Name = "Hud BackBuffer Tex";
+            ret.HUDBackBuffer.Name = "HudBackbuffer";
+            ret.LeftEyeBackBuffer = Util.CreateFramebuffer(ret.Window.Device, (uint)ret.Window.Resolution.Width, (uint)ret.Window.Resolution.Height, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
+            ret.LeftEyeBackBuffer.ColorTargets[0].Target.Name = "LeftEye Backbuffer Tex";
+            ret.LeftEyeBackBuffer.Name = "LeftEye Backbuffer";
+            ret.RightEyeBackBuffer = Util.CreateFramebuffer(ret.Window.Device, (uint)ret.Window.Resolution.Width, (uint)ret.Window.Resolution.Height, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
+            ret.RightEyeBackBuffer.ColorTargets[0].Target.Name = "RightEye Backbuffer Tex";
+            ret.RightEyeBackBuffer.Name = "RightEye Backbuffer";
+            ret.ScreenBackBuffer = Util.CreateFramebuffer(ret.Window.Device, ret.Window.Device.ResourceFactory.CreateTexture(new TextureDescription((uint)ret.Window.Resolution.Width,
+                                       (uint)ret.Window.Resolution.Height,
+                                       1, 1, 1,
+                                       PixelFormat.R8_G8_B8_A8_UNorm,
+                                       TextureUsage.RenderTarget | TextureUsage.Sampled,
+                                       TextureType.Texture2D,
+                                       ret.PrefferedTextureCount)));
+            ret.ScreenBackBuffer.Name = "Screen Backbuffer";
+            ret.ScreenBackBuffer.ColorTargets[0].Target.Name = "Screen Backbuffer tex";
+
+            //ret.ScreenBackBuffer = Util.CreateFramebuffer(ret.Window.Device, (uint)ret.Window.Resolution.Width, (uint)ret.Window.Resolution.Height, vrPixelFormat, ret.PrefferedTextureCount);
 
             ret.WorldCamera = new LookAtQuaternionCamera(new Vector2(ret.Window.Resolution.Width, ret.Window.Resolution.Height));
 
@@ -290,8 +310,7 @@ namespace BareE.GameDev
                                        TextureType.Texture2D,
                                        sampleCount)
             );
-
-            FramebufferAttachmentDescription[] cltTrgs = new FramebufferAttachmentDescription[1]
+           FramebufferAttachmentDescription[] cltTrgs = new FramebufferAttachmentDescription[1]
             {
                 new FramebufferAttachmentDescription()
                 {
@@ -306,6 +325,7 @@ namespace BareE.GameDev
                 ColorTargets = cltTrgs
             };
             var offscreenBuffer = device.ResourceFactory.CreateFramebuffer(frameBuffDesc);
+
             return offscreenBuffer;
         }
     }

@@ -273,12 +273,12 @@ namespace BareE.Harness
         {
             if (v.isStatic)
             {
-                v.Model = ModelHelper.LoadStaticColoredMesh(v.Root, ModelHelper.DefaultSteps, Env.GetBackbufferOutputDescription(),
+                v.Model = ModelHelper.LoadStaticColoredMesh(v.Root, ModelHelper.DefaultSteps, Env.LeftEyeBackBuffer.OutputDescription,
                                                     Env.Window.Device, v.ClrMap);
             }
             else
             {
-                v.Model = ModelHelper.LoadColoredMesh(v.Root, ModelHelper.DefaultSteps, Env.GetBackbufferOutputDescription(),
+                v.Model = ModelHelper.LoadColoredMesh(v.Root, ModelHelper.DefaultSteps, Env.LeftEyeBackBuffer.OutputDescription,
                                                     Env.Window.Device, v.ClrMap);
             }
         }
@@ -288,14 +288,14 @@ namespace BareE.Harness
             if (v.isStatic)
             {
                 v.Model = ModelHelper.LoadStaticTexturedMesh(v.Root, ModelHelper.DefaultSteps,
-                                                       Env.GetBackbufferOutputDescription(),
+                                                       Env.LeftEyeBackBuffer.OutputDescription,
                                                        Env.Window.Device,
                                                        LoadTexture(v.Skin, Env.Window.Device));
             }
             else
             {
                 v.Model = ModelHelper.LoadTexturedMesh(v.Root, ModelHelper.DefaultSteps,
-                                                       Env.GetBackbufferOutputDescription(),
+                                                       Env.LeftEyeBackBuffer.OutputDescription,
                                                        Env.Window.Device,
                                                        LoadTexture(v.Skin, Env.Window.Device));
             }
@@ -318,14 +318,14 @@ namespace BareE.Harness
             if (v.isStatic)
             {
                 v.Model = ModelHelper.LoadStaticTexturedBumpMesh(v.Root, ModelHelper.DefaultSteps,
-                                                       Env.GetBackbufferOutputDescription(),
+                                                       Env.LeftEyeBackBuffer.OutputDescription,
                                                        Env.Window.Device,
                                                        textures.ToArray());
             }
             else
             {
                 v.Model = ModelHelper.LoadTexturedBumpMesh(v.Root, ModelHelper.DefaultSteps,
-                                                       Env.GetBackbufferOutputDescription(),
+                                                       Env.LeftEyeBackBuffer.OutputDescription,
                                                        Env.Window.Device,
                                                        textures.ToArray());
             }

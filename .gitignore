@@ -260,3 +260,5 @@ Session.vim
 launchSettings.json
 
 # Generated shaders
+/src/BareE.Harness/Assets/Fonts/Bitmap/Neuton/Neuton_aa.png
+/src/BareE.Harness/Assets/Fonts/Bitmap/Neuton/Neuton_Wht.png

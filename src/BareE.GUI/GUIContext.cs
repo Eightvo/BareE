@@ -180,6 +180,7 @@ namespace BareE.GUI
 
 
             var uv = StyleAtlas[$"R2Frame"];
+            
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Left, uv.Bottom, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Top, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Bottom, 0) });
@@ -207,9 +208,9 @@ namespace BareE.GUI
 
             DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(250, 250, 200, 200), 0, 32, "Cookie", ((Vector4)Color.Black), true);
 
-            DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(550, 250, 200, 200), 0, 16, "Neuton", ((Vector4)Color.Black), true);
+            DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(550, 250, 200, 200), 0, 16, "Neuton", ((Vector4)Color.Blue), true);
 
-            DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(750, 250, 200, 200), 0, 10, "Neuton", ((Vector4)Color.Black), true);
+            DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(750, 250, 200, 200), 0, 10, "Neuton", ((Vector4)Color.Red), true);
 
             GuiShader.Update(env.Window.Device);
             
@@ -547,6 +548,7 @@ namespace BareE.GUI
                 float offsetX = glyphData.BearingX*resizeRatioV;
                 float offsetY = glyphData.Drop*resizeRatioV;
                 float glyphWidth = glyphData.Width * resizeRatioV;
+                float glyphHeight = glyphData.Height* resizeRatioV;
                 if (penX+offsetX+glyphWidth>textArea.Right)
                 {
                     penX = textArea.Left;
@@ -555,13 +557,17 @@ namespace BareE.GUI
                     continue;
                 }
                 var uv = FontAtlas[$"{font}.{currCh}"];
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(penX + offsetX             , penY - offsetY , zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(penX + offsetX + glyphWidth, penY - offsetY + trueLineHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(penX + offsetX + glyphWidth, penY - offsetY , zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
 
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(penX + offsetX             , penY - offsetY , zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(penX + offsetX             , penY - offsetY + trueLineHeight, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(penX + offsetX + glyphWidth, penY - offsetY + trueLineHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
+                var trueX = penX + offsetX;
+                var trueY = penY - offsetY;
+
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX             , trueY , zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY , zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
+
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX             , trueY , zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX             , trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
                 i += 1;
                 penX += glyphData.Advance * resizeRatioV;
             }

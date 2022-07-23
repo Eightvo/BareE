@@ -1,4 +1,8 @@
 ﻿{
+	//The Filename specifies the Reference Name (except when overridden)
+	//The StyleAtlas is a sprite atlas that defines a NineFrame, VerticalThreeFrame, HorizontalThreeFrame, and Glyph.
+	StyleAtlas:{Src:"BareE.GUI.Assets.Styles.MinGui.MinGui.Atlas"}
+
 	CloseButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/close.png"},
 	CollapseButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/Collapse.png"},
 	ExpandButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/Expand.png"},

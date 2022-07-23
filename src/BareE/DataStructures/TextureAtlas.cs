@@ -22,15 +22,35 @@ namespace BareE.DataStructures
             public Image src;
             public Veldrid.Rectangle PageRect;
         }
-
+        public bool AutoPad { get; set; } = true;
         private bool _dirty;
         public bool Dirty { get { return _dirty; } }
         public Image<Rgba32> AtlasSheet;
-        private Dictionary<String, AtlasPage> _Pages = new Dictionary<string, AtlasPage>();
+        private Dictionary<String, AtlasPage> _Pages = new Dictionary<string, AtlasPage>(StringComparer.CurrentCultureIgnoreCase);
 
         public IEnumerable<String> Pages
         {
             get { return _Pages.Keys; }
+        }
+
+        public void Merge(String name, Image<Rgba32> image, Rectangle subRec)
+        {
+            var tSpriteModel = new SpriteModel()
+            {
+                Name = name,
+                SrcRect = subRec
+            };
+            Merge(name, tSpriteModel, image);
+        }
+        public void Merge(String name, Image<Rgba32> image)
+        {
+            var tSpriteModel = new SpriteModel()
+            {
+                Name = name,
+                SrcRect = new Rectangle(0, 0, image.Width, image.Height)
+
+            };
+            Merge(name, tSpriteModel, image);
         }
 
         public void Merge(String name, SpriteModel sprite, Image<Rgba32> image, float scale=1.0f)
@@ -42,13 +62,18 @@ namespace BareE.DataStructures
 
             newPage.src = image;
 
+
+
             if (!_Pages.ContainsKey(name))
                 _Pages.Add(name, newPage);
             else
                 _Pages[name] = newPage;
+
             _dirty = true;
 
         }
+
+
         public void Merge(String name, SpriteModel sprite, String TextureSrc, float scale=1.0f)
         {
             Merge(name, sprite,GetTextureSrcImage(sprite, TextureSrc),scale);
@@ -84,7 +109,7 @@ namespace BareE.DataStructures
             var maxW = 0;
             foreach (var v in _Pages)
             {
-                var w = v.Value.src.Width;
+                var w = (v.Value.src.Width+2);
                 if (w > maxW)
                     maxW = w;
             }
@@ -94,7 +119,7 @@ namespace BareE.DataStructures
             SpatialPartion layout = new SpatialPartion(new Veldrid.Rectangle(0, 0, maxWidth == 0 ? int.MaxValue : maxWidth, int.MaxValue));
             foreach (var v in _Pages)
             {
-                v.Value.PageRect = layout.AddRectangle(new System.Drawing.Size(v.Value.src.Width, v.Value.src.Height));
+                v.Value.PageRect = layout.AddRectangle(new System.Drawing.Size(v.Value.src.Width+1, v.Value.src.Height+1));
             }
             layout.Crop();
             Image<Rgba32> newImage = new Image<Rgba32>((int)MathHelper.NxtPowerOfTwo(layout.Space.Width), (int)MathHelper.NxtPowerOfTwo(layout.Space.Height));
@@ -153,6 +178,25 @@ namespace BareE.DataStructures
 
                 return new RectangleF(0, 0, 0, 0);
             }
+        }
+        public System.Numerics.Vector2 EstimateOriginalSize(String query)
+        {
+            return EstimateOriginalSize(this[query]);
+        }
+        public System.Numerics.Vector2 EstimateOriginalSize(RectangleF uvBox)
+        {
+            return EstimateOriginalSize((float)uvBox.Width, (float)uvBox.Height);
+        }
+
+        public System.Numerics.Vector2 EstimateOriginalSize(System.Numerics.Vector2 dimentions)
+        {
+            return EstimateOriginalSize(dimentions.X, dimentions.Y);
+        }
+        public System.Numerics.Vector2 EstimateOriginalSize(float uvWidth, float uvHeight)
+        {
+            var ogWidth = uvWidth*(float)AtlasSheet.Width;
+            var ogHeight = uvHeight*(float)AtlasSheet.Height;
+            return new System.Numerics.Vector2(ogWidth, ogHeight);
         }
 
         public class SpriteModel

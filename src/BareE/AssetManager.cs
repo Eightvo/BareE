@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SixLabors.ImageSharp.Processing;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -45,6 +47,9 @@ namespace BareE
             _assetRepositories.Clear();
             _assetRepositories.Add(Environment.CurrentDirectory);
         }
+
+
+
 
         /// <summary>
         /// Return a Veldird Device Texture from asset
@@ -221,6 +226,35 @@ namespace BareE
                 }
             }
             throw new FileNotFoundException($"File not found: {name}", name);
+        }
+
+        public static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> GetImage(string name)
+        {
+            using (var strm = AssetManager.FindFileStream(name))
+            {
+                SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(strm);
+                return img;
+            }
+        }
+        public static SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> GetImage(string name, Rectangle srcRect)
+        {
+            using (var strm = AssetManager.FindFileStream(name))
+            {
+                SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(strm);
+                
+                if (srcRect.Left <= 0 && srcRect.Width >= img.Width && srcRect.Bottom <= 0 && srcRect.Top >= img.Height)
+                    return img;
+                var cropRect = new SixLabors.ImageSharp.Rectangle(Math.Max(0, srcRect.X),
+                                                          Math.Max(0, srcRect.Y),
+                                                              srcRect.Width,
+                                                              srcRect.Height);
+
+                img.Mutate(x =>
+                {
+
+                    x.Crop(cropRect);
+                }); return img;
+            }
         }
 
         internal static IEnumerable<String> GetAssetsByPath(string currDirectory)

@@ -1,0 +1,41 @@
+﻿[
+{
+	"Name":"NineFrame",
+	"SrcRect":"0,0,179,93",
+	"Children":[
+		{"Name":"TL","SrcRect":"  0, 0,16,16"},
+		{"Name":"TM","SrcRect":" 16, 0,147,16"},
+		{"Name":"TR","SrcRect":"163, 0,16,16"},
+		
+		{"Name":"ML","SrcRect":"  0, 16,16,61"},
+		{"Name":"MM","SrcRect":" 16, 16,147,61"},
+		{"Name":"MR","SrcRect":"163, 16,16,61"},
+		{"Name":"BL","SrcRect":"  0, 77,16,16"},
+		{"Name":"BM","SrcRect":" 16, 77,147,16"},
+		{"Name":"BR","SrcRect":"163, 77,16,16"}
+	]
+
+},
+{
+	"Name":"HorizontalThreeFrame",
+	"SrcRect":"0,0,179,93",
+	"Children":[
+		{"Name":"L","SrcRect":" 0,0,16,93"},
+		{"Name":"M","SrcRect":"16,0,147,93"},
+		{"Name":"R","SrcRect":"163,0,16,93"}
+	]
+},
+{
+	"Name":"VerticalThreeFrame",
+	"SrcRect":"0,0,179,93",
+	"Children":[
+		{"Name":"T","SrcRect":"0, 0,179,16"},
+		{"Name":"M","SrcRect":"0,16,179,61"},
+		{"Name":"B","SrcRect":"0,77,179,16"}
+	]
+},
+{
+	"Name":"Glyph",
+	"SrcRect":"0,0,18,18"
+}
+]

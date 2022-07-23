@@ -33,7 +33,7 @@ namespace BareE.GUI
 
         SpriteAtlas FontAtlas = new SpriteAtlas();
         Dictionary<String, FontData> FontLib = new Dictionary<string, FontData>(StringComparer.CurrentCultureIgnoreCase);
-        
+
         SpriteAtlas StyleAtlas = new SpriteAtlas();
 
         Dictionary<String, Dictionary<String, SpriteModel>> SpriteModels = new Dictionary<string, Dictionary<string, SpriteModel>>(StringComparer.CurrentCultureIgnoreCase);
@@ -49,17 +49,20 @@ namespace BareE.GUI
         private Vector2 _nextResolution;
         private bool _setNextResolution = false;
 
+        public bool UseSystemMouseCursor { get; set; } = false;
+
+        private int maxGuiDepth = 100;
         Camera guiCam;
 
 
         TextureSampleCount GuiBufferTextureCount = TextureSampleCount.Count1;
 
         public StyleTree Styles { get; set; }
-        Dictionary<String, GuiWidgetBase> Widgets { get; set; }=new Dictionary<String, GuiWidgetBase>(StringComparer.InvariantCultureIgnoreCase);
+        Dictionary<String, GuiWidgetBase> Widgets { get; set; } = new Dictionary<String, GuiWidgetBase>(StringComparer.InvariantCultureIgnoreCase);
         public Size Resolution { get { return new Size(Canvas.Width, Canvas.Height); } }
 
         public Image Canvas;
-        
+
         public GUIContext(Size size)
         {
             Canvas = new SixLabors.ImageSharp.Image<Rgba32>(size.Width, size.Height);
@@ -69,7 +72,7 @@ namespace BareE.GUI
         internal void Load(Instant instant, GameState state, GameEnvironment env)
         {
 
-            guiCam = new OrthographicCamera(Resolution.Width, Resolution.Height, 100);
+            guiCam = new OrthographicCamera(Resolution.Width, Resolution.Height, maxGuiDepth);
             guiCam.Move(new Vector3(Resolution.Width / 2.0f, Resolution.Height / 2.0f, 0.0f));
 
             Veldrid.RenderDoc.Load(out env.rd);
@@ -79,23 +82,6 @@ namespace BareE.GUI
             GUICanvas.SetOutputDescription(env.HUDBackBuffer.OutputDescription);
             GUICanvas.Flip = true;
             GUICanvas.CreateResources(env.Window.Device);
-
-            //   cTex = env.Window.Device.ResourceFactory.CreateTexture(
-            //       new TextureDescription((uint)Resolution.Width,
-            //                              (uint)Resolution.Height,
-            //                              1, 1, 1,
-            //                              PixelFormat.R8_G8_B8_A8_UNorm,
-            //                              TextureUsage.Staging,
-            //                              TextureType.Texture2D,
-            //                              TextureSampleCount.Count1)
-            //   );
-
-            //fontCollection = new SixLabors.Fonts.FontCollection();
-            //fontFam = fontCollection.Add(@"C:\AA_Main\Git\Eightvo\BareE\src\BareE.GUI\Assets\Fonts\Roboto-Regular.ttf");
-            //font = fontFam.CreateFont(12, SixLabors.Fonts.FontStyle.Regular);
-            //  font = SystemFonts.Get("Arial").CreateFont(39);
-
-            //  opts = new SixLabors.Fonts.TextOptions(font);
             resolvedTexture = env.Window.Device.ResourceFactory.CreateTexture(
                 new TextureDescription((uint)Resolution.Width, (uint)Resolution.Height,
                                        1, 1, 1,
@@ -111,13 +97,43 @@ namespace BareE.GUI
             GUICanvas.Update(env.Window.Device);
 
             StyleAtlas = new SpriteAtlas();
-            var minGuiSpriteModels = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile(@"BareE.GUI.Assets.Styles.MinGui.Atlas"));
-            StyleAtlas.Merge("squareFrame", minGuiSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.squareFrame.png");
-            StyleAtlas.Merge("R2Frame", minGuiSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.R2Frame.png");
-            StyleAtlas.Merge("CloseIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.close.png");
-            StyleAtlas.Merge("ExpandIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.Expand.png");
-            StyleAtlas.Merge("CheckBoxEmpty", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.OvalEmpty.png");
-            StyleAtlas.Merge("CheckBoxChecked", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.Oval_Filled.png");
+            var minGuiSpriteModels = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile(@"BareE.GUI.Assets.Styles.MinGui.MinGui.Atlas"));
+            StyleAtlas.Merge("MinGui:squareFrame", minGuiSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.MinGui.squareFrame.png");
+            StyleAtlas.Merge("MinGui:R2Frame", minGuiSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.MinGui.R2Frame.png");
+            StyleAtlas.Merge("MinGui:R2FrameV", minGuiSpriteModels["VerticalThreeFrame"], @"BareE.GUI.Assets.Styles.MinGui.R2Frame.png");
+            StyleAtlas.Merge("MinGui:R2FrameH", minGuiSpriteModels["HorizontalThreeFrame"], @"BareE.GUI.Assets.Styles.MinGui.R2Frame.png");
+            StyleAtlas.Merge("MinGui:CloseIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.close.png");
+            StyleAtlas.Merge("MinGui:ExpandIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Expand.png");
+            StyleAtlas.Merge("MinGui:CollapseIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Collapse.png");
+            StyleAtlas.Merge("MinGui:CheckBoxEmpty", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.OvalEmpty.png");
+            StyleAtlas.Merge("MinGui:CheckBoxChecked", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Oval_Filled.png");
+            StyleAtlas.Merge("MinGui:ResizeIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.resize.png");
+            StyleAtlas.Merge("MinGui:ArrowRight", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Right.png");
+            StyleAtlas.Merge("MinGui:ArrowDown", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Down.png");
+            StyleAtlas.Merge("MinGui:ArrowLeft", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Left.png");
+            StyleAtlas.Merge("MinGui:ArrowUp", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Up.png");
+
+
+            var SimpleRPGSpriteModels = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile(@"BareE.GUI.Assets.Styles.SimpleRPG.SimpleRpg.Atlas"));
+            StyleAtlas.Merge("SimpleRPG:GemFrame", SimpleRPGSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.SimpleRPG.GemFrame.png");
+            StyleAtlas.Merge("SimpleRPG:BasicFrame"      , SimpleRPGSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png");
+            StyleAtlas.Merge("SimpleRPG:BasicFrameV", SimpleRPGSpriteModels["VerticalThreeFrame"], @"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png");
+            StyleAtlas.Merge("SimpleRPG:BasicFrameH", SimpleRPGSpriteModels["HorizontalThreeFrame"], @"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png");
+            StyleAtlas.Merge("SimpleRPG:CloseIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.CloseIcon.png");
+            StyleAtlas.Merge("SimpleRPG:ExpandIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ExpandIcon.png");
+            StyleAtlas.Merge("SimpleRPG:CollapseIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.CollapseIcon.png");
+//            StyleAtlas.Merge("SimpleRPG.CheckBoxEmpty" , SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.OvalEmpty.png");
+//           StyleAtlas.Merge("SimpleRPG.CheckBoxChecked", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.Oval_Filled.png");
+            StyleAtlas.Merge("SimpleRPG:ResizeIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ResizeIcon.png");
+            StyleAtlas.Merge("SimpleRPG:ArrowRight", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ArrowRight.png");
+            StyleAtlas.Merge("SimpleRPG:ArrowDown", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ArrowDown.png");
+            StyleAtlas.Merge("SimpleRPG:ArrowLeft", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ArrowLeft.png");
+            StyleAtlas.Merge("SimpleRPG:ArrowUp", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ArrowUp.png");
+            StyleAtlas.Merge("SimpleRPG:GemIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.GemIcon.png");
+
+            StyleAtlas.Merge("KennyGUI:GoldSword", AssetManager.GetImage(@"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", new Veldrid.Rectangle(198, 450, 15, 15)));
+            StyleAtlas.Merge("KennyGUI:SilverSword", AssetManager.GetImage(@"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", new Veldrid.Rectangle(180, 450, 15, 15)));
+
             StyleAtlas.Build(0, null);
 
 
@@ -152,10 +168,14 @@ namespace BareE.GUI
             GuiShader.Update(env.Window.Device);
 
         }
-
+        
         internal void Update(Instant instant, GameState state, GameEnvironment env)
         {
 
+            var mPos = ImGuiNET.ImGui.GetIO().MousePos;
+            //ImGuiNET.ImGui.GetIO().
+            bool showCursor = (this.UseSystemMouseCursor | !(ImGuiNET.ImGui.GetIO().WantCaptureMouse));
+            Veldrid.Sdl2.Sdl2Native.SDL_ShowCursor(showCursor ? 0 : 1);
             if (_setNextResolution)
             {
                 Canvas = new SixLabors.ImageSharp.Image<Rgba32>((int)_nextResolution.X, (int)_nextResolution.Y);
@@ -179,8 +199,60 @@ namespace BareE.GUI
             GuiShader.Clear();
 
 
-            var uv = StyleAtlas[$"R2Frame"];
-            
+            var uv = StyleAtlas[$"MinGui:R2Frame"];
+
+            DrawNineFrame($"MinGui:squareFrame", new RectangleF(100, 298, 200, 32), -0.01f, ((Vector4)Color.CornflowerBlue));
+            DrawString("MinGui:Title", new RectangleF(115, 303, 190, 20), -0.01f, 16, "Neuton", (Vector4)Color.Black);
+            DrawNineFrame($"MinGui:R2Frame", new RectangleF(100, 116, 200, 200), 1, ((Vector4)Color.AntiqueWhite));
+            DrawGlyph($"MinGui:CollapseIcon", new RectangleF(242, 305, 16, 16), -0.01f, ((Vector4)Color.Black));
+            DrawGlyph($"MinGui:ExpandIcon", new RectangleF(258, 305, 16, 16), -0.01f, ((Vector4)Color.Black));
+            DrawGlyph($"MinGui:CloseIcon", new RectangleF(274, 305, 16, 16), -0.01f, ((Vector4)Color.Black));
+
+            DrawGlyph($"MinGui:R2Frame", new RectangleF(280, 160, 20, 20), 0, ((Vector4)Color.White));
+            DrawGlyph($"MinGui:ArrowUp", new RectangleF(280, 280, 20, 20), 0, ((Vector4)Color.Black));
+            DrawGlyph($"MinGui:ArrowDown", new RectangleF(280, 130, 20, 20), 0, ((Vector4)Color.Black));
+
+            DrawGlyph($"MinGui:R2Frame", new RectangleF(180, 116, 20, 20), 0, ((Vector4)Color.White));
+            DrawGlyph($"MinGui:ArrowLeft", new RectangleF(108, 116, 20, 20), 0, ((Vector4)Color.Black));
+            DrawGlyph($"MinGui:ArrowRight", new RectangleF(268, 116, 20, 20), 0, ((Vector4)Color.Black));
+
+
+
+
+
+            DrawNineFrame($"SimpleRpg:GemFrame", new RectangleF(600, 298, 200, 32), -0.01f, ((Vector4)Color.White));
+            DrawString("SimpleRpg:Title", new RectangleF(615, 303, 190, 20), -0.01f, 16, "Neuton", (Vector4)Color.White);
+            DrawNineFrame($"SimpleRpg:GemFrame", new RectangleF(600, 116, 200, 200), 1, ((Vector4)Color.AntiqueWhite));
+            DrawGlyph($"SimpleRpg:CollapseIcon", new RectangleF(742, 305, 16, 16), -0.01f, ((Vector4)Color.White));
+            DrawGlyph($"SimpleRpg:ExpandIcon", new RectangleF(758, 305, 16, 16), -0.01f, ((Vector4)Color.White));
+            DrawGlyph($"SimpleRpg:CloseIcon", new RectangleF(774, 305, 16, 16), -0.01f, ((Vector4)Color.White));
+
+            DrawGlyph($"SimpleRpg:GemIcon", new RectangleF(780, 160, 20, 20), 0, ((Vector4)Color.White));
+            DrawGlyph($"SimpleRpg:ArrowUp", new RectangleF(780, 280, 20, 20), 0, ((Vector4)Color.White));
+            DrawGlyph($"SimpleRpg:ArrowDown", new RectangleF(780, 130, 20, 20), 0, ((Vector4)Color.White));
+
+            DrawGlyph($"SimpleRpg:GemIcon", new RectangleF(680, 116, 20, 20), 0, ((Vector4)Color.White));
+            DrawGlyph($"SimpleRpg:ArrowLeft", new RectangleF(608, 116, 20, 20), 0, ((Vector4)Color.White));
+            DrawGlyph($"SimpleRpg:ArrowRight", new RectangleF(768, 116, 20, 20), 0, ((Vector4)Color.White));
+
+            if (showCursor)
+            {
+                var c = ImGuiNET.ImGui.GetIO().MouseDown;
+                //var cursorStyle = (ImGuiNET.ImGui.GetIO().MouseDown) ? $"KennyGUI:GoldSword" : $"KennyGUI:SilverSword";
+                var cursorOffSet = StyleAtlas.EstimateOriginalSize($"KennyGUI:GoldSword");
+                
+                DrawGlyph($"KennyGUI:GoldSword", new RectangleF(mPos.X, Resolution.Height - (mPos.Y + cursorOffSet.Y), cursorOffSet.X, cursorOffSet.Y), -maxGuiDepth, ((Vector4)Color.White));
+            }
+
+
+
+        
+
+                        //DrawGlyph($"SimpleRpg:ResizeIcon", new RectangleF(780, 100, 20, 20), 0, ((Vector4)Color.Black));
+
+            //DrawNineFrame($"squareFrame", new RectangleF(100, 600, 200, 200), -1, ((Vector4)Color.Blue));
+
+            /*
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Left, uv.Bottom, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Top, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Bottom, 0) });
@@ -188,11 +260,11 @@ namespace BareE.GUI
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Left, uv.Bottom, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 250, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Left, uv.Top, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Top, 0) });
+            */
 
 
 
-
-
+            /*
             uv = FontAtlas[$"Cookie.{(((int)'A').ToString())}"];
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0),     Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Left , uv.Bottom, 1)});
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Right, uv.Top   , 1)});
@@ -201,7 +273,7 @@ namespace BareE.GUI
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0),     Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Left , uv.Bottom, 1)});
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 250, 0),   Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Left , uv.Top   , 1)});
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Right, uv.Top   , 1)});
-
+            */
 
 
 
@@ -213,7 +285,7 @@ namespace BareE.GUI
             DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(750, 250, 200, 200), 0, 10, "Neuton", ((Vector4)Color.Red), true);
 
             GuiShader.Update(env.Window.Device);
-            
+
 
             //Pull Canvas from card
             /*
@@ -239,51 +311,56 @@ namespace BareE.GUI
             //AssetManager.UpdateTextureData(env.Window.Device, cTex, Canvas);
 
         }
+
+
+
+
+
         /*
-        Func()
-        {
-            if (this._screenshotQueued)
-            {
-                this._screenshotQueued = false;
+Func()
+{
+   if (this._screenshotQueued)
+   {
+       this._screenshotQueued = false;
 
-                TextureDescription desc = TextureDescription.Texture2D(
-                    this.MainFramebufferTexture.Width,
-                    this.MainFramebufferTexture.Height,
-                    this.MainFramebufferTexture.MipLevels,
-                    this.MainFramebufferTexture.ArrayLayers,
-                    this.MainFramebufferTexture.Format,
-                    TextureUsage.Staging
-                );
+       TextureDescription desc = TextureDescription.Texture2D(
+           this.MainFramebufferTexture.Width,
+           this.MainFramebufferTexture.Height,
+           this.MainFramebufferTexture.MipLevels,
+           this.MainFramebufferTexture.ArrayLayers,
+           this.MainFramebufferTexture.Format,
+           TextureUsage.Staging
+       );
 
-                Texture? tex = this.ResourceFactory.CreateTexture(desc);
+       Texture? tex = this.ResourceFactory.CreateTexture(desc);
 
-                this.CommandList.Begin();
-                this.CommandList.CopyTexture(this.MainFramebufferTexture, tex);
-                this.CommandList.End();
-                this.GraphicsDevice.SubmitCommands(this.CommandList);
+       this.CommandList.Begin();
+       this.CommandList.CopyTexture(this.MainFramebufferTexture, tex);
+       this.CommandList.End();
+       this.GraphicsDevice.SubmitCommands(this.CommandList);
 
-                MappedResource mapped = this.GraphicsDevice.Map(tex, MapMode.Read);
+       MappedResource mapped = this.GraphicsDevice.Map(tex, MapMode.Read);
 
-                byte[] bytes = new byte[mapped.SizeInBytes];
-                Marshal.Copy(mapped.Data, bytes, 0, (int)mapped.SizeInBytes);
+       byte[] bytes = new byte[mapped.SizeInBytes];
+       Marshal.Copy(mapped.Data, bytes, 0, (int)mapped.SizeInBytes);
 
-                Image img = Image.LoadPixelData<Rgba32>(bytes, (int)tex.Width, (int)tex.Height);
-                this.GraphicsDevice.Unmap(tex);
+       Image img = Image.LoadPixelData<Rgba32>(bytes, (int)tex.Width, (int)tex.Height);
+       this.GraphicsDevice.Unmap(tex);
 
-                img = img.CloneAs<Rgb24>();
+       img = img.CloneAs<Rgb24>();
 
-                if (!GraphicsDevice.IsUvOriginTopLeft)
-                {
-                    img.Mutate(x => x.Flip(FlipMode.Vertical));
-                }
+       if (!GraphicsDevice.IsUvOriginTopLeft)
+       {
+           img.Mutate(x => x.Flip(FlipMode.Vertical));
+       }
 
-                this.InvokeScreenshotTaken(img);
+       this.InvokeScreenshotTaken(img);
 
-                tex.Dispose();
-            }
-            
-    }
-        */
+       tex.Dispose();
+   }
+
+}
+*/
         ~GUIContext()
         {
             Canvas.Dispose();
@@ -334,8 +411,8 @@ namespace BareE.GUI
         {
             if (String.IsNullOrEmpty(fontName))
                 fontName = System.IO.Path.GetFileNameWithoutExtension(fontFile);
-            if (fontName.LastIndexOf(".")!= fontName.IndexOf("."))
-                fontName=fontName.Substring(fontName.LastIndexOf(".")+1);
+            if (fontName.LastIndexOf(".") != fontName.IndexOf("."))
+                fontName = fontName.Substring(fontName.LastIndexOf(".") + 1);
             Dictionary<string, SpriteModel> sprites = new Dictionary<string, SpriteModel>();
             FontData data = new FontData();
             Image<Rgba32> bitmap = null;
@@ -391,11 +468,11 @@ namespace BareE.GUI
 
         public void LoadResources(AttributeCollection refs)
         {
-            foreach(var k in refs.Attributes)
+            foreach (var k in refs.Attributes)
             {
                 var def = (AttributeCollection)k.Value;
-                if(def==null) continue;
-                switch(def.DataAs<String>("Type").Trim().ToLower())
+                if (def == null) continue;
+                switch (def.DataAs<String>("Type").Trim().ToLower())
                 {
                     case "atlas":
                         {
@@ -412,7 +489,7 @@ namespace BareE.GUI
                     case "image":
                         {
                             var src = def.DataAs<String>("src");
-                             Image<Rgba32> img = SixLabors.ImageSharp.Image<Rgba32>.Load<Rgba32>(src);
+                            Image<Rgba32> img = SixLabors.ImageSharp.Image<Rgba32>.Load<Rgba32>(src);
                             if (def["Region"] != null)
                             {
                                 Vector4 region;
@@ -431,7 +508,7 @@ namespace BareE.GUI
                                     img.Mutate(X => X.Crop(new SixLabors.ImageSharp.Rectangle((int)region.X, (int)region.Y, (int)region.W, (int)region.Z)));
                             }
 
-                                if (!Images.ContainsKey(k.AttributeName))
+                            if (!Images.ContainsKey(k.AttributeName))
                                 Images.Add(k.AttributeName, img);
                             else Images[k.AttributeName] = img;
                         }
@@ -439,11 +516,11 @@ namespace BareE.GUI
                     case "font":
                         {
                             var src = def.DataAs<String>("src");
-                           // FontDescription desc;
-                           // this.fontCollection.Add(src, out desc);
-                           // if (!Fonts.ContainsKey(k.AttributeName))
-                           //     Fonts.Add(k.AttributeName, desc);
-                           // else Fonts[k.AttributeName] = desc;
+                            // FontDescription desc;
+                            // this.fontCollection.Add(src, out desc);
+                            // if (!Fonts.ContainsKey(k.AttributeName))
+                            //     Fonts.Add(k.AttributeName, desc);
+                            // else Fonts[k.AttributeName] = desc;
 
                         }
                         break;
@@ -478,14 +555,14 @@ namespace BareE.GUI
             cmds.SetFramebuffer(GuiBuffer);
             cmds.ClearColorTarget(0, RgbaFloat.Clear);
             cmds.ClearDepthStencil(0);
-            
+
             GuiShader.Render(GuiBuffer, cmds, null, guiCam.CamMatrix, Matrix4x4.Identity);
 
-            
+
             //cmds.ClearColorTarget(0, RgbaFloat.Green);
             //cmds.ClearDepthStencil(0);
             //cmds.ResolveTexture(, resolvedTexture);
-            cmds.SetFramebuffer(outbuffer); 
+            cmds.SetFramebuffer(outbuffer);
             GUICanvas.Render(outbuffer, cmds, null, Matrix4x4.Identity, Matrix4x4.Identity);
             //cmds.SetFramebuffer(GuiBuffer);
 
@@ -514,7 +591,7 @@ namespace BareE.GUI
         /// <param name="style">Name of Font style</param>
         /// <param namne="AutoWrap">Automatically wrap text that doesn't fit</param>
         /// <exception cref="Exception"></exception>
-        public void DrawString(String str, RectangleF textArea, float zIndex,float textSize, String font, Vector4 color, bool AutoWrap=true)
+        public void DrawString(String str, RectangleF textArea, float zIndex, float textSize, String font, Vector4 color, bool AutoWrap = true)
         {
             if (!FontLib.ContainsKey(font))
                 throw new Exception($"No font {font}");
@@ -527,15 +604,15 @@ namespace BareE.GUI
             float penY = textArea.Bottom - trueLineHeight;
 
             int i = 0;
-            while(i<str.Length)
+            while (i < str.Length)
             {
                 if (penY + trueLineHeight < textArea.Top)
                     break;
                 var currCh = (int)str[i];
                 if (!fontData.Glyphs.ContainsKey(currCh))
                 {
-                    penX += (fontData.SpaceWidth*resizeRatioV);
-                    if (penX>textArea.Right)
+                    penX += (fontData.SpaceWidth * resizeRatioV);
+                    if (penX > textArea.Right)
                     {
                         penX = textArea.Left;
                         penY = penY - (trueLineHeight * 1.25f);
@@ -545,11 +622,11 @@ namespace BareE.GUI
                     continue;
                 }
                 var glyphData = fontData.Glyphs[currCh];
-                float offsetX = glyphData.BearingX*resizeRatioV;
-                float offsetY = glyphData.Drop*resizeRatioV;
+                float offsetX = glyphData.BearingX * resizeRatioV;
+                float offsetY = glyphData.Drop * resizeRatioV;
                 float glyphWidth = glyphData.Width * resizeRatioV;
-                float glyphHeight = glyphData.Height* resizeRatioV;
-                if (penX+offsetX+glyphWidth>textArea.Right)
+                float glyphHeight = glyphData.Height * resizeRatioV;
+                if (penX + offsetX + glyphWidth > textArea.Right)
                 {
                     penX = textArea.Left;
                     penY = penY - (trueLineHeight * 1.25f);
@@ -561,17 +638,276 @@ namespace BareE.GUI
                 var trueX = penX + offsetX;
                 var trueY = penY - offsetY;
 
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX             , trueY , zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
                 GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY , zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
 
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX             , trueY , zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX             , trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
                 GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
                 i += 1;
                 penX += glyphData.Advance * resizeRatioV;
             }
         }
 
+        private void DrawNineFrame(string StyleName, RectangleF footprint, float zIndex)
+        {
+            DrawNineFrame(StyleName, footprint, zIndex, Vector4.One);
+        }
+        private void DrawNineFrame(string StyleName, RectangleF footprint, float zIndex, Vector4 color)
+        {
+            var Uv_TLCorner = StyleAtlas[$"{StyleName}.TL"];
+            var Sz_TLCorner = StyleAtlas.EstimateOriginalSize(Uv_TLCorner);
+
+            var Uv_TFill = StyleAtlas[$"{StyleName}.TM"];
+
+            var Uv_TRCorner = StyleAtlas[$"{StyleName}.TR"];
+            var Sz_TRCorner = StyleAtlas.EstimateOriginalSize(Uv_TRCorner);
+
+
+            var Uv_MLFill = StyleAtlas[$"{StyleName}.ML"];
+            var Uv_MMFill = StyleAtlas[$"{StyleName}.MM"];
+            var Uv_MRFill = StyleAtlas[$"{StyleName}.MR"];
+
+            var Uv_BLCorner = StyleAtlas[$"{StyleName}.BL"];
+            var Sz_BLCorner = StyleAtlas.EstimateOriginalSize(Uv_BLCorner);
+
+            var Uv_BFill = StyleAtlas[$"{StyleName}.BM"];
+
+            var Uv_BRCorner = StyleAtlas[$"{StyleName}.BR"];
+            var Sz_BRCorner = StyleAtlas.EstimateOriginalSize(Uv_BRCorner);
+
+            if (footprint.Height < Sz_TLCorner.Y + Sz_BLCorner.Y)
+            {
+                var newTLCornerHeight = Sz_TLCorner.Y * (Sz_TLCorner.Y / (Sz_TLCorner.Y + Sz_BLCorner.Y));
+                var newBLCornerHeight = Sz_BLCorner.Y * (Sz_BLCorner.Y / (Sz_TLCorner.Y + Sz_BLCorner.Y));
+                Sz_TLCorner.Y = newTLCornerHeight;
+                Sz_BLCorner.X = newBLCornerHeight;
+            }
+
+            if (footprint.Height < Sz_TRCorner.Y + Sz_BRCorner.Y)
+            {
+                var newTRCornerHeight = Sz_TRCorner.Y * (Sz_TRCorner.Y / (Sz_TRCorner.Y + Sz_BRCorner.Y));
+                var newBRCornerHeight = Sz_BRCorner.Y * (Sz_BRCorner.Y / (Sz_TRCorner.Y + Sz_BRCorner.Y));
+                Sz_TLCorner.Y = newTRCornerHeight;
+                Sz_BLCorner.X = newBRCornerHeight;
+            }
+
+            if (footprint.Width < Sz_TLCorner.X + Sz_TRCorner.X)
+            {
+                float d = Sz_TLCorner.X + Sz_TRCorner.X;
+                Sz_TLCorner.X = Sz_TLCorner.X * (Sz_TLCorner.X / d);
+                Sz_TRCorner.X = Sz_TRCorner.X * (Sz_TRCorner.X / d);
+            }
+
+            if (footprint.Width < Sz_BLCorner.X + Sz_BRCorner.X)
+            {
+                float d = Sz_BLCorner.X + Sz_BRCorner.X;
+                Sz_BLCorner.X = Sz_BLCorner.X * (Sz_BLCorner.X / d);
+                Sz_BRCorner.X = Sz_BRCorner.X * (Sz_BRCorner.X / d);
+            }
+
+
+
+            //Draw Top Left Corner
+            {
+                var closeX = footprint.X;
+                var farX = footprint.X + Sz_TLCorner.X;
+                var lowY = footprint.Y + footprint.Height - Sz_TLCorner.Y;
+                var highY = footprint.Y + footprint.Height;
+                DrawQuad(zIndex, color, Uv_TLCorner, closeX, farX, lowY, highY);
+            }
+
+            //Draw Bottom Left Corner
+            {
+                var closeX = footprint.X;
+                var farX = footprint.X + Sz_BLCorner.X;
+                var lowY = footprint.Y;
+                var highY = footprint.Y + Sz_BLCorner.Y;
+                DrawQuad(zIndex, color, Uv_BLCorner, closeX, farX, lowY, highY);
+            }
+
+            //Draw Top Right Corner
+            {
+                var closeX = footprint.X + footprint.Width - Sz_TRCorner.X;
+                var farX = footprint.X + footprint.Width;
+                var lowY = footprint.Y + footprint.Height - Sz_TLCorner.Y;
+                var highY = footprint.Y + footprint.Height;
+                DrawQuad(zIndex, color, Uv_TRCorner, closeX, farX, lowY, highY);
+            }
+
+            //Draw Bottom Right Corner
+            {
+                var closeX = footprint.X + footprint.Width - Sz_BRCorner.X;
+                var farX = footprint.X + footprint.Width;
+                var lowY = footprint.Y;
+                var highY = footprint.Y + Sz_BLCorner.Y;
+                DrawQuad(zIndex, color, Uv_BRCorner, closeX, farX, lowY, highY);
+            }
+
+
+            //Draw top fill
+            float topFillWidth = footprint.Width - (Sz_TLCorner.X + Sz_TRCorner.X);
+            if (topFillWidth > 0)
+            {
+                var closeX = footprint.X + Sz_TRCorner.X;
+                var farX = footprint.X + footprint.Width - Sz_TRCorner.X;
+                var lowY = footprint.Y + footprint.Height - Math.Min(Sz_TRCorner.Y, Sz_TLCorner.Y);
+                var highY = footprint.Y + footprint.Height;
+                DrawQuad(zIndex, color, Uv_TFill, closeX, farX, lowY, highY);
+
+            }
+
+            //Draw bottom fill
+            float bottomFillWidth = footprint.Width - (Sz_BLCorner.X + Sz_BRCorner.X);
+            if (bottomFillWidth > 0)
+            {
+                var closeX = footprint.X + Sz_BRCorner.X;
+                var farX = footprint.X + footprint.Width - Sz_BRCorner.X;
+                var lowY = footprint.Y;
+                var highY = footprint.Y + Math.Min(Sz_BRCorner.Y, Sz_BLCorner.Y);
+                DrawQuad(zIndex, color, Uv_BFill, closeX, farX, lowY, highY);
+
+            }
+
+            //Draw left fill
+            float leftFillWidth = footprint.Width - (Sz_BLCorner.X + Sz_BRCorner.X);
+            if (leftFillWidth > 0)
+            {
+                var closeX = footprint.X;
+                var farX = footprint.X + Math.Min(Sz_BLCorner.X, Sz_TLCorner.X);
+                var lowY = footprint.Y + Sz_BLCorner.Y;
+                var highY = footprint.Y + footprint.Height - Sz_TLCorner.Y;
+                DrawQuad(zIndex, color, Uv_MLFill, closeX, farX, lowY, highY);
+
+            }
+            //Draw right fill
+            float rightFillWidth = footprint.Width - (Sz_BLCorner.X + Sz_BRCorner.X);
+            if (rightFillWidth > 0)
+            {
+                var closeX = footprint.X + footprint.Width - Math.Min(Sz_TRCorner.X, Sz_BRCorner.X);
+                var farX = footprint.X + footprint.Width;
+                var lowY = footprint.Y + Sz_BRCorner.Y;
+                var highY = footprint.Y + footprint.Height - Math.Min(Sz_TRCorner.Y, Sz_BRCorner.Y);
+                DrawQuad(zIndex, color, Uv_MRFill, closeX, farX, lowY, highY);
+            }
+
+            //Draw center fill
+            {
+                var closeX = footprint.X + Math.Min(Sz_TLCorner.X, Sz_BLCorner.X);
+                var farX = footprint.X + footprint.Width - Math.Min(Sz_TRCorner.X, Sz_BRCorner.X);
+                var lowY = footprint.Y + Math.Min(Sz_BLCorner.Y, Sz_BRCorner.Y);
+                var highY = footprint.Y + footprint.Height - Math.Min(Sz_TLCorner.Y, Sz_TRCorner.Y);
+                DrawQuad(zIndex, color, Uv_MMFill, closeX, farX, lowY, highY);
+            }
+
+        }
+
+        private void DrawVerticalThreeFrame(string style, RectangleF footprint, float zIndex, Vector4 color)
+        {
+            var uvTop = StyleAtlas[$"{style}.T"];
+            var uvMid = StyleAtlas[$"{style}.M"];
+            var uvBot = StyleAtlas[$"{style}.B"];
+
+            var szTop = StyleAtlas.EstimateOriginalSize(uvTop);
+            var szBottom = StyleAtlas.EstimateOriginalSize(uvBot);
+
+            if (szTop.Y+szBottom.Y>footprint.Height)
+            {
+                float d = szTop.Y + szBottom.Y;
+                szTop.Y = szTop.Y * (szTop.Y / d);
+                szBottom.Y = szBottom.Y * (szBottom.Y / d);
+            }
+
+            var closeX = footprint.X ;
+            var farX = footprint.X + footprint.Width;
+            //Draw top
+            {
+                var lowY = footprint.Y + footprint.Height - szTop.Y;
+                var highY = footprint.Y + footprint.Height;
+                DrawQuad(zIndex, color, uvTop, closeX, farX, lowY, highY);
+            }
+
+            //Draw top
+            {
+                var lowY = footprint.Y + szBottom.Y;
+                var highY = footprint.Y + footprint.Height-szTop.Y;
+                DrawQuad(zIndex, color, uvMid, closeX, farX, lowY, highY);
+            }
+
+            //Draw bottom
+            {
+                var lowY = footprint.Y;
+                var highY = footprint.Y + szBottom.Y;
+                DrawQuad(zIndex, color, uvBot, closeX, farX, lowY, highY);
+            }
+        }
+        private void DrawHorizontalThreeFrame(string style, RectangleF footprint, float zIndex, Vector4 color)
+        {
+            var uvLeft = StyleAtlas[$"{style}.L"];
+            var uvMid = StyleAtlas[$"{style}.M"];
+            var uvRight = StyleAtlas[$"{style}.R"];
+
+            var szLeft = StyleAtlas.EstimateOriginalSize(uvLeft);
+            var szRight = StyleAtlas.EstimateOriginalSize(uvRight);
+
+            if (szLeft.X + szRight.X > footprint.Width)
+            {
+                float d = szLeft.X + szRight.X;
+                szLeft.X = szLeft.X * (szLeft.X / d);
+                szRight.X = szRight.X * (szRight.X / d);
+            }
+
+            var lowY = footprint.Y;
+            var highY = footprint.Y + footprint.Height;
+            //Draw Left
+            {
+                var closeX = footprint.X;
+                var farX = footprint.X + szLeft.X;
+                DrawQuad(zIndex, color, uvLeft, closeX, farX, lowY, highY);
+            }
+
+            //Draw middle
+            {
+                var closeX = footprint.X + szLeft.X;
+                var farX = footprint.X + footprint.Width- szRight.X;
+                DrawQuad(zIndex, color, uvMid, closeX, farX, lowY, highY);
+            }
+
+            //Draw right
+            {
+                var closeX = footprint.X+footprint.Width-szRight.X;
+                var farX = footprint.X + footprint.Width;
+                DrawQuad(zIndex, color, uvRight, closeX, farX, lowY, highY);
+            }
+
+        }
+
+        private void DrawQuad(float zIndex, Vector4 color, RectangleF uv, float closeX, float farX, float lowY, float highY)
+        {
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 0) });
+
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, highY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
+        }
+
+        private void DrawGlyph(string glyphName, RectangleF footprint, float zIndex, Vector4 color)
+        {
+            var closeX = footprint.X;
+            var farX = footprint.X + footprint.Width;
+            var lowY = footprint.Y;
+            var highY = footprint.Y + footprint.Height;
+            var uv = StyleAtlas[glyphName];// Uv_MMFill;
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 0) });
+
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, highY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
+        }
     }
 }

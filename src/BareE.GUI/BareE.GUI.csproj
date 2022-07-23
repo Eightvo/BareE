@@ -16,21 +16,38 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\Styles\AltStyle.style" />
     <None Remove="Assets\Styles\blueframe.Atlas" />
     <None Remove="Assets\Styles\close.png" />
     <None Remove="Assets\Styles\Collapse.png" />
     <None Remove="Assets\Styles\Down.png" />
     <None Remove="Assets\Styles\Expand.png" />
+    <None Remove="Assets\Styles\KennyUI\UIpackSheet_transparent.png" />
+    <None Remove="Assets\Styles\Left.png" />
     <None Remove="Assets\Styles\MinGui.Atlas" />
     <None Remove="Assets\Styles\minGui.credits" />
+    <None Remove="Assets\Styles\MinGui.style" />
     <None Remove="Assets\Styles\OvalEmpty.png" />
     <None Remove="Assets\Styles\Oval_Checked.png" />
     <None Remove="Assets\Styles\Oval_Filled.png" />
     <None Remove="Assets\Styles\R2Frame.png" />
     <None Remove="Assets\Styles\resize.png" />
     <None Remove="Assets\Styles\Right.png" />
+    <None Remove="Assets\Styles\SimpleRPG\ArrowDown.png" />
+    <None Remove="Assets\Styles\SimpleRPG\ArrowLeft.png" />
+    <None Remove="Assets\Styles\SimpleRPG\ArrowRight.png" />
+    <None Remove="Assets\Styles\SimpleRPG\ArrowUp.png" />
+    <None Remove="Assets\Styles\SimpleRPG\BasicFrame.png" />
+    <None Remove="Assets\Styles\SimpleRPG\CloseIcon.png" />
+    <None Remove="Assets\Styles\SimpleRPG\CollapseIcon.png" />
+    <None Remove="Assets\Styles\SimpleRPG\CurveFrame.png" />
+    <None Remove="Assets\Styles\SimpleRPG\ExpandIcon.png" />
+    <None Remove="Assets\Styles\SimpleRPG\GemFrame.png" />
+    <None Remove="Assets\Styles\SimpleRPG\GemIcon.png" />
+    <None Remove="Assets\Styles\SimpleRPG\ResizeIcon.png" />
+    <None Remove="Assets\Styles\SimpleRPG\SimpleRpg.Atlas" />
+    <None Remove="Assets\Styles\SimpleRPG\SimpleRpg.credits" />
     <None Remove="Assets\Styles\squareFrame.png" />
+    <None Remove="Assets\Styles\Up.png" />
     <None Remove="BaseGuiShader\BaseGui.frag.spv" />
     <None Remove="BaseGuiShader\BaseGui.vert.spv" />
     <None Remove="TextRendering\Text.frag.spv" />
@@ -42,51 +59,68 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\Styles\AltStyle.style">
+    <EmbeddedResource Include="Assets\Styles\MinGui\MinGui.style">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Assets\Styles\blueframe.Atlas">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\close.png">
+    <EmbeddedResource Include="Assets\Styles\KennyUI\UIpackSheet_transparent.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\close.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\Collapse.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\Collapse.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\Down.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\Down.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\Expand.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\Expand.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\MinGui.Atlas">
+    <EmbeddedResource Include="Assets\Styles\MinGui\Left.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\MinGui.Atlas">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\minGui.credits">
+    <EmbeddedResource Include="Assets\Styles\MinGui\minGui.credits">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\OvalEmpty.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\OvalEmpty.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\Oval_Checked.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\Oval_Checked.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\Oval_Filled.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\Oval_Filled.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\R2Frame.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\R2Frame.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\resize.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\resize.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\Right.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\Right.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Assets\Styles\squareFrame.png">
+    <EmbeddedResource Include="Assets\Styles\MinGui\squareFrame.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\MinGui\Up.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\ArrowDown.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\ArrowLeft.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\ArrowRight.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\ArrowUp.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\BasicFrame.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\CloseIcon.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\CollapseIcon.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\CurveFrame.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\ExpandIcon.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\GemFrame.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\GemIcon.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\ResizeIcon.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\SimpleRpg.Atlas" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\SimpleRpg.credits" />
     <EmbeddedResource Include="BaseGuiShader\BaseGui.frag.spv" />
     <EmbeddedResource Include="BaseGuiShader\BaseGui.vert.spv" />
     <EmbeddedResource Include="TextRendering\Text.frag.spv" />

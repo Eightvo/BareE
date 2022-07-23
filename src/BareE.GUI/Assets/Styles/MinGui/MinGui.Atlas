@@ -20,17 +20,17 @@
 	"SrcRect":"0,0,26,26",
 	"Children":[
 		{"Name":"L","SrcRect":" 0,0,9,26"},
-		{"Name":"L","SrcRect":" 9,0,8,26"},
-		{"Name":"L","SrcRect":"17,0,9,26"}
+		{"Name":"M","SrcRect":" 9,0,8,26"},
+		{"Name":"R","SrcRect":"17,0,9,26"}
 	]
 },
 {
 	"Name":"VerticalThreeFrame",
 	"SrcRect":"0,0,26,26",
 	"Children":[
-		{"Name":"L","SrcRect":"0, 0,26,9"},
-		{"Name":"L","SrcRect":"0, 9,26,8"},
-		{"Name":"L","SrcRect":"0,17,26,9"}
+		{"Name":"T","SrcRect":"0, 0,26,9"},
+		{"Name":"M","SrcRect":"0, 9,26,8"},
+		{"Name":"B","SrcRect":"0,17,26,9"}
 	]
 },
 {

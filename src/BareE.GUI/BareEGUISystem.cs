@@ -15,6 +15,7 @@ using Veldrid;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
 using System.Numerics;
+using Veldrid.Sdl2;
 
 namespace BareE.GUI
 {
@@ -56,6 +57,12 @@ namespace BareE.GUI
         {
             Context.Render(Instant, State, Env, outbuffer, cmds);
             
+        }
+        public override bool HandleMouseButtonEvent(SDL_MouseButtonEvent mouseButtonEvent)
+        {
+            if (Context.HandleMouseButtonEvent(mouseButtonEvent))
+                return true;
+            return base.HandleMouseButtonEvent(mouseButtonEvent);
         }
     }
 }

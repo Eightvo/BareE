@@ -176,7 +176,8 @@ namespace BareE
                     {
                         SDL_ControllerAxisEvent wEvent = Unsafe.As<SDL_Event, SDL_ControllerAxisEvent>(ref ev);
                         // Console.WriteLine($"Axis: {wEvent.axis} {wEvent.value} {wEvent.which} {wEvent.type} {wEvent.timestamp}");
-                        ActiveState.Input.HandleGamepadAxisEvent(wEvent);
+                        if (!ActiveGame.ActiveScene.HandleControllerAxisMotion(wEvent))
+                            ActiveState.Input.HandleGamepadAxisEvent(wEvent);
                     }
                     break;
 
@@ -186,7 +187,8 @@ namespace BareE
                 case SDL_EventType.JoyButtonUp:
                     {
                         SDL_ControllerButtonEvent wEvent = Unsafe.As<SDL_Event, SDL_ControllerButtonEvent>(ref ev);
-                        ActiveState.Input.HandleGamepadButtonEvent(wEvent);
+                        if (!ActiveGame.ActiveScene.HandleControllerButtonEvent(wEvent))
+                            ActiveState.Input.HandleGamepadButtonEvent(wEvent);
                     }
                     break;
 
@@ -195,7 +197,8 @@ namespace BareE
                     {
                         if (ImGuiNET.ImGui.GetIO().WantCaptureKeyboard) break;
                         SDL_KeyboardEvent wEvent = Unsafe.As<SDL_Event, SDL_KeyboardEvent>(ref ev);
-                        ActiveState.Input.HandleKeyboardEvent(wEvent);
+                        if (!ActiveGame.ActiveScene.HandleKeyboardEvent(wEvent))
+                            ActiveState.Input.HandleKeyboardEvent(wEvent);
                     }
                     break;
 
@@ -203,21 +206,24 @@ namespace BareE
                 case SDL_EventType.MouseButtonUp:
                     {
                         SDL_MouseButtonEvent wEvent = Unsafe.As<SDL_Event, SDL_MouseButtonEvent>(ref ev);
-                        ActiveState.Input.HandleMouseButtonEvent(wEvent);
+                        if (!ActiveGame.ActiveScene.HandleMouseButtonEvent(wEvent))
+                            ActiveState.Input.HandleMouseButtonEvent(wEvent);
                     }
                     break;
 
                 case SDL_EventType.MouseMotion:
                     {
                         SDL_MouseMotionEvent wEvent = Unsafe.As<SDL_Event, SDL_MouseMotionEvent>(ref ev);
-                        ActiveState.Input.HandleMouseMove(wEvent);
+                        if (!ActiveGame.ActiveScene.HandleMouseMotion(wEvent))
+                            ActiveState.Input.HandleMouseMove(wEvent);
                     }
                     break;
 
                 case SDL_EventType.MouseWheel:
                     {
                         SDL_MouseWheelEvent wEvent = Unsafe.As<SDL_Event, SDL_MouseWheelEvent>(ref ev);
-                        ActiveState.Input.HandleMouseWheelAxis(wEvent);
+                        if (!ActiveGame.ActiveScene.HandleMouseWheel(wEvent))
+                            ActiveState.Input.HandleMouseWheelAxis(wEvent);
                     }
                     break;
 

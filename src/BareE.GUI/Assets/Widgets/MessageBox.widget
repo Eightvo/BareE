@@ -1,24 +1,48 @@
 ﻿{
 	Resources:{
-	//Example:
-	BGImg:{Type:Image, Src:"./Assets/Styles/blueframe2.png", Region:<0,0,800,600>},
-	//OnMessageAppear:{Type:Script, Src:"file.xyz"}
-	Alt:{Type:Style, Src:"./Assets/Styles/AltStyle.style"},
-	
-	MinGui:{Type:Atlas, Src:"./Assets/Styles/MinGui.Atlas"},
 	
 	//Styles can also be defined inline
 	//Styles should always contain a default
-		Default:{
+		DefaultStyle:{
 			Type:Style,
+			Name:Default,
 			Src:{
-				CloseButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/close.png"},
-				CollapseButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/Collapse.png"},
-				ExpandButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/Expand.png"},
-				ResizeButton:{Sprite:"MinGui.Glyph", Src:"./Assets/Styles/resize.png"},
-				Frame:{Sprite:"MinGui.NineFrame", Src:"./Assets/Styles/squareFrame.png"},
-				Titlebar:{Sprite:"MinGUi.NineFrame", Src:"./Assets/Styles/R2Frame.png"},
-				Font:{Src:"./Assets/Fonts/Bitmap/Cookie/Cookie.bff"},
+				MinGUiAtlas:{Name:MinGui, Type:"Atlas", Src:"BareE.GUI.Assets.Styles.MinGui.MinGui.Atlas"},
+				NeutonFont:{"Name":"Neuton", Type:"Font", "Src":"BareE.Harness.Assets.Fonts.Bitmap.Neuton.Neuton.bff"},
+
+				CloseButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.close.png"},
+				/*
+				Does it need:
+				CloseButton-Offset-X:0,
+				CloseButton-Offset-Y:0,
+				*/
+				CollapseButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.Collapse.png"},
+				ExpandButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.Expand.png"},
+				ResizeButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.resize.png"},
+				Frame:{Sprite:"MinGui.NineFrame", Src:"BareE.GUI.Assets.Styles.MinGui.squareFrame.png"},
+				Titlebar:{Sprite:"MinGUi.NineFrame", Src:"BareE.GUI.Assets.Styles.MinGui.R2Frame.png"},
+
+				Mouse_Cursor_Normal:{Src:"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", rect:<180,450,15,15>},
+				Mouse_Cursor_MouseDown:{Src:"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", rect:<198,450,15,15>},
+
+				
+				Text_Font_Normal:Neuton,
+				Text_Size_Normal:12,
+				Text_Color_Normal:Black,
+				Text_BackgroundColor_Normal:None,
+				
+				//Text-Color-Selected:White,
+				//Text-BackgroundColor-Selected:Black,
+
+				Text_Font_Title:Neuton,
+				Text_Size_Title:16,
+				Text_Color_Title:White,
+
+				Panel_Color_Normal_Active:White,
+				Panel_Color_Title_Active:CornflowerBlue,
+				Panel_Color_Normal_Inactive:Grey,
+				Panel_Color_Title_Inactive:CornflowerBlue,
+
 			}
 
 		}
@@ -49,6 +73,9 @@
 		AllowResize:false,
 		AllowMove:false,
 		AllowCollapse:false,
+		Style:{
+			Text_Color_Normal:"Red",
+		},
 		Children:[
 			{
 				Name:Message,

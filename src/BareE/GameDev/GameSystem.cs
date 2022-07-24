@@ -2,6 +2,7 @@
 using System.Numerics;
 
 using Veldrid;
+using Veldrid.Sdl2;
 
 namespace BareE.GameDev
 {
@@ -34,9 +35,20 @@ namespace BareE.GameDev
         {
         }
 
-        internal virtual void OnHudRefresh(Instant instant, GameState state, GameEnvironment env)
+        public virtual void OnHudRefresh(Instant instant, GameState state, GameEnvironment env)
         {
             
         }
+
+        public virtual bool HandleControllerAxisMotion(SDL_ControllerAxisEvent axisEvent)
+        {
+            return false;
+        }
+        public virtual bool HandleControllerButtonEvent(SDL_ControllerButtonEvent axisEvent) { return false; }
+        public virtual bool HandleKeyboardEvent(SDL_KeyboardEvent keyboardEvent) { return false; }
+        public virtual bool HandleMouseButtonEvent(SDL_MouseButtonEvent mouseButtonEvent) { return false; }
+        public virtual bool HandleMouseMotion(SDL_MouseMotionEvent mouseMotionEvent) { return false; }
+        public virtual bool HandleMouseWheel(SDL_MouseWheelEvent mouseWheelEvent) { return false; }
+
     }
 }

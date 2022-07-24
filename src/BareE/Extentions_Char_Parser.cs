@@ -76,6 +76,7 @@ namespace BareE
             if (isConnector(c)) return true;
             if (isCombiningCharacter(c)) return true;
             if (isFormattingCharacter(c)) return true;
+            if (c == '_') return true;           
             //if (c == '.') return true;
             //if (c == '[' || c == ']') return true;
             return false;

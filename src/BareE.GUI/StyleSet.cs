@@ -8,6 +8,7 @@ namespace BareE.GUI
 {
     public class StyleTree
     {
+        Dictionary<String, object> StyleDefinitions = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
         Dictionary<String,Stack<StyleNode>> StylePriority = new Dictionary<String,Stack<StyleNode>>(StringComparer.CurrentCultureIgnoreCase);
         Stack<Stack<StyleNode>> opOrder = new Stack<Stack<StyleNode>>();
         public void PushStyles(params StyleNode[] styles)
@@ -40,6 +41,18 @@ namespace BareE.GUI
                 (opOrder.Pop()).Pop();
         }
         public String this[String Element] { get { return GetStyle(Element); } }
+        public object GetStyleDefinition(String elm)
+        {
+            if (StyleDefinitions.ContainsKey(elm)) return StyleDefinitions[elm];
+            return null; 
+        }
+        public void DefineStyle(String elm, String val)
+        {
+            if (StyleDefinitions.ContainsKey(elm))
+                StyleDefinitions[elm] = val;
+            else StyleDefinitions.Add(elm, val);
+        }
+
     }
 
     public struct StyleNode

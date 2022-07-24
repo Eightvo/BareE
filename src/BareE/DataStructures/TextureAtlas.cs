@@ -33,6 +33,11 @@ namespace BareE.DataStructures
             get { return _Pages.Keys; }
         }
 
+        public void Merge(String name, Image<Rgba32> image, System.Numerics.Vector4 subRec)
+        {
+            Merge(name, image, new Rectangle((int)subRec.X, (int)subRec.Y, (int)subRec.Z, (int)subRec.W));
+        }
+
         public void Merge(String name, Image<Rgba32> image, Rectangle subRec)
         {
             var tSpriteModel = new SpriteModel()

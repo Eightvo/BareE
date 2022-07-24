@@ -48,5 +48,22 @@ namespace BareE.DataStructures
             foreach (AttributeDisplay attr in map)
                 this[attr.Title] = from[attr.Attribute];
         }
+
+        public bool HasAttribute(string v)
+        {
+            if (v.Contains("."))
+            {
+                var dIndx = v.IndexOf(".");
+                var key = v.Substring(0, dIndx);
+                var subKey = v.Substring(dIndx + 1);
+                if (_data.ContainsKey(key))
+                    return false;
+                var subEnd = DataAs<AttributeCollection>(key);
+                if (subEnd == null)
+                    return false;
+                return subEnd.HasAttribute(subKey);
+            }
+            return _data.ContainsKey(v);
+        }
     }
 }

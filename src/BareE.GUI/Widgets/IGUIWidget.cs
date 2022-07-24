@@ -5,11 +5,21 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
+using Rectangle = SixLabors.ImageSharp.Rectangle;
+using RectangleF = SixLabors.ImageSharp.RectangleF;
 namespace BareE.GUI.Widgets
 {
+    public enum RenderStyle
+    {
+        Glyph = 0,
+        NineFrame=1,
+        VerticalThreeFrame=2,
+        HorizontalThreeFrame=3
+    }
     public enum AnchorPoint
     {
         None=0,
@@ -34,10 +44,13 @@ namespace BareE.GUI.Widgets
         public virtual bool ClickThrough { get; protected set; } = false;
         public virtual bool CanFocus { get; protected set; } = false;
 
+        public AttributeCollection Style { get; set; } = new AttributeCollection();
+
         private bool _focused = false;
         public virtual bool ContainsFocus { get { if (_focused) return true; foreach (var c in ChildWidgets) if (c.ContainsFocus) return true; return false; } protected set { _focused = value; } } 
 
         public virtual AnchorPoint Anchor { get; protected set; } = AnchorPoint.None;
+        public virtual RenderStyle RenderStyle { get; protected set; } = RenderStyle.Glyph;
         public virtual Size Size { get; protected set; }
         public virtual Point Position { get; protected set; }
         public virtual RectangleF FootPrint { get { return new RectangleF(Position.X, Position.Y, Size.Width, Size.Height); } }
@@ -69,6 +82,9 @@ namespace BareE.GUI.Widgets
             CanFocus = def.DataAs<bool>("CanFocus");
             ContainsFocus = def.DataAs<bool>("ContainsFocus");
             Anchor = def.DataAs<AnchorPoint>("Anchor");
+            Style = (AttributeCollection)def["Style"];
+            if (def.HasAttribute("RenderStyle"))
+                RenderStyle = def.DataAs<RenderStyle>("RenderStyle");
             switch(def["Size"])
             {
                 case null: throw new Exception($"Widget {Name} requires a size.");
@@ -109,7 +125,17 @@ namespace BareE.GUI.Widgets
             }
         }
 
-        public abstract void Render(Instant Instant, GameState GameState, GameEnvironment Env);
+        public virtual RectangleF GetDisplayArea(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context)
+        {
+            var padding = (int)(context.Styles.GetStyleDefinition("Default_Padding")??2);
+            return new RectangleF(this.FootPrint.X + padding, this.FootPrint.Y + padding, this.FootPrint.Width-2*padding, this.FootPrint.Height-2*padding);        }
+
+        public virtual void Render(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context, RectangleF displayArea)
+        {
+
+            foreach (var widget in Children.OrderBy(x => x.Value.ZIndex))
+                widget.Value.Render(Instant, GameState, Env, context, GetDisplayArea(Instant,GameState,Env,context));
+        }
 
 
         public event EventHandler Updated;
@@ -144,6 +170,25 @@ namespace BareE.GUI.Widgets
         public class UpdateEventArgs : EventArgs
         {
             public UpdateEventArgs() { }
+        }
+
+        internal bool ContainsPoint(Vector2 loc)
+        {
+            if (loc.X < FootPrint.X) return false;
+            if (loc.Y < FootPrint.Y) return false;
+            if (loc.X > FootPrint.Right) return false;
+            if (loc.Y > FootPrint.Top) return false;
+            return true;
+        }
+
+        internal GuiWidgetBase GetWidgetAtPt(Vector2 vector2)
+        {
+            foreach (var widget in this.ChildWidgets)
+            {
+                if (widget.ContainsPoint(vector2))
+                    return widget.GetWidgetAtPt(vector2 - new Vector2(widget.FootPrint.X, widget.FootPrint.Y));
+            }
+            return this;
         }
     }
 }

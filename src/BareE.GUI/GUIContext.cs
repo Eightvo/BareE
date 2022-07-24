@@ -20,48 +20,43 @@ using static BareE.DataStructures.SpriteAtlas;
 
 using Image = SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>;
 using Size = System.Drawing.Size;
+using Veldrid.Sdl2;
+using System.Linq;
 
 namespace BareE.GUI
 {
     public class GUIContext
     {
+
+        Camera guiCam;
+
         FullScreenTexture GUICanvas;
         BaseGuiShader GuiShader;
-
         Framebuffer GuiBuffer;
         Texture resolvedTexture;
+        public Image Canvas;
+        public Size Resolution { get { return new Size(Canvas.Width, Canvas.Height); } }
+
+        Dictionary<String, GuiWidgetBase> Widgets { get; set; } = new Dictionary<String, GuiWidgetBase>(StringComparer.InvariantCultureIgnoreCase);
 
         SpriteAtlas FontAtlas = new SpriteAtlas();
         Dictionary<String, FontData> FontLib = new Dictionary<string, FontData>(StringComparer.CurrentCultureIgnoreCase);
 
+        public StyleTree Styles { get; set; } = new StyleTree();
         SpriteAtlas StyleAtlas = new SpriteAtlas();
-
         Dictionary<String, Dictionary<String, SpriteModel>> SpriteModels = new Dictionary<string, Dictionary<string, SpriteModel>>(StringComparer.CurrentCultureIgnoreCase);
         Dictionary<String, Image<Rgba32>> Images = new Dictionary<string, Image<Rgba32>>(StringComparer.CurrentCultureIgnoreCase);
-
-        internal void SetResolution(Vector2 vector2)
-        {
-            _nextResolution = vector2;
-            _setNextResolution = true;
-
-        }
 
         private Vector2 _nextResolution;
         private bool _setNextResolution = false;
 
+        private int maxGuiDepth = 100;
+        TextureSampleCount GuiBufferTextureCount = TextureSampleCount.Count1;
         public bool UseSystemMouseCursor { get; set; } = false;
 
-        private int maxGuiDepth = 100;
-        Camera guiCam;
-
-
-        TextureSampleCount GuiBufferTextureCount = TextureSampleCount.Count1;
-
-        public StyleTree Styles { get; set; }
-        Dictionary<String, GuiWidgetBase> Widgets { get; set; } = new Dictionary<String, GuiWidgetBase>(StringComparer.InvariantCultureIgnoreCase);
-        public Size Resolution { get { return new Size(Canvas.Width, Canvas.Height); } }
-
-        public Image Canvas;
+        private bool _isMouseDown=false;
+        private bool _rebuildStyleAtlas = true;
+        private bool _rebuildFontAtlas = true;
 
         public GUIContext(Size size)
         {
@@ -96,7 +91,8 @@ namespace BareE.GUI
             GUICanvas.SetTexture(env.Window.Device, GuiBuffer.ColorTargets[0].Target);
             GUICanvas.Update(env.Window.Device);
 
-            StyleAtlas = new SpriteAtlas();
+            //StyleAtlas = new SpriteAtlas();
+            /*
             var minGuiSpriteModels = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile(@"BareE.GUI.Assets.Styles.MinGui.MinGui.Atlas"));
             StyleAtlas.Merge("MinGui:squareFrame", minGuiSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.MinGui.squareFrame.png");
             StyleAtlas.Merge("MinGui:R2Frame", minGuiSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.MinGui.R2Frame.png");
@@ -149,7 +145,7 @@ namespace BareE.GUI
             if (FontAtlas.Dirty)
                 FontAtlas.Build(0, null);
 
-
+            */
             GuiShader = new BaseGuiShader();
             GuiShader.SetOutputDescription(GuiBuffer.OutputDescription);
             GuiShader.DepthStencilDescription = new DepthStencilStateDescription()
@@ -160,8 +156,6 @@ namespace BareE.GUI
 
             };
             GuiShader.CreateResources(env.Window.Device);
-            GuiShader.SetStyleTexture(env.Window.Device, AssetManager.LoadTexture(StyleAtlas.AtlasSheet, env.Window.Device));
-            GuiShader.SetFontTexture(env.Window.Device, AssetManager.LoadTexture(FontAtlas.AtlasSheet, env.Window.Device));
             GuiShader.resolution = new Vector2(900, 900);
             GuiShader.mousepos = new Vector2(30, 540);
 
@@ -171,6 +165,20 @@ namespace BareE.GUI
         
         internal void Update(Instant instant, GameState state, GameEnvironment env)
         {
+            if (_rebuildFontAtlas)
+            {
+                FontAtlas.Build(0, null);
+                GuiShader.SetFontTexture(env.Window.Device, AssetManager.LoadTexture(FontAtlas.AtlasSheet, env.Window.Device));
+                _rebuildFontAtlas = false;
+            }
+            if (_rebuildStyleAtlas)
+            {
+                StyleAtlas.Build(0,null);
+                GuiShader.SetStyleTexture(env.Window.Device, AssetManager.LoadTexture(StyleAtlas.AtlasSheet, env.Window.Device));
+                _rebuildStyleAtlas = false;
+            }
+            
+            
 
             var mPos = ImGuiNET.ImGui.GetIO().MousePos;
             //ImGuiNET.ImGui.GetIO().
@@ -197,8 +205,11 @@ namespace BareE.GUI
 
 
             GuiShader.Clear();
-
-
+            foreach(var widget in Widgets.OrderBy(x=>x.Value.ZIndex))
+            {
+                widget.Value.Render(instant, state, env, this, new RectangleF(0,0,Resolution.Width, Resolution.Height));
+            }
+            /*
             var uv = StyleAtlas[$"MinGui:R2Frame"];
 
             DrawNineFrame($"MinGui:squareFrame", new RectangleF(100, 298, 200, 32), -0.01f, ((Vector4)Color.CornflowerBlue));
@@ -237,11 +248,11 @@ namespace BareE.GUI
 
             if (showCursor)
             {
-                var c = ImGuiNET.ImGui.GetIO().MouseDown;
-                //var cursorStyle = (ImGuiNET.ImGui.GetIO().MouseDown) ? $"KennyGUI:GoldSword" : $"KennyGUI:SilverSword";
+                var c = _isMouseDown;
+                var cursorStyle = (_isMouseDown) ? $"KennyGUI:GoldSword" : $"KennyGUI:SilverSword";
                 var cursorOffSet = StyleAtlas.EstimateOriginalSize($"KennyGUI:GoldSword");
                 
-                DrawGlyph($"KennyGUI:GoldSword", new RectangleF(mPos.X, Resolution.Height - (mPos.Y + cursorOffSet.Y), cursorOffSet.X, cursorOffSet.Y), -maxGuiDepth, ((Vector4)Color.White));
+                DrawGlyph(cursorStyle, new RectangleF(mPos.X, Resolution.Height - (mPos.Y + cursorOffSet.Y), cursorOffSet.X, cursorOffSet.Y), -maxGuiDepth, ((Vector4)Color.White));
             }
 
 
@@ -251,7 +262,7 @@ namespace BareE.GUI
                         //DrawGlyph($"SimpleRpg:ResizeIcon", new RectangleF(780, 100, 20, 20), 0, ((Vector4)Color.Black));
 
             //DrawNineFrame($"squareFrame", new RectangleF(100, 600, 200, 200), -1, ((Vector4)Color.Blue));
-
+            */
             /*
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Left, uv.Bottom, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Top, 0) });
@@ -277,13 +288,13 @@ namespace BareE.GUI
 
 
 
-
+            /*
             DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(250, 250, 200, 200), 0, 32, "Cookie", ((Vector4)Color.Black), true);
 
             DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(550, 250, 200, 200), 0, 16, "Neuton", ((Vector4)Color.Blue), true);
 
             DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(750, 250, 200, 200), 0, 10, "Neuton", ((Vector4)Color.Red), true);
-
+            */
             GuiShader.Update(env.Window.Device);
 
 
@@ -313,7 +324,13 @@ namespace BareE.GUI
         }
 
 
-
+        internal bool HandleMouseButtonEvent(SDL_MouseButtonEvent mouseButtonEvent)
+        {
+            var w = GetWidgetAtPt(ImGuiNET.ImGui.GetIO().MousePos);
+            if (mouseButtonEvent.button == SDL_MouseButton.Left)
+                _isMouseDown = (mouseButtonEvent.type == SDL_EventType.MouseButtonDown);
+            return false;
+        }
 
 
         /*
@@ -364,6 +381,12 @@ Func()
         ~GUIContext()
         {
             Canvas.Dispose();
+        }
+        internal void SetResolution(Vector2 vector2)
+        {
+            _nextResolution = vector2;
+            _setNextResolution = true;
+
         }
 
         internal void AddWindow(string name, AttributeCollection result)
@@ -516,6 +539,7 @@ Func()
                     case "font":
                         {
                             var src = def.DataAs<String>("src");
+                            
                             // FontDescription desc;
                             // this.fontCollection.Add(src, out desc);
                             // if (!Fonts.ContainsKey(k.AttributeName))
@@ -527,7 +551,70 @@ Func()
                     case "script":
                         break;
                     case "style":
+                        {
+                            var src = def.DataAs<AttributeCollection>("Src");
+                            if (src == null) continue;
+                            var name = def.DataAs<String>("Name");
+                            if (String.IsNullOrEmpty(name)) continue;
+                            foreach(var v in src.Attributes)
+                            {
+                                if (v.Type!=typeof(AttributeCollection))
+                                {
+                                    Styles.DefineStyle($"{name}.{v.AttributeName}", v.Value.ToString());
+                                    continue;
+                                }
+                                var childAtt = (AttributeCollection)v.Value;
+                                switch((childAtt.DataAs<String>("Type")??"").ToLower())
+                                {
+                                    case "atlas":
+                                        {
+                                            var atlasName = childAtt.DataAs<String>("Name");
+                                            if (String.IsNullOrEmpty(atlasName)) atlasName = v.AttributeName;
+                                            var atlasSrc = childAtt.DataAs<String>("src");
+                                            var models = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile( atlasSrc));
+                                            if (!SpriteModels.ContainsKey(atlasName))
+                                                SpriteModels.Add(atlasName, models);
+                                            else SpriteModels[atlasName] = models;
+                                        }
+                                        break;
+                                    case "font":
+                                        {
+                                            var fontName = childAtt.DataAs<String>("Name");
+                                            if (String.IsNullOrEmpty(fontName)) fontName = v.AttributeName;
+                                            var fontSrc = childAtt.DataAs<String>("src");
+                                            LoadFont(fontSrc,fontName);
 
+                                        }
+                                        break;
+                                    default:
+                                        {
+                                            var spriteModel = childAtt.DataAs<String>("Sprite");
+                                            var spriteSrc = childAtt.DataAs<String>("Src");
+                                            
+                                            if (String.IsNullOrEmpty(spriteSrc)) continue;
+                                            var spriteRef = $"{def["Name"]}_{v.AttributeName}";
+                                            if (String.IsNullOrEmpty(spriteModel))
+                                            {
+                                                if (childAtt["rect"] != null)
+                                                    StyleAtlas.Merge(spriteRef, AssetManager.GetImage(spriteSrc), (Vector4)childAtt["rect"]);
+                                                else
+                                                    StyleAtlas.Merge(spriteRef, AssetManager.GetImage(spriteSrc));
+                                            }
+                                            else
+                                            {
+                                                var dIndex = spriteModel.IndexOf(".");
+                                                var atlasname = spriteModel.Substring(0, dIndex);
+                                                var modelName = spriteModel.Substring(dIndex + 1);
+                                                StyleAtlas.Merge(spriteRef, SpriteModels[atlasname][modelName], spriteSrc);
+                                            }
+
+                                            Styles.DefineStyle($"{name}.{v.AttributeName}", spriteRef);
+
+                                        }
+                                        break;
+                                }
+                            }
+                        }
 
 
 
@@ -543,6 +630,8 @@ Func()
             var refs = result.DataAs<AttributeCollection>("Resources");
             var def = result.DataAs<AttributeCollection>("Root");
             LoadResources(refs);
+            _rebuildFontAtlas = true;
+            _rebuildStyleAtlas=true; 
             return CreateWidget(def);
 
         }
@@ -650,11 +739,11 @@ Func()
             }
         }
 
-        private void DrawNineFrame(string StyleName, RectangleF footprint, float zIndex)
+        public void DrawNineFrame(string StyleName, RectangleF footprint, float zIndex)
         {
             DrawNineFrame(StyleName, footprint, zIndex, Vector4.One);
         }
-        private void DrawNineFrame(string StyleName, RectangleF footprint, float zIndex, Vector4 color)
+        public void DrawNineFrame(string StyleName, RectangleF footprint, float zIndex, Vector4 color)
         {
             var Uv_TLCorner = StyleAtlas[$"{StyleName}.TL"];
             var Sz_TLCorner = StyleAtlas.EstimateOriginalSize(Uv_TLCorner);
@@ -803,7 +892,7 @@ Func()
 
         }
 
-        private void DrawVerticalThreeFrame(string style, RectangleF footprint, float zIndex, Vector4 color)
+        public void DrawVerticalThreeFrame(string style, RectangleF footprint, float zIndex, Vector4 color)
         {
             var uvTop = StyleAtlas[$"{style}.T"];
             var uvMid = StyleAtlas[$"{style}.M"];
@@ -842,7 +931,7 @@ Func()
                 DrawQuad(zIndex, color, uvBot, closeX, farX, lowY, highY);
             }
         }
-        private void DrawHorizontalThreeFrame(string style, RectangleF footprint, float zIndex, Vector4 color)
+        public void DrawHorizontalThreeFrame(string style, RectangleF footprint, float zIndex, Vector4 color)
         {
             var uvLeft = StyleAtlas[$"{style}.L"];
             var uvMid = StyleAtlas[$"{style}.M"];
@@ -894,7 +983,7 @@ Func()
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
         }
 
-        private void DrawGlyph(string glyphName, RectangleF footprint, float zIndex, Vector4 color)
+        public void DrawGlyph(string glyphName, RectangleF footprint, float zIndex, Vector4 color)
         {
             var closeX = footprint.X;
             var farX = footprint.X + footprint.Width;
@@ -909,5 +998,17 @@ Func()
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, highY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
         }
+
+        GuiWidgetBase GetWidgetAtPt(Vector2 loc)
+        {
+            foreach (var widget in this.Widgets.OrderBy(kvp=>kvp.Value.ZIndex))
+            {
+                if (widget.Value.ContainsPoint(loc))
+                    return widget.Value.GetWidgetAtPt(loc - new Vector2(widget.Value.Position.X, widget.Value.Position.Y));
+            }
+            return null;
+        }
+
     }
+
 }

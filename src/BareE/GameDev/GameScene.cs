@@ -18,6 +18,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Image = SixLabors.ImageSharp.Image;
 using BareE.UTIL;
+using Veldrid.Sdl2;
 
 namespace BareE.GameDev
 {
@@ -486,5 +487,44 @@ namespace BareE.GameDev
         public virtual void Unload()
         {
         }
+
+
+        public virtual bool HandleControllerAxisMotion(SDL_ControllerAxisEvent axisEvent) {
+            foreach (var sys in Systems.Elements)
+                if (sys.HandleControllerAxisMotion(axisEvent))
+                    return true;
+            return false; 
+        }
+        public virtual bool HandleControllerButtonEvent(SDL_ControllerButtonEvent axisEvent) {
+            foreach (var sys in Systems.Elements)
+                if (sys.HandleControllerButtonEvent(axisEvent))
+                    return true;
+            return false; 
+        }
+        public virtual bool HandleKeyboardEvent(SDL_KeyboardEvent keyboardEvent) {
+            foreach (var sys in Systems.Elements)
+                if (sys.HandleKeyboardEvent(keyboardEvent))
+                    return true;
+            return false; 
+        }
+        public virtual bool HandleMouseButtonEvent(SDL_MouseButtonEvent mouseButtonEvent) {
+            foreach (var sys in Systems.Elements)
+                if (sys.HandleMouseButtonEvent(mouseButtonEvent))
+                    return true;
+            return false; 
+        }
+        public virtual bool HandleMouseMotion(SDL_MouseMotionEvent mouseMotionEvent) {
+            foreach (var sys in Systems.Elements)
+                if (sys.HandleMouseMotion(mouseMotionEvent))
+                    return true;
+            return false; 
+        }
+        public virtual bool HandleMouseWheel(SDL_MouseWheelEvent mouseWheelEvent) {
+            foreach (var sys in Systems.Elements)
+                if (sys.HandleMouseWheel(mouseWheelEvent))
+                    return true;
+            return false; 
+        }
+
     }
 }

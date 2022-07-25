@@ -131,11 +131,11 @@
   <ItemGroup>
     <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Veldrid" Version="4.9.0-beta1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-beta1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.ImGui" Version="5.87.0-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.SPIRV" Version="1.0.15" />
-    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-beta1-gb881f7dcb4" />
+    <PackageReference Include="Veldrid.ImageSharp_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
+    <PackageReference Include="Veldrid.ImGui_ImageSharpUpdate" Version="5.87.0-g7419c2975d" />
+    <PackageReference Include="Veldrid.SPIRV_ImageSharpUpdate" Version="1.0.15-g" />
+    <PackageReference Include="Veldrid.StartupUtilities_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
+    <PackageReference Include="Veldrid_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
   </ItemGroup>
 
   <ItemGroup>

@@ -53,15 +53,91 @@
     <PackageReference Include="SharpAudio" Version="1.0.53-beta" />
     <PackageReference Include="SharpAudio.Codec" Version="1.0.27-beta" />
     <PackageReference Include="System.Windows.Extensions" Version="5.0.0" />
-    <PackageReference Include="Veldrid" Version="4.9.0-beta1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.ImageSharp" Version="4.9.0-beta1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.ImGui" Version="5.87.0-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.OpenGLBindings" Version="4.9.0-beta1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.RenderDoc" Version="1.0.1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.SDL2" Version="4.9.0-beta1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-beta1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.Utilities" Version="4.9.0-beta1-gb881f7dcb4" />
-    <PackageReference Include="Veldrid.VirtualReality" Version="1.0.1-gb881f7dcb4" />
+    <PackageReference Include="Veldrid.ImageSharp_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
+    <PackageReference Include="Veldrid.ImGui_ImageSharpUpdate" Version="5.87.0-g7419c2975d" />
+    <PackageReference Include="Veldrid.OpenGLBindings_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
+    <PackageReference Include="Veldrid.RenderDoc_ImageSharpUpdate" Version="1.0.1-g7419c2975d" />
+    <PackageReference Include="Veldrid.SDL2_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
+    <PackageReference Include="Veldrid.SPIRV_ImageSharpUpdate" Version="1.0.15-g" />
+    <PackageReference Include="Veldrid.StartupUtilities_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
+    <PackageReference Include="Veldrid.Utilities_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
+    <PackageReference Include="Veldrid.VirtualReality_ImageSharpUpdate" Version="1.0.1-g4be25fef4f" />
+    <PackageReference Include="Veldrid_ImageSharpUpdate" Version="4.9.0-beta1-g7419c2975d" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="runtimes\linux-x64\native\libassimp.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\linux-x64\native\libcimgui.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\linux-x64\native\libveldrid-spirv.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\osx-universal\native\libcimgui.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\osx-x64\native\libassimp.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\osx-x64\native\libsdl2.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\osx\native\libveldrid-spirv.dylib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x64\native\assimp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x64\native\cimgui.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x64\native\libveldrid-spirv.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x64\native\openvr_api.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x64\native\SDL2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x86\native\assimp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x86\native\cimgui.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x86\native\libveldrid-spirv.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x86\native\SDL2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win\lib\netstandard2.0\System.Security.AccessControl.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

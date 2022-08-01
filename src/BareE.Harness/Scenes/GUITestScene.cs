@@ -14,10 +14,12 @@ namespace BareE.Harness.Scenes
 {
     public class GUITestScene : GameSceneBase
     {
+        ConsoleSystem cSys;
         GUI.BareEGUISystem guiSys;
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
-            this.Systems.Enqueue(new ConsoleSystem(), 0);
+            cSys = (ConsoleSystem)this.Systems.Enqueue(new ConsoleSystem(), 0);
+            cSys.IsShowingMainMenuBar = false;
             guiSys = (GUI.BareEGUISystem)this.Systems.Enqueue(new BareE.GUI.BareEGUISystem(new System.Drawing.Size(Env.Window.Resolution.Width, Env.Window.Resolution.Height)),1);
             guiSys.AddWindow("Message", AssetManager.ReadFile(@"./Assets/Widgets/MessageBox.widget"));
             State.Messages.AddListener<ChangeSetting>(HandleSettingChange);

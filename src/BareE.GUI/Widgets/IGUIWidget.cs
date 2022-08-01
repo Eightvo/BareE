@@ -53,8 +53,8 @@ namespace BareE.GUI.Widgets
         public virtual RenderStyle RenderStyle { get; protected set; } = RenderStyle.Glyph;
         public virtual Size Size { get; protected set; }
         public virtual Point Position { get; protected set; }
-        public virtual RectangleF FootPrint { get { return new RectangleF(Position.X, Position.Y, Size.Width, Size.Height); } }
-        public virtual RectangleF Viewport { get; protected set; }
+        public virtual Rectangle FootPrint { get { return new Rectangle(Position.X, Position.Y, Size.Width, Size.Height); } }
+        public virtual Rectangle Viewport { get; protected set; }
         
         public virtual int KeyRefreshRate { get; protected set; }
         public virtual int ZIndex { get; set; } 
@@ -69,7 +69,7 @@ namespace BareE.GUI.Widgets
             }
         }
 
-        public GuiWidgetBase(BareE.DataStructures.AttributeCollection def, GUIContext context)
+        public GuiWidgetBase(BareE.DataStructures.AttributeCollection def, GUIContext context, GuiWidgetBase parent)
         {
             _id++;
             ID = _id;
@@ -88,10 +88,19 @@ namespace BareE.GUI.Widgets
             switch(def["Size"])
             {
                 case null: throw new Exception($"Widget {Name} requires a size.");
+                case Vector2 v2: Size = new Size((int)v2.X, (int)v2.Y);break;
                 case String szStr:
                     {
                         Size sz;
-                        if (!StringHelper.TryParseSize(szStr, context.Resolution, out sz))
+                        Size rz = context.Resolution;
+                        
+                        if (parent != null)
+                        {
+                            var pSz = parent.GetDisplayArea(new Instant(), null, null, context);
+                            rz=new Size(pSz.Width, pSz.Height);
+                        }
+                            
+                        if (!StringHelper.TryParseSize(szStr, rz, out sz))
                             throw new Exception($"Invalid size {szStr}");
                         Size=sz;
                     }
@@ -104,10 +113,19 @@ namespace BareE.GUI.Widgets
             switch (def["Position"])
             {
                 case null: Position = new Point(0, 0); break;
+
+                case Vector2 v2: Position = new Point((int)v2.X, (int)v2.Y); break;
                 case string posStr:
                     {
                         Point pos;
-                        if (!StringHelper.TryParsePosition(posStr, Size, context.Resolution, out pos)) 
+                        Size rz = context.Resolution;
+
+                        if (parent != null)
+                        {
+                            var pSz = parent.GetDisplayArea(new Instant(), null, null, context);
+                            rz = new Size(pSz.Width, pSz.Height);
+                        }
+                        if (!StringHelper.TryParsePosition(posStr, Size, rz, out pos)) 
                           throw new Exception($"Invalid position {posStr}");
                         Position = pos;
                     }
@@ -119,18 +137,18 @@ namespace BareE.GUI.Widgets
             {
                 foreach (var child in def.DataAs<Object[]>("Children"))
                 {
-                    var childWidget = context.CreateWidget((AttributeCollection)child);
+                    var childWidget = context.CreateWidget((AttributeCollection)child, this);
                     Children.Add(childWidget.Name, childWidget);
                 }
             }
         }
 
-        public virtual RectangleF GetDisplayArea(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context)
+        public virtual Rectangle GetDisplayArea(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context)
         {
             var padding = (int)(context.Styles.GetStyleDefinition("Default_Padding")??2);
-            return new RectangleF(this.FootPrint.X + padding, this.FootPrint.Y + padding, this.FootPrint.Width-2*padding, this.FootPrint.Height-2*padding);        }
+            return new Rectangle(this.FootPrint.X + padding, this.FootPrint.Y + padding, this.FootPrint.Width-2*padding, this.FootPrint.Height-2*padding);        }
 
-        public virtual void Render(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context, RectangleF displayArea)
+        public virtual void Render(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context, Rectangle displayArea)
         {
 
             foreach (var widget in Children.OrderBy(x => x.Value.ZIndex))

@@ -45,6 +45,7 @@ namespace BareE.Rendering
             get
             {
                 return Matrix4x4.CreateOrthographicOffCenter(boundsLeft, boundsRight, boundsBottom, boundsTop, boundsNear, boundsFar);
+                //return Matrix4x4.CreateOrthographicOffCenter(boundsLeft, boundsRight, boundsBottom, boundsTop, boundsNear, boundsFar);
             }
         }
 

@@ -40,10 +40,11 @@ namespace BareE.DataStructures
 
         public void Merge(String name, Image<Rgba32> image, Rectangle subRec)
         {
+            image.Mutate<Rgba32>(x => x.Crop(subRec));
             var tSpriteModel = new SpriteModel()
             {
                 Name = name,
-                SrcRect = subRec
+                SrcRect = new Rectangle(0, 0, subRec.Width, subRec.Height)
             };
             Merge(name, tSpriteModel, image);
         }

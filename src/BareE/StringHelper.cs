@@ -52,10 +52,10 @@ namespace BareE
 
             switch (posStr.Trim().ToLower())
             {
-                case "topleft":pos = new System.Drawing.Point(0, 0);break;
-                case "top":
-                case "topcenter": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width) / 2.0f), 0); break;
-                case "topright": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width)), 0); break;
+                case "bottomleft": pos = new System.Drawing.Point(0, 0);break;
+                case "bottom":
+                case "bottomcenter": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width) / 2.0f), 0); break;
+                case "bottomright": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width)), 0); break;
 
                 case "left":
                 case "centerleft": pos = new System.Drawing.Point(0, (int)((contextSize.Height - WidgetSize.Height) / 2)); break;
@@ -64,10 +64,10 @@ namespace BareE
                 case "right":
                 case "centerright": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width)), (int)((contextSize.Height - WidgetSize.Height) / 2)); break;
 
-                case "bottomleft": pos = new System.Drawing.Point(0, (int)(contextSize.Height - WidgetSize.Height)); break;
-                case "bottom":
-                case "bottomcenter": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width) / 2.0f), (int)(contextSize.Height - WidgetSize.Height)); break;
-                case "bottomright": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width) ), (int)(contextSize.Height - WidgetSize.Height)); break;
+                case "topleft": pos = new System.Drawing.Point(0, (int)(contextSize.Height - WidgetSize.Height)); break;
+                case "top":
+                case "topcenter": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width) / 2.0f), (int)(contextSize.Height - WidgetSize.Height)); break;
+                case "topright": pos = new System.Drawing.Point((int)((contextSize.Width - WidgetSize.Width) ), (int)(contextSize.Height - WidgetSize.Height)); break;
 
                     default:
                     {

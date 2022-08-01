@@ -35,17 +35,17 @@ namespace BareE.Rendering
             FragmentShaderName = fragmentShaderName;
         }
 
-        private List<V> verts = new List<V>();
-        private int MaxVerts = 100;
+        protected List<V> verts = new List<V>();
+        protected int MaxVerts = 100;
 
-        private bool MaxVertexCountDirty = true;
-        private bool VertexContentDirty = false;
+        protected bool MaxVertexCountDirty = true;
+        protected bool VertexContentDirty = false;
 
         public virtual bool UseDepthStencil { get; set; } = true;
 
-        private PixelFormat NativePixelFormat;
-        private Pipeline GraphicsPipeline;
-        private DeviceBuffer VertexBuffer;
+        protected PixelFormat NativePixelFormat;
+        protected Pipeline GraphicsPipeline;
+        protected DeviceBuffer VertexBuffer;
 
         private DeviceBuffer CameraMatrixBuffer;
         private ResourceLayout CameraMatrixResourceLayout;
@@ -55,11 +55,14 @@ namespace BareE.Rendering
         private Shader[] ShaderSet;
         private ShaderSetDescription ShaderSetDesc;
 
-        public void Clear()
+        public void ClearVerticies()
         {
             verts.Clear();
-
             VertexContentDirty = true;
+        }
+        public virtual void Clear()
+        {
+            ClearVerticies();
         }
 
         public virtual void AddVertex(V vert)

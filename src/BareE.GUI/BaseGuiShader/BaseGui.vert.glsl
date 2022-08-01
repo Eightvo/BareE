@@ -37,7 +37,7 @@ layout(set=3,binding=1) uniform sampler Sampler1;
 
 void main()
 {
-	gl_Position = CamMatrix*ModelMatrix*vec4(POS,1);
+	gl_Position = CamMatrix*ModelMatrix*vec4(POS*vec3(1,-1,1),1);
 	uvt=UVT;
 	clr=COLOR;
 }

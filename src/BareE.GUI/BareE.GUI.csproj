@@ -37,6 +37,7 @@
     <None Remove="Assets\Styles\SimpleRPG\ArrowRight.png" />
     <None Remove="Assets\Styles\SimpleRPG\ArrowUp.png" />
     <None Remove="Assets\Styles\SimpleRPG\BasicFrame.png" />
+    <None Remove="Assets\Styles\SimpleRPG\BasicFrameWBkgrnd.png" />
     <None Remove="Assets\Styles\SimpleRPG\CloseIcon.png" />
     <None Remove="Assets\Styles\SimpleRPG\CollapseIcon.png" />
     <None Remove="Assets\Styles\SimpleRPG\CurveFrame.png" />
@@ -112,6 +113,7 @@
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\ArrowRight.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\ArrowUp.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\BasicFrame.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\BasicFrameWBkgrnd.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\CloseIcon.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\CollapseIcon.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\CurveFrame.png" />

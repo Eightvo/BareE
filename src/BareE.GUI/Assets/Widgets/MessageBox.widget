@@ -8,6 +8,7 @@
 			Name:Default,
 			Src:{
 				MinGUiAtlas:{Name:MinGui, Type:"Atlas", Src:"BareE.GUI.Assets.Styles.MinGui.MinGui.Atlas"},
+				//SimpleRPGAtlas:{Name:SimpleRPG, Type:"Atlas", Src:"BareE.GUI.Assets.Styles.SimpleRPG.SimpleRpg.Atlas"},
 				NeutonFont:{"Name":"Neuton", Type:"Font", "Src":"BareE.Harness.Assets.Fonts.Bitmap.Neuton.Neuton.bff"},
 
 				CloseButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.close.png"},
@@ -21,6 +22,8 @@
 				ResizeButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.resize.png"},
 				Frame:{Sprite:"MinGui.NineFrame", Src:"BareE.GUI.Assets.Styles.MinGui.squareFrame.png"},
 				Titlebar:{Sprite:"MinGUi.NineFrame", Src:"BareE.GUI.Assets.Styles.MinGui.R2Frame.png"},
+				//Frame:{Sprite:"SimpleRPG.NineFrame", Src:"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png"},
+				//Titlebar:{Sprite:"SimpleRPG.NineFrame", Src:"BareE.GUI.Assets.Styles.SimpleRPG.GemFrame.png"},
 
 				Mouse_Cursor_Normal:{Src:"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", rect:<180,450,15,15>},
 				Mouse_Cursor_MouseDown:{Src:"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", rect:<198,450,15,15>},
@@ -66,8 +69,8 @@
 		*/
 		Type:Window,
 		Name:MessageBox,
-		Size:"50%,25%",
-		Position:Centered,
+		Size:<350,150>,
+		Position:"Centered",
 		Text:MessageBox,
 		AllowClose:false,
 		AllowResize:false,
@@ -82,7 +85,7 @@
 				Type:Text,
 				Size:"95%,75%",
 				Position: TopCenter,
-				Text:"This is a message",
+				Text:"This is a message. It is really long. Like Really really Long. Like So long that I have to start making up gibberish. Like Ipa Sorum type long. Lets make this so long that you can't fit the whole thing on the page. Like no matter how hard you try, you either fit the whole thing on the page or can't read it. Or maybe you have like a really really big monitor. So that would be a lot of text. Man. How much text can you fit on your really really big monitor? This much? no! More? Man. Lets keep going. I'll tell you a story of a man named Jed. He was working in the forsest and to right in the head. But on day he shot a deer. It was a john deere so he had to pay someone to come fix it. But they were all like you have to pay this specific guy and jed was like that sucks. And the moral of the story is that there is none. Just becareful with your firearms I guess or you'll have to pay someone to fix something. Speaking of fire. Don't light them unattended. That is a bad idea because it can cause you all sorts of problems in the future. Like maybe you won't have a house any more... and then what will you do? ",
 				TextAlign:Centered
 			},
 			{

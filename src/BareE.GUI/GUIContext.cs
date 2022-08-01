@@ -18,6 +18,7 @@ using Veldrid;
 
 using static BareE.DataStructures.SpriteAtlas;
 
+using Rectangle = SixLabors.ImageSharp.Rectangle;
 using Image = SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>;
 using Size = System.Drawing.Size;
 using Veldrid.Sdl2;
@@ -34,8 +35,9 @@ namespace BareE.GUI
         BaseGuiShader GuiShader;
         Framebuffer GuiBuffer;
         Texture resolvedTexture;
-        public Image Canvas;
-        public Size Resolution { get { return new Size(Canvas.Width, Canvas.Height); } }
+//        public Image Canvas;
+
+        public Size Resolution { get; private set; }
 
         Dictionary<String, GuiWidgetBase> Widgets { get; set; } = new Dictionary<String, GuiWidgetBase>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -60,7 +62,8 @@ namespace BareE.GUI
 
         public GUIContext(Size size)
         {
-            Canvas = new SixLabors.ImageSharp.Image<Rgba32>(size.Width, size.Height);
+            Resolution = size;
+            //Canvas = new SixLabors.ImageSharp.Image<Rgba32>(size.Width, size.Height);
 
         }
 
@@ -68,7 +71,8 @@ namespace BareE.GUI
         {
 
             guiCam = new OrthographicCamera(Resolution.Width, Resolution.Height, maxGuiDepth);
-            guiCam.Move(new Vector3(Resolution.Width / 2.0f, Resolution.Height / 2.0f, 0.0f));
+            //guiCam.Roll(MathHelper.DegToRad(180));
+            guiCam.Move(new Vector3(Resolution.Width / 2.0f, -Resolution.Height / 2.0f, 0.0f));
 
             Veldrid.RenderDoc.Load(out env.rd);
             env.rd.SetCaptureSavePath(@"C:\TestData\RenderDocOutput\");
@@ -91,61 +95,6 @@ namespace BareE.GUI
             GUICanvas.SetTexture(env.Window.Device, GuiBuffer.ColorTargets[0].Target);
             GUICanvas.Update(env.Window.Device);
 
-            //StyleAtlas = new SpriteAtlas();
-            /*
-            var minGuiSpriteModels = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile(@"BareE.GUI.Assets.Styles.MinGui.MinGui.Atlas"));
-            StyleAtlas.Merge("MinGui:squareFrame", minGuiSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.MinGui.squareFrame.png");
-            StyleAtlas.Merge("MinGui:R2Frame", minGuiSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.MinGui.R2Frame.png");
-            StyleAtlas.Merge("MinGui:R2FrameV", minGuiSpriteModels["VerticalThreeFrame"], @"BareE.GUI.Assets.Styles.MinGui.R2Frame.png");
-            StyleAtlas.Merge("MinGui:R2FrameH", minGuiSpriteModels["HorizontalThreeFrame"], @"BareE.GUI.Assets.Styles.MinGui.R2Frame.png");
-            StyleAtlas.Merge("MinGui:CloseIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.close.png");
-            StyleAtlas.Merge("MinGui:ExpandIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Expand.png");
-            StyleAtlas.Merge("MinGui:CollapseIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Collapse.png");
-            StyleAtlas.Merge("MinGui:CheckBoxEmpty", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.OvalEmpty.png");
-            StyleAtlas.Merge("MinGui:CheckBoxChecked", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Oval_Filled.png");
-            StyleAtlas.Merge("MinGui:ResizeIcon", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.resize.png");
-            StyleAtlas.Merge("MinGui:ArrowRight", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Right.png");
-            StyleAtlas.Merge("MinGui:ArrowDown", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Down.png");
-            StyleAtlas.Merge("MinGui:ArrowLeft", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Left.png");
-            StyleAtlas.Merge("MinGui:ArrowUp", minGuiSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.MinGui.Up.png");
-
-
-            var SimpleRPGSpriteModels = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile(@"BareE.GUI.Assets.Styles.SimpleRPG.SimpleRpg.Atlas"));
-            StyleAtlas.Merge("SimpleRPG:GemFrame", SimpleRPGSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.SimpleRPG.GemFrame.png");
-            StyleAtlas.Merge("SimpleRPG:BasicFrame"      , SimpleRPGSpriteModels["NineFrame"], @"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png");
-            StyleAtlas.Merge("SimpleRPG:BasicFrameV", SimpleRPGSpriteModels["VerticalThreeFrame"], @"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png");
-            StyleAtlas.Merge("SimpleRPG:BasicFrameH", SimpleRPGSpriteModels["HorizontalThreeFrame"], @"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png");
-            StyleAtlas.Merge("SimpleRPG:CloseIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.CloseIcon.png");
-            StyleAtlas.Merge("SimpleRPG:ExpandIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ExpandIcon.png");
-            StyleAtlas.Merge("SimpleRPG:CollapseIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.CollapseIcon.png");
-//            StyleAtlas.Merge("SimpleRPG.CheckBoxEmpty" , SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.OvalEmpty.png");
-//           StyleAtlas.Merge("SimpleRPG.CheckBoxChecked", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.Oval_Filled.png");
-            StyleAtlas.Merge("SimpleRPG:ResizeIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ResizeIcon.png");
-            StyleAtlas.Merge("SimpleRPG:ArrowRight", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ArrowRight.png");
-            StyleAtlas.Merge("SimpleRPG:ArrowDown", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ArrowDown.png");
-            StyleAtlas.Merge("SimpleRPG:ArrowLeft", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ArrowLeft.png");
-            StyleAtlas.Merge("SimpleRPG:ArrowUp", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.ArrowUp.png");
-            StyleAtlas.Merge("SimpleRPG:GemIcon", SimpleRPGSpriteModels["Glyph"], @"BareE.GUI.Assets.Styles.SimpleRPG.GemIcon.png");
-
-            StyleAtlas.Merge("KennyGUI:GoldSword", AssetManager.GetImage(@"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", new Veldrid.Rectangle(198, 450, 15, 15)));
-            StyleAtlas.Merge("KennyGUI:SilverSword", AssetManager.GetImage(@"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", new Veldrid.Rectangle(180, 450, 15, 15)));
-
-            StyleAtlas.Build(0, null);
-
-
-            FontAtlas = new SpriteAtlas();
-            LoadFont(@"BareE.Harness.Assets.Fonts.Bitmap.Cookie.Cookie.bff");
-            LoadFont(@"BareE.Harness.Assets.Fonts.Bitmap.Neuton.Neuton.bff");
-            //var spriteModels = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile(@"BareE.Harness.Assets.Fonts.Bitmap.Cookie.Cookie.atlas"));
-            //FontAtlas.Merge("Cookie", spriteModels["Cookie"], @"BareE.Harness.Assets.Fonts.Bitmap.Cookie.Cookie.png");
-
-            //spriteModels = SpriteModel.LoadSpriteModelsFromSrc(AssetManager.ReadFile(@"BareE.Harness.Assets.Fonts.Bitmap.Neuton.Neuton.atlas"));
-            //FontAtlas.Merge("Neuton", spriteModels["Neuton"], @"BareE.Harness.Assets.Fonts.Bitmap.Neuton.Neuton.png");
-
-            if (FontAtlas.Dirty)
-                FontAtlas.Build(0, null);
-
-            */
             GuiShader = new BaseGuiShader();
             GuiShader.SetOutputDescription(GuiBuffer.OutputDescription);
             GuiShader.DepthStencilDescription = new DepthStencilStateDescription()
@@ -177,29 +126,12 @@ namespace BareE.GUI
                 GuiShader.SetStyleTexture(env.Window.Device, AssetManager.LoadTexture(StyleAtlas.AtlasSheet, env.Window.Device));
                 _rebuildStyleAtlas = false;
             }
-            
-            
 
-            var mPos = ImGuiNET.ImGui.GetIO().MousePos;
-            //ImGuiNET.ImGui.GetIO().
             bool showCursor = (this.UseSystemMouseCursor | !(ImGuiNET.ImGui.GetIO().WantCaptureMouse));
             Veldrid.Sdl2.Sdl2Native.SDL_ShowCursor(showCursor ? 0 : 1);
             if (_setNextResolution)
             {
-                Canvas = new SixLabors.ImageSharp.Image<Rgba32>((int)_nextResolution.X, (int)_nextResolution.Y);
-                GuiBuffer.Dispose();
-                GuiBuffer = UTIL.Util.CreateFramebuffer(env.Window.Device, (uint)Resolution.Width, (uint)Resolution.Height, PixelFormat.R8_G8_B8_A8_UNorm, GuiBufferTextureCount);
-                resolvedTexture.Dispose();
-                resolvedTexture = env.Window.Device.ResourceFactory.CreateTexture(
-                new TextureDescription((uint)_nextResolution.X, (uint)_nextResolution.Y,
-                                       1, 1, 1,
-                                       PixelFormat.R8_G8_B8_A8_UNorm,
-                                       TextureUsage.Sampled,
-                                       TextureType.Texture2D,
-                                       TextureSampleCount.Count1));
-
-                GUICanvas.SetTexture(env.Window.Device, GuiBuffer.ColorTargets[0].Target);
-                GUICanvas.Update(env.Window.Device);
+                Resolution = new Size((int)_nextResolution.X, (int)_nextResolution.Y);
                 _setNextResolution = false;
             }
 
@@ -207,120 +139,27 @@ namespace BareE.GUI
             GuiShader.Clear();
             foreach(var widget in Widgets.OrderBy(x=>x.Value.ZIndex))
             {
-                widget.Value.Render(instant, state, env, this, new RectangleF(0,0,Resolution.Width, Resolution.Height));
+                widget.Value.Render(instant, state, env, this, new Rectangle(0,0,Resolution.Width, Resolution.Height));
             }
-            /*
-            var uv = StyleAtlas[$"MinGui:R2Frame"];
-
-            DrawNineFrame($"MinGui:squareFrame", new RectangleF(100, 298, 200, 32), -0.01f, ((Vector4)Color.CornflowerBlue));
-            DrawString("MinGui:Title", new RectangleF(115, 303, 190, 20), -0.01f, 16, "Neuton", (Vector4)Color.Black);
-            DrawNineFrame($"MinGui:R2Frame", new RectangleF(100, 116, 200, 200), 1, ((Vector4)Color.AntiqueWhite));
-            DrawGlyph($"MinGui:CollapseIcon", new RectangleF(242, 305, 16, 16), -0.01f, ((Vector4)Color.Black));
-            DrawGlyph($"MinGui:ExpandIcon", new RectangleF(258, 305, 16, 16), -0.01f, ((Vector4)Color.Black));
-            DrawGlyph($"MinGui:CloseIcon", new RectangleF(274, 305, 16, 16), -0.01f, ((Vector4)Color.Black));
-
-            DrawGlyph($"MinGui:R2Frame", new RectangleF(280, 160, 20, 20), 0, ((Vector4)Color.White));
-            DrawGlyph($"MinGui:ArrowUp", new RectangleF(280, 280, 20, 20), 0, ((Vector4)Color.Black));
-            DrawGlyph($"MinGui:ArrowDown", new RectangleF(280, 130, 20, 20), 0, ((Vector4)Color.Black));
-
-            DrawGlyph($"MinGui:R2Frame", new RectangleF(180, 116, 20, 20), 0, ((Vector4)Color.White));
-            DrawGlyph($"MinGui:ArrowLeft", new RectangleF(108, 116, 20, 20), 0, ((Vector4)Color.Black));
-            DrawGlyph($"MinGui:ArrowRight", new RectangleF(268, 116, 20, 20), 0, ((Vector4)Color.Black));
-
-
-
-
-
-            DrawNineFrame($"SimpleRpg:GemFrame", new RectangleF(600, 298, 200, 32), -0.01f, ((Vector4)Color.White));
-            DrawString("SimpleRpg:Title", new RectangleF(615, 303, 190, 20), -0.01f, 16, "Neuton", (Vector4)Color.White);
-            DrawNineFrame($"SimpleRpg:GemFrame", new RectangleF(600, 116, 200, 200), 1, ((Vector4)Color.AntiqueWhite));
-            DrawGlyph($"SimpleRpg:CollapseIcon", new RectangleF(742, 305, 16, 16), -0.01f, ((Vector4)Color.White));
-            DrawGlyph($"SimpleRpg:ExpandIcon", new RectangleF(758, 305, 16, 16), -0.01f, ((Vector4)Color.White));
-            DrawGlyph($"SimpleRpg:CloseIcon", new RectangleF(774, 305, 16, 16), -0.01f, ((Vector4)Color.White));
-
-            DrawGlyph($"SimpleRpg:GemIcon", new RectangleF(780, 160, 20, 20), 0, ((Vector4)Color.White));
-            DrawGlyph($"SimpleRpg:ArrowUp", new RectangleF(780, 280, 20, 20), 0, ((Vector4)Color.White));
-            DrawGlyph($"SimpleRpg:ArrowDown", new RectangleF(780, 130, 20, 20), 0, ((Vector4)Color.White));
-
-            DrawGlyph($"SimpleRpg:GemIcon", new RectangleF(680, 116, 20, 20), 0, ((Vector4)Color.White));
-            DrawGlyph($"SimpleRpg:ArrowLeft", new RectangleF(608, 116, 20, 20), 0, ((Vector4)Color.White));
-            DrawGlyph($"SimpleRpg:ArrowRight", new RectangleF(768, 116, 20, 20), 0, ((Vector4)Color.White));
-
             if (showCursor)
             {
-                var c = _isMouseDown;
-                var cursorStyle = (_isMouseDown) ? $"KennyGUI:GoldSword" : $"KennyGUI:SilverSword";
-                var cursorOffSet = StyleAtlas.EstimateOriginalSize($"KennyGUI:GoldSword");
-                
-                DrawGlyph(cursorStyle, new RectangleF(mPos.X, Resolution.Height - (mPos.Y + cursorOffSet.Y), cursorOffSet.X, cursorOffSet.Y), -maxGuiDepth, ((Vector4)Color.White));
+                var mPos = ImGuiNET.ImGui.GetIO().MousePos;
+
+                var mRatioH = env.Window.Resolution.Width / (float)env.Window.Width;
+                mPos.X = mPos.X * mRatioH;
+                var mRatioV = env.Window.Resolution.Height/ (float)env.Window.Height;
+                mPos.Y = mPos.Y * mRatioV;//(Resolution.Height - (mPos.Y + cursorOffSet.Y)) * mRatioV;   
+
+                var c = _isMouseDown? "Mouse_Cursor_MouseDown": "Mouse_Cursor_Normal";
+                var cursorStyle = $"Default_{c}";
+                var cursorOffSet = StyleAtlas.EstimateOriginalSize(cursorStyle);
+
+
+                var cursorFootprint = new Rectangle((int)mPos.X, (int)mPos.Y, (int)cursorOffSet.X, (int)cursorOffSet.Y);
+                DrawGlyph(cursorStyle, cursorFootprint, -maxGuiDepth, ((Vector4)Color.White));
+                EndVertSet(new Rectangle(0,0,Resolution.Width, Resolution.Height));
             }
-
-
-
-        
-
-                        //DrawGlyph($"SimpleRpg:ResizeIcon", new RectangleF(780, 100, 20, 20), 0, ((Vector4)Color.Black));
-
-            //DrawNineFrame($"squareFrame", new RectangleF(100, 600, 200, 200), -1, ((Vector4)Color.Blue));
-            */
-            /*
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Left, uv.Bottom, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Top, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Bottom, 0) });
-
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Left, uv.Bottom, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 250, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Left, uv.Top, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(1, 1, 1, 1), UvT = new Vector3(uv.Right, uv.Top, 0) });
-            */
-
-
-
-            /*
-            uv = FontAtlas[$"Cookie.{(((int)'A').ToString())}"];
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0),     Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Left , uv.Bottom, 1)});
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Right, uv.Top   , 1)});
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 0, 0),   Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Right, uv.Bottom, 1)});
-
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 0, 0),     Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Left , uv.Bottom, 1)});
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(0, 250, 0),   Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Left , uv.Top   , 1)});
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(250, 250, 0), Color = new Vector4(0, 0, 0, 1), UvT = new Vector3(uv.Right, uv.Top   , 1)});
-            */
-
-
-
-            /*
-            DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(250, 250, 200, 200), 0, 32, "Cookie", ((Vector4)Color.Black), true);
-
-            DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(550, 250, 200, 200), 0, 16, "Neuton", ((Vector4)Color.Blue), true);
-
-            DrawString("The quick brown fox jumped over the lazy dog.", new RectangleF(750, 250, 200, 200), 0, 10, "Neuton", ((Vector4)Color.Red), true);
-            */
             GuiShader.Update(env.Window.Device);
-
-
-            //Pull Canvas from card
-            /*
-            MappedResource mapped = env.Window.Device.Map(cTex, MapMode.Read);
-            byte[] bytes = new byte[mapped.SizeInBytes];
-            Marshal.Copy(mapped.Data, bytes, 0, (int)mapped.SizeInBytes);
-
-            Canvas = Image.LoadPixelData<Rgba32>(bytes, (int)cTex.Width, (int)cTex.Height);
-            env.Window.Device.Unmap(cTex);
-            */
-
-            //Modify Canvas *SWRender*
-            /*
-             t++;
-             Canvas.Mutate<Rgba32>(i => 
-             {
-                 //i.Clear(Color.Transparent);
-                  i.DrawText((t / ((instant.SessionDuration+1) / 1000.0f)).ToString(), font, Color.Orange, new PointF(100, 0100));
-             });
-            */
-
-            //Send Canvas to Card
-            //AssetManager.UpdateTextureData(env.Window.Device, cTex, Canvas);
-
         }
 
 
@@ -380,7 +219,7 @@ Func()
 */
         ~GUIContext()
         {
-            Canvas.Dispose();
+            //Canvas.Dispose();
         }
         internal void SetResolution(Vector2 vector2)
         {
@@ -394,7 +233,7 @@ Func()
             var widget = CreateWindow(result);
             this.Widgets.Add(name, widget);
         }
-        public GuiWidgetBase CreateWidget(AttributeCollection def)
+        public GuiWidgetBase CreateWidget(AttributeCollection def, GuiWidgetBase parent=null)
         {
             GuiWidgetBase widget = null;
             switch (def["type"])
@@ -405,22 +244,22 @@ Func()
                     switch (typeName.Trim().ToLower())
                     {
                         case "panel":
-                            widget = new Panel(def, this);
+                            widget = new Panel(def, this, parent);
                             break;
                         case "frame":
-                            widget = new Frame(def, this);
+                            widget = new Frame(def, this, parent);
                             break;
                         case "border":
-                            widget = new Border(def, this);
+                            widget = new Border(def, this, parent);
                             break;
                         case "window":
-                            widget = new Window(def, this);
+                            widget = new Window(def, this, parent);
                             break;
                         case "text":
-                            widget = new Text(def, this);
+                            widget = new Text(def, this, parent);
                             break;
                         case "button":
-                            widget = new Button(def, this);
+                            widget = new Button(def, this, parent);
                             break;
                     }
                     break;
@@ -690,21 +529,21 @@ Func()
 
             float trueLineHeight = fontData.LineHeight * resizeRatioV;
             float penX = textArea.Left;
-            float penY = textArea.Bottom - trueLineHeight;
+            float penY = textArea.Top; 
 
             int i = 0;
             while (i < str.Length)
             {
-                if (penY + trueLineHeight < textArea.Top)
+                if (penY + trueLineHeight > textArea.Bottom)
                     break;
                 var currCh = (int)str[i];
                 if (!fontData.Glyphs.ContainsKey(currCh))
                 {
                     penX += (fontData.SpaceWidth * resizeRatioV);
-                    if (penX > textArea.Right)
+                    if (penX >= textArea.Right)
                     {
                         penX = textArea.Left;
-                        penY = penY - (trueLineHeight * 1.25f);
+                        penY = penY + (trueLineHeight * 1.25f);
                     }
                     //MoveNext and continue
                     i += 1;
@@ -715,25 +554,25 @@ Func()
                 float offsetY = glyphData.Drop * resizeRatioV;
                 float glyphWidth = glyphData.Width * resizeRatioV;
                 float glyphHeight = glyphData.Height * resizeRatioV;
-                if (penX + offsetX + glyphWidth > textArea.Right)
+                if (penX + offsetX + glyphWidth > textArea.Right-glyphWidth)
                 {
                     penX = textArea.Left;
-                    penY = penY - (trueLineHeight * 1.25f);
+                    penY = penY + (trueLineHeight * 1.25f);
                     //Continue on new line without moving next or placing char.
                     continue;
                 }
                 var uv = FontAtlas[$"{font}.{currCh}"];
 
                 var trueX = penX + offsetX;
-                var trueY = penY - offsetY;
+                var trueY = (penY + offsetY)+(trueLineHeight-glyphHeight);
 
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
 
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
-                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
                 i += 1;
                 penX += glyphData.Advance * resizeRatioV;
             }
@@ -975,12 +814,12 @@ Func()
         private void DrawQuad(float zIndex, Vector4 color, RectangleF uv, float closeX, float farX, float lowY, float highY)
         {
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
 
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, highY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 0) });
             GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, highY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 0) });
         }
 
         public void DrawGlyph(string glyphName, RectangleF footprint, float zIndex, Vector4 color)
@@ -990,13 +829,13 @@ Func()
             var lowY = footprint.Y;
             var highY = footprint.Y + footprint.Height;
             var uv = StyleAtlas[glyphName];// Uv_MMFill;
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 0) });
 
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, highY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 0) });
-            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, lowY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(farX, highY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 0) });
+            GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(closeX, highY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 0) });
         }
 
         GuiWidgetBase GetWidgetAtPt(Vector2 loc)
@@ -1007,6 +846,12 @@ Func()
                     return widget.Value.GetWidgetAtPt(loc - new Vector2(widget.Value.Position.X, widget.Value.Position.Y));
             }
             return null;
+        }
+
+
+        public void EndVertSet(SixLabors.ImageSharp.Rectangle rect)
+        {
+            GuiShader.EndVertSet(rect);
         }
 
     }

@@ -7,9 +7,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using RectangleF = SixLabors.ImageSharp.RectangleF;
+
 using Rectangle = SixLabors.ImageSharp.Rectangle;
-using Color = SixLabors.ImageSharp.Color;
 namespace BareE.GUI.Widgets
 {
     public class Panel : GuiWidgetBase
@@ -38,73 +37,14 @@ namespace BareE.GUI.Widgets
         }
 
     }
-    public class Window: GuiWidgetBase
-    {
-        public override string WidgetType => "Window";
-
-        public bool AllowClose { get; set; } = true;
-        public bool AllowExpand { get; set; } = true;
-        public bool AllowCollapse { get; set; } = true;
-
-        public override RenderStyle RenderStyle { get; protected set; } = RenderStyle.NineFrame;
-        public Window(AttributeCollection def, GUIContext context, GuiWidgetBase parent) : base(def, context, parent)
-        {
-
-        }
-        int titleBarHeight = 40;
-        public override Rectangle GetDisplayArea(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context)
-        {
-            return new Rectangle(this.FootPrint.X, this.FootPrint.Y+titleBarHeight, this.FootPrint.Width, this.FootPrint.Height-titleBarHeight);
-
-        }
-        public override void Render(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context, Rectangle displayArea)
-        {
-            switch(RenderStyle)
-            {
-                case RenderStyle.NineFrame:
-                    context.DrawNineFrame("Default_Frame"   , this.FootPrint, this.ZIndex);
-                    
-                    var titleBarRect = new RectangleF(this.FootPrint.X, this.FootPrint.Y, this.FootPrint.Width, titleBarHeight);
-                    context.DrawNineFrame("Default_Titlebar", titleBarRect, this.ZIndex, (Vector4)SixLabors.ImageSharp.Color.CornflowerBlue);
-                   
-                    var xOff = 0;
-                    if (AllowClose)
-                    {
-                        var closeIconRect = new RectangleF(this.FootPrint.X + this.FootPrint.Width - titleBarHeight, titleBarRect.Y, titleBarHeight, titleBarHeight);
-                        context.DrawGlyph("Default_CloseButton", closeIconRect, this.ZIndex, (Vector4)Color.Black);
-                        xOff += titleBarHeight;
-                    }
-                    if (AllowExpand)
-                    {
-                        var closeIconRect = new RectangleF(this.FootPrint.X + this.FootPrint.Width - (titleBarHeight + xOff), titleBarRect.Y, titleBarHeight, titleBarHeight);
-                        context.DrawGlyph("Default_ExpandButton", closeIconRect, this.ZIndex, (Vector4)Color.Black);
-                        xOff += titleBarHeight;
-                    }
-                    if (AllowCollapse)
-                    {
-                        var closeIconRect = new RectangleF(this.FootPrint.X + this.FootPrint.Width - (titleBarHeight + xOff), titleBarRect.Y, titleBarHeight, titleBarHeight);
-                        context.DrawGlyph("Default_CollapseButton", closeIconRect, this.ZIndex, (Vector4)Color.Black);
-                        xOff += titleBarHeight;
-                    }
-                    context.DrawString(this.Text, new RectangleF(this.FootPrint.X + 20, this.FootPrint.Y , this.FootPrint.Width - titleBarHeight + xOff, titleBarHeight), this.ZIndex, titleBarHeight * 0.8f, "Neuton", (Vector4)Color.Black);
-
-                    
-                    break;
-                default:
-                    throw new Exception("Windows must be RenderStyle NineFrame");
-            }
-            context.EndVertSet(FootPrint);
-            base.Render(Instant, GameState, Env, context, this.GetDisplayArea(Instant,GameState,Env,context));
-        }
-
-    }
 
     public class Text : GuiWidgetBase
     {
         public override string WidgetType => "Text";
+        public override bool ClickThrough { get; protected set; } = true;
         public Text(AttributeCollection def, GUIContext context, GuiWidgetBase parent) : base(def, context, parent)
         {
-            
+            ClickThrough = true;
         }
         public override void Render(Instant Instant, GameState GameState, GameEnvironment Env, GUIContext context, Rectangle displayArea)
         {

@@ -35,11 +35,12 @@ namespace BareE.GUI
         BaseGuiShader GuiShader;
         Framebuffer GuiBuffer;
         Texture resolvedTexture;
-//        public Image Canvas;
 
         public Size Resolution { get; private set; }
-
         Dictionary<String, GuiWidgetBase> Widgets { get; set; } = new Dictionary<String, GuiWidgetBase>(StringComparer.InvariantCultureIgnoreCase);
+
+        GuiWidgetBase ActiveWidget = null;
+
 
         SpriteAtlas FontAtlas = new SpriteAtlas();
         Dictionary<String, FontData> FontLib = new Dictionary<string, FontData>(StringComparer.CurrentCultureIgnoreCase);
@@ -57,9 +58,10 @@ namespace BareE.GUI
         public bool UseSystemMouseCursor { get; set; } = false;
 
         private bool _isMouseDown=false;
+        private bool _wasMouseDown = false;
         private bool _rebuildStyleAtlas = true;
         private bool _rebuildFontAtlas = true;
-
+        public Vector2 MousePosition;
         public GUIContext(Size size)
         {
             Resolution = size;
@@ -143,19 +145,19 @@ namespace BareE.GUI
             }
             if (showCursor)
             {
-                var mPos = ImGuiNET.ImGui.GetIO().MousePos;
+                MousePosition = ImGuiNET.ImGui.GetIO().MousePos;
 
                 var mRatioH = env.Window.Resolution.Width / (float)env.Window.Width;
-                mPos.X = mPos.X * mRatioH;
+                MousePosition.X = MousePosition.X * mRatioH;
                 var mRatioV = env.Window.Resolution.Height/ (float)env.Window.Height;
-                mPos.Y = mPos.Y * mRatioV;//(Resolution.Height - (mPos.Y + cursorOffSet.Y)) * mRatioV;   
+                MousePosition.Y = MousePosition.Y * mRatioV;//(Resolution.Height - (mPos.Y + cursorOffSet.Y)) * mRatioV;   
 
                 var c = _isMouseDown? "Mouse_Cursor_MouseDown": "Mouse_Cursor_Normal";
                 var cursorStyle = $"Default_{c}";
                 var cursorOffSet = StyleAtlas.EstimateOriginalSize(cursorStyle);
 
 
-                var cursorFootprint = new Rectangle((int)mPos.X, (int)mPos.Y, (int)cursorOffSet.X, (int)cursorOffSet.Y);
+                var cursorFootprint = new Rectangle((int)MousePosition.X, (int)MousePosition.Y, (int)cursorOffSet.X, (int)cursorOffSet.Y);
                 DrawGlyph(cursorStyle, cursorFootprint, -maxGuiDepth, ((Vector4)Color.White));
                 EndVertSet(new Rectangle(0,0,Resolution.Width, Resolution.Height));
             }
@@ -166,8 +168,29 @@ namespace BareE.GUI
         internal bool HandleMouseButtonEvent(SDL_MouseButtonEvent mouseButtonEvent)
         {
             var w = GetWidgetAtPt(ImGuiNET.ImGui.GetIO().MousePos);
+            _wasMouseDown = _isMouseDown;
             if (mouseButtonEvent.button == SDL_MouseButton.Left)
                 _isMouseDown = (mouseButtonEvent.type == SDL_EventType.MouseButtonDown);
+
+            if (_wasMouseDown!=_isMouseDown)
+            {
+                if (_isMouseDown)
+                {
+
+                    if (w == null)
+                    {
+                        ActiveWidget = null;
+                        return false;
+                    }
+                    w.OnMouseDown(new MouseButtonEventArgs(mouseButtonEvent));
+                    ActiveWidget = w;
+                }
+                else
+                {
+                    if (ActiveWidget!=null)
+                        ActiveWidget.OnMouseUp(new MouseButtonEventArgs(mouseButtonEvent));
+                }
+            }
             return false;
         }
 

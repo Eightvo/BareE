@@ -58,6 +58,8 @@ namespace BareE.GUI
             
             if (VertexBuffer == null) return;
             BaseRender(Trgt, cmds, sceneData, camMat, ModelMatrix);
+
+            var lst = 0;
             foreach(var vSet in vertSets)
             {
                 var Rect = vSet.Item3;
@@ -65,11 +67,15 @@ namespace BareE.GUI
                 var End = vSet.Item2;
                 cmds.SetScissorRect(0, (uint)Rect.X, (uint)Rect.Y, (uint)Rect.Width, (uint)Rect.Height);
                 cmds.Draw((uint)(End), 1, (uint)Start, 0);
+                lst = Start + End;
                 //cmds.Draw((uint)verts.Count, 1, 0, 0);
                 //cmds.Draw()
                 //cmds.Draw((uint)verts.Count);
             }
-            
+            if (verts.Count-lst>0)
+            {
+                cmds.Draw((uint)(verts.Count-lst), 1, (uint)lst, 0);
+            }
         }
     }
 

@@ -139,7 +139,10 @@ namespace BareE.GUI
 
 
             GuiShader.Clear();
-            foreach(var widget in Widgets.OrderBy(x=>x.Value.ZIndex))
+            DrawStringTemp("ABC", new RectangleF(0, 0, 200, 200), 1, 12, "Neuton", new Vector4(1, 1, 1, 1));
+            EndVertSet(new Rectangle(0, 0, Resolution.Width, Resolution.Height));
+
+            foreach (var widget in Widgets.OrderBy(x=>x.Value.ZIndex))
             {
                 widget.Value.Render(instant, state, env, this, new Rectangle(0,0,Resolution.Width, Resolution.Height));
             }
@@ -588,6 +591,74 @@ Func()
 
                 var trueX = penX + offsetX;
                 var trueY = (penY + offsetY)+(trueLineHeight-glyphHeight);
+
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
+
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Bottom, 1) });
+                GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY + glyphHeight, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Bottom, 1) });
+                i += 1;
+                penX += glyphData.Advance * resizeRatioV;
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str">The text to display</param>
+        /// <param name="textArea">The area to constrain the text to</param>
+        /// <param name="zIndex">The depth of the text quads</param>
+        /// <param name="textSize">Size of text quads</param>
+        /// <param name="style">Name of Font style</param>
+        /// <param namne="AutoWrap">Automatically wrap text that doesn't fit</param>
+        /// <exception cref="Exception"></exception>
+        public void DrawStringTemp(String str, RectangleF textArea, float zIndex, float textSize, String font, Vector4 color, bool AutoWrap = true)
+        {
+            if (!FontLib.ContainsKey(font))
+                throw new Exception($"No font {font}");
+            FontData fontData = FontLib[font];
+
+            var resizeRatioV = 1.0f;// (float)(textSize) / (float)fontData.LineHeight;
+
+            float trueLineHeight = fontData.LineHeight * resizeRatioV;
+            float penX = textArea.Left;
+            float penY = textArea.Top;
+
+            int i = 0;
+            while (i < str.Length)
+            {
+                if (penY + trueLineHeight > textArea.Bottom)
+                    break;
+                var currCh = (int)str[i];
+                if (!fontData.Glyphs.ContainsKey(currCh))
+                {
+                    penX += (fontData.SpaceWidth * resizeRatioV);
+                    if (penX >= textArea.Right)
+                    {
+                        penX = textArea.Left;
+                        penY = penY + (trueLineHeight * 1.25f);
+                    }
+                    //MoveNext and continue
+                    i += 1;
+                    continue;
+                }
+                var glyphData = fontData.Glyphs[currCh];
+                float offsetX = glyphData.BearingX * resizeRatioV;
+                float offsetY = glyphData.Drop * resizeRatioV;
+                float glyphWidth = glyphData.Width * resizeRatioV;
+                float glyphHeight = glyphData.Height * resizeRatioV;
+                if (penX + offsetX + glyphWidth > textArea.Right - glyphWidth)
+                {
+                    penX = textArea.Left;
+                    penY = penY + (trueLineHeight * 1.25f);
+                    //Continue on new line without moving next or placing char.
+                    continue;
+                }
+                var uv = FontAtlas[$"{font}.{currCh}"];
+
+                var trueX = penX + offsetX;
+                var trueY = (penY + offsetY) + (trueLineHeight - glyphHeight);
 
                 GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX, trueY, zIndex), Color = color, UvT = new Vector3(uv.Left, uv.Top, 1) });
                 GuiShader.AddVertex(new BaseGuiVertex() { Pos = new Vector3(trueX + glyphWidth, trueY, zIndex), Color = color, UvT = new Vector3(uv.Right, uv.Top, 1) });

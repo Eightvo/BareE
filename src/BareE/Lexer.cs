@@ -128,7 +128,7 @@ namespace BareE
                 {
                     foreach (var v in ConsumeWhitespace(rdr))
                         yield return v;
-
+                    if (rdr.EndOfStream) yield break;
                     //yield return ConsumeWhitespace(rdr);
                     //if (curr.isNewLineChar())
                     foreach (var v in ConsumeInputSection(rdr))

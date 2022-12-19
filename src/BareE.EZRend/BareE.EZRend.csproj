@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.78</Version>
+    <Version>1.0.82</Version>
     <PackageTags>BareE</PackageTags>
     <PackageLicenseFile>License.md</PackageLicenseFile>
     <Copyright>Greg Freedline 2021</Copyright>
@@ -11,6 +11,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Eightvo/BareE</RepositoryUrl>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageOutputPath>$(OutputPath)..\..\BareE\bin\BareE.EZRend</PackageOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -41,6 +42,8 @@
     <None Remove="Flat\AdvSpriteBatch\Terrain.atlas" />
     <None Remove="Flat\InstancedColor\InstancedColor.frag.spv" />
     <None Remove="Flat\InstancedColor\InstancedColor.vert.spv" />
+    <None Remove="Flat\SpriteBatch\Spritebatch.frag.spv" />
+    <None Remove="Flat\SpriteBatch\Spritebatch.vert.spv" />
     <None Remove="fonts\Natural Mono Alt-Regular.ttf" />
     <None Remove="fonts\Natural Mono-Regular.ttf" />
     <None Remove="images\EZRend_BIG.png" />
@@ -94,6 +97,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Flat\InstancedColor\InstancedColor.frag.spv" />
     <EmbeddedResource Include="Flat\InstancedColor\InstancedColor.vert.spv" />
+    <EmbeddedResource Include="Flat\SpriteBatch\Spritebatch.frag.spv" />
+    <EmbeddedResource Include="Flat\SpriteBatch\Spritebatch.vert.spv" />
     <EmbeddedResource Include="fonts\Natural Mono Alt-Regular.ttf" />
     <EmbeddedResource Include="fonts\Natural Mono-Regular.ttf" />
     <EmbeddedResource Include="images\EZRend_BIG.png" />

@@ -343,12 +343,21 @@ namespace BareE.DataStructures
                                 return (BuildArray(tokens, state));
                                 break;
                             case "@":
-                                tokens.MoveNext();
-                                ConsumeWhitespace(tokens, state);
-                                var r = ReadReference(tokens, state);
-                                if (TranslateReference != null)
-                                    r = TranslateReference(r,state);
-                                return AttributeCollectionDeserializer.FromAsset(r);
+                                {
+                                    tokens.MoveNext();
+                                    ConsumeWhitespace(tokens, state);
+                                    var r = ReadReference(tokens, state);
+                                    if (TranslateReference != null)
+                                        r = TranslateReference(r, state);
+                                    ConsumeWhitespace(tokens, state);
+                                    var toRet = AttributeCollectionDeserializer.FromAsset(r); 
+                                    if (tokens.Current.Text == "{")
+                                    {
+                                        var toMerge = (AttributeCollection)ConsumeObject(tokens, state);
+                                        toRet.Merge(toMerge);
+                                    }
+                                    return toRet;
+                                }
                                 break;
                             case "<":
                                 tokens.MoveNext();
@@ -552,7 +561,14 @@ namespace BareE.DataStructures
                             ConsumeWhitespace(tokens, state);
                             var fk = ReadReference(tokens, state);
                             if (TranslateReference != null) fk = TranslateReference(fk, state);
-                            value = AttributeCollectionDeserializer.FromAsset(fk);
+                            var toRet = AttributeCollectionDeserializer.FromAsset(fk);
+                            ConsumeWhitespace(tokens, state);
+                            if (tokens.Current.Text == "{")
+                            {
+                                var toMerge=(AttributeCollection)ConsumeObject(tokens, state);
+                                toRet.Merge(toMerge);
+                            }
+                            value = toRet;
                             break;
                         }
                     case "<":

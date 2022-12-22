@@ -12,30 +12,30 @@ namespace BareE.Rendering
         Vector3 CameraPosition { get; set; }
         Vector3 CameraSize { get; set; }
 
-        float boundsLeft
+        public float BoundsLeft
         {
             get { return CameraPosition.X - (CameraSize.X / 2.0f); }
         }
-        float boundsRight
+        public float BoundsRight
         {
             get { return CameraPosition.X + (CameraSize.X / 2.0f); }
         }
-        float boundsBottom
+        public float BoundsBottom
         {
             get { return CameraPosition.Y - (CameraSize.Y / 2.0f); }
         }
 
-        float boundsTop
+        public float BoundsTop
         {
             get { return CameraPosition.Y + (CameraSize.Y / 2.0f); }
         }
 
-        float boundsNear
+        public float BoundsNear
         {
             get { return CameraPosition.Z; }
         }
 
-        float boundsFar
+        public float BoundsFar
         {
             get { return CameraPosition.Z + (CameraSize.Z); }
         }
@@ -44,7 +44,7 @@ namespace BareE.Rendering
         {
             get
             {
-                return Matrix4x4.CreateOrthographicOffCenter(boundsLeft, boundsRight, boundsBottom, boundsTop, boundsNear, boundsFar);
+                return Matrix4x4.CreateOrthographicOffCenter(BoundsLeft, BoundsRight, BoundsBottom, BoundsTop, BoundsNear, BoundsFar);
                 //return Matrix4x4.CreateOrthographicOffCenter(boundsLeft, boundsRight, boundsBottom, boundsTop, boundsNear, boundsFar);
             }
         }
@@ -86,11 +86,14 @@ namespace BareE.Rendering
 
         public override void Zoom(float amount)
         {
-            if (CameraSize.X + amount < 0)
+            var newX = CameraSize.X + amount;
+            if (newX <= 0)
                 return;
+            var newY = CameraSize.Y + (amount * (CameraSize.Y / CameraSize.X));
+            if (newY <= 0) return;
             CameraSize = new Vector3(
-                CameraSize.X+amount,
-                CameraSize.Y+(amount*(CameraSize.Y/CameraSize.X)),
+                newX,
+                newY,
                 CameraSize.Z
                 );
         }

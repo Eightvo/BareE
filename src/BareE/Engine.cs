@@ -50,11 +50,11 @@ namespace BareE
             }
         }
 
-        private void DispatchMessagesInBackground(MessageQueue queue, Instant instant, GameState state)
+        private void DispatchMessagesInBackground(MessageQueue queue, Instant instant, GameState state, GameEnvironment env)
         {
             lock (MessageDispatchLock)
             {
-                queue.ProcessMessages(instant, state);
+                queue.ProcessMessages(instant, state, env);
             }
         }
 
@@ -108,7 +108,7 @@ namespace BareE
                 {
                     try
                     {
-                        Task.Run(() => DispatchMessagesInBackground(game.State.Messages, instant, game.State));
+                        Task.Run(() => DispatchMessagesInBackground(game.State.Messages, instant, game.State, game.Environment));
                     }
                     finally
                     {

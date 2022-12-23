@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.IO;
 using BareE.Components;
 using SixLabors.ImageSharp;
+using FFmpeg.AutoGen;
 
 namespace BareE.DataStructures
 {
@@ -130,12 +131,14 @@ namespace BareE.DataStructures
             return ent;
         }
 
+        [Obsolete("Use State.ImportAsset to  ensure refernce messages are emitted.")]
         public Entity SpawnFromAsset(String Alias, String Asset, params object[] componentOverrides)
         {
             
             var model = AttributeCollectionDeserializer.FromAsset(Asset);
             return SpawnFromAttributeCollection(Alias, model, componentOverrides);
         }
+        [Obsolete("Use State.ImportAsset to  ensure refernce messages are emitted.")]
         public Entity SpawnFromAsset(String Asset, params object[] componentOverrides)
         {
             var model = AttributeCollectionDeserializer.FromAsset(Asset);
@@ -144,7 +147,6 @@ namespace BareE.DataStructures
 
         public Entity SpawnFromAttributeCollection(String Alias, AttributeCollection model, params object[] componentOverrides)
         {
-
             List<object> componentList = AttributeCollectionToComponentSet(model);
 
 
@@ -195,12 +197,12 @@ namespace BareE.DataStructures
             return ret;
         }
 
-        private object AttributeCollectionAs<T>(AttributeCollection src)
+        public static object AttributeCollectionAs<T>(AttributeCollection src)
         {
             return AttributeCollectionAs(typeof(T), src);
         }
 
-        private object AttributeCollectionAs(Type t, AttributeCollection src)
+        public static object AttributeCollectionAs(Type t, AttributeCollection src)
         {
             var ret = Activator.CreateInstance(t);
             foreach(var v in t.GetProperties())
@@ -229,8 +231,10 @@ namespace BareE.DataStructures
             }
             return ret;
         }
-        private object AttributeAsObject(Type t, object src)
+        public static object AttributeAsObject(Type t, object src)
         {
+            if (t == src.GetType())
+                return src;
             if (t.IsPrimitive)
             {
                 return src;
@@ -246,14 +250,24 @@ namespace BareE.DataStructures
                     return Helper.DecodeColor(src.ToString());
                 }
             }
-            if (t==typeof(RectangleF) && src.GetType()==typeof(Vector4))
+            if (t == typeof(RectangleF) && src.GetType() == typeof(Vector4))
             {
                 Vector4 v = (Vector4)src;
                 return new RectangleF(v.X, v.Y, v.Z, v.W);
             }
+            if (t == typeof(Rectangle) && src.GetType() == typeof(Vector4))
+            {
+                Vector4 v = (Vector4)src;
+                return new Rectangle((int)v.X, (int)v.Y, (int)v.Z, (int)v.W);
+            }
+            if (t == typeof(Point) && src.GetType() == typeof(Vector2))
+            {
+                Vector2 v = (Vector2)src;
+                return new Point((int)v.X, (int)v.Y);
+            }
             return AttributeCollectionAs(t, (AttributeCollection)src);
         }
-        private object AttributeAsArrayOf(Type t, object[] src)
+        public static object AttributeAsArrayOf(Type t, object[] src)
         {
             var ret = Array.CreateInstance(t, src.Length);
 

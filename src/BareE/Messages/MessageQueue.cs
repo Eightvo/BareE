@@ -37,7 +37,10 @@ namespace BareE.Messages
         private PriorityQueue<object> _delayedMessages_Realtime = new PriorityQueue<object>();
         private PriorityQueue<object> _delayedMessages_Turn = new PriorityQueue<object>();
 
-        public delegate bool ProcessMessage<T>(T msg, GameState state, Instant instant);
+        public delegate bool ProcessMessage<T>(T msg);
+        public delegate bool ProcessMessageState<T>(T msg, GameState state);
+        public delegate bool ProcessMessageStateInstant<T>(T msg, GameState state, Instant instant);
+        public delegate bool ProcessMessageStateInstantEnv<T>(T msg, GameState state, Instant instant, GameEnvironment env);
 
         /// <summary>
         /// Wait delay milliseconds from the insant provided not counting paused time then emit the specified message.
@@ -112,6 +115,7 @@ namespace BareE.Messages
             _messages[i].Enqueue(m);
         }
 
+
         /// <summary>
         /// Add a handler to listen for a specific type of message.
         /// </summary>
@@ -125,14 +129,53 @@ namespace BareE.Messages
                 _listeners.Add(i, new List<object>());
             _listeners[i].Add(msgresp);
         }
+        /// <summary>
+        /// Add a handler to listen for a specific type of message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="msgresp"></param>
+        public void AddListener<T>(ProcessMessageState<T> msgresp)
+        {
+            var tDat = MessageTypeData[typeof(T)];
+            int i = tDat.MTypeID;
+            if (!_listeners.ContainsKey(i))
+                _listeners.Add(i, new List<object>());
+            _listeners[i].Add(msgresp);
+        }
+        /// <summary>
+        /// Add a handler to listen for a specific type of message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="msgresp"></param>
+        public void AddListener<T>(ProcessMessageStateInstant<T> msgresp)
+        {
+            var tDat = MessageTypeData[typeof(T)];
+            int i = tDat.MTypeID;
+            if (!_listeners.ContainsKey(i))
+                _listeners.Add(i, new List<object>());
+            _listeners[i].Add(msgresp);
+        }
 
+        /// <summary>
+        /// Add a handler to listen for a specific type of message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="msgresp"></param>
+        public void AddListener<T>(ProcessMessageStateInstantEnv<T> msgresp)
+        {
+            var tDat = MessageTypeData[typeof(T)];
+            int i = tDat.MTypeID;
+            if (!_listeners.ContainsKey(i))
+                _listeners.Add(i, new List<object>());
+            _listeners[i].Add(msgresp);
+        }
         /// <summary>
         /// Enumerate the currently queued messages calling the specified handlers for each.
         /// The first handler to return true will be the last handler to handle the message.
         /// </summary>
         /// <param name="snapshot"></param>
         /// <param name="state"></param>
-        public void ProcessMessages(Instant snapshot, GameState state)
+        public void ProcessMessages(Instant snapshot, GameState state, GameEnvironment env)
         {
             /*Effective time Delay*/
             while (!_delayedMessages_Effective.IsEmpty &&
@@ -169,12 +212,31 @@ namespace BareE.Messages
                         var d = (Delegate)listener;
                         try
                         {
-                            if ((bool)d.DynamicInvoke(msg, state, snapshot))
-                                continue;
+                            var absorbed = false;
+                            switch(d.Method.GetParameters().Length)
+                            {
+                                case 1:
+                                    absorbed = (bool)d.DynamicInvoke(msg);
+                                    break;
+                                case 2:
+                                    absorbed = (bool)d.DynamicInvoke(msg, state);
+                                    break;
+                                case 3:
+                                    absorbed = (bool)d.DynamicInvoke(msg, state, snapshot);
+                                    break;
+                                case 4:
+                                    absorbed = (bool)d.DynamicInvoke(msg, state, snapshot, env);
+                                    break;
+                                default: throw new Exception("Invalid number of parameters for Message Handler");
+                            }
+
+                            if (absorbed)
+                                break;
                         }
                         catch (Exception e)
                         {
                             Log.EmitError(e);
+                            state.Messages.EmitMsg<EmitException>(new EmitException(e));
                         }
                     }
                 }

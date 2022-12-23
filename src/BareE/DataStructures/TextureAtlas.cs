@@ -7,6 +7,7 @@ using SixLabors.ImageSharp.Processing;
 
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 using JsonConverter = Newtonsoft.Json.JsonConverter;
 using JsonConverterAttribute = Newtonsoft.Json.JsonConverterAttribute;
@@ -208,7 +209,7 @@ namespace BareE.DataStructures
         public class SpriteModel
         {
             public String Name { get; set; }
-            
+
             [JsonProperty("Children")]
             private SpriteModel[] _Children { get; set; }
             public void SetChildren(SpriteModel[] ch) { _Children = ch; }
@@ -276,15 +277,57 @@ namespace BareE.DataStructures
             }
             public void Scale(float scale)
             {
-                SrcRect = new Rectangle((int)(SrcRect.X * scale), (int)(SrcRect.Y * scale),(int)(SrcRect.Width * scale),(int)(SrcRect.Height * scale));
-                foreach(var c in _Children)
+                SrcRect = new Rectangle((int)(SrcRect.X * scale), (int)(SrcRect.Y * scale), (int)(SrcRect.Width * scale), (int)(SrcRect.Height * scale));
+                foreach (var c in _Children)
                 {
                     c.Scale(scale);
                 }
-                foreach(var a in _Alternatives)
+                foreach (var a in _Alternatives)
                 {
                     a.Off = new Point((int)(a.Off.X * scale), (int)(a.Off.Y * scale));
                 }
+            }
+
+            private static SpriteAlternativeModel SpriteAlternativeModelFromAttributeCollection(AttributeCollection src)
+            {
+                return (SpriteAlternativeModel)EntityComponentContext.AttributeCollectionAs<SpriteAlternativeModel>(src);
+            }
+            private static SpriteAlternativeModel[] SpriteAlternativeModelArrayFromAttributeCollectionArray(object[] src)
+            {
+                SpriteAlternativeModel[] ret = new SpriteAlternativeModel[src.Length];
+                for(int i=0;i<src.Length;i++)
+                {
+                    ret[i] = SpriteAlternativeModelFromAttributeCollection((AttributeCollection)src[i]);
+                }
+                return ret;
+            }
+
+            private static SpriteModel[] SpriteChildrenFromAttributeCollectionArray(object[] src)
+            {
+                SpriteModel[] children = new SpriteModel[src.Length];
+                for(int i=0;i<src.Length;i++)
+                {
+                    children[i] = LoadSpriteModelFromAttributeCollection((AttributeCollection)src[i]);
+                }
+                return children;
+            }
+
+            public static SpriteModel LoadSpriteModelFromAttributeCollection(AttributeCollection def)
+            {
+                SpriteModel model = new SpriteModel();
+                model.Name = def.DataAs<String>("Name");
+                var srcRectV4 = def.DataAs<Vector4>("SrcRect");
+                model.SrcRect = new Rectangle((int)srcRectV4.X, (int)srcRectV4.Y, (int)srcRectV4.Z, (int)srcRectV4.W);
+                if (def.HasAttribute("Alternatives"))
+                {
+                    model._Alternatives = SpriteAlternativeModelArrayFromAttributeCollectionArray(def.DataAs<object[]>("Alternatives"));
+                }
+                if (def.HasAttribute("Children"))
+                {
+                    model._Children = SpriteChildrenFromAttributeCollectionArray(def.DataAs<object[]>("Children"));
+                }
+                //model.
+                return model;
             }
             public static SpriteModel LoadSpriteModel(String filename)
             {

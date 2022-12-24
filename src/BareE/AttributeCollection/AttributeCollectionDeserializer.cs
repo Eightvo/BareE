@@ -1,10 +1,16 @@
 ﻿using BareE;
 
+using Microsoft.VisualBasic;
+
+using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.ExceptionServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BareE.DataStructures
@@ -287,33 +293,141 @@ namespace BareE.DataStructures
             return ret;
         }
 
-        private static object[] BuildArray(IEnumerator<LexerToken> tokens, ParserState state)
+        private static bool IsIdentiferTokenType(LexerToken token)
+        {
+            if (token.Type == LexerToken.LexerTokenType.Identifier ||
+                token.Type == LexerToken.LexerTokenType.Character_Literal ||
+                token.Type == LexerToken.LexerTokenType.String_Literal)
+                    return true;
+            return false;
+
+        }
+
+        private static void ConcateStream(IEnumerator<LexerToken> tokens, ParserState state)
         {
             tokens.MoveNext();
             ConsumeWhitespace(tokens, state);
-            List<object> ret = new List<object>();
+            var r = ReadReference(tokens, state);
+            var txt = String.Empty;
+            try
+            {
+                txt = AssetManager.ReadFile(r);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Issue attempting to read file {r}");
+            }
+            var pre = BareE.Lexer.DefaultLexer.Tokenize(txt).GetEnumerator();
+            var post = state.Asset;
+            state.Asset = r;
+            tokens = Join(pre, tokens, state, post).GetEnumerator();
+            tokens.MoveNext();
+            ConsumeWhitespace(tokens, state);
+        }
+
+        private static Dictionary<String, object> BuildStringDictionary(IEnumerator<LexerToken> tokens, ParserState state, Dictionary<String, object> ret)
+        {
             while (!(tokens.Current.Type == LexerToken.LexerTokenType.Operator && tokens.Current.Text == "]"))
             {
-                if (tokens.Current.Type== LexerToken.LexerTokenType.Operator && tokens.Current.Text==">")
+                if (tokens.Current.Type == LexerToken.LexerTokenType.Operator && tokens.Current.Text == ">")
+                    ConcateStream(tokens, state);
+                if (!IsIdentiferTokenType(tokens.Current))
+                    Unexpected("Identifier", tokens.Current, state);
+                var key = tokens.Current.Text;
+                tokens.MoveNext();
+                ConsumeWhitespace(tokens, state);
+                if (tokens.Current.Text != ":")
+                    Unexpected(":", tokens.Current, state);
+                tokens.MoveNext();
+                var Ob = ConsumeObject(tokens, state);
+                ret.Add(key, Ob);
+
+            }
+            tokens.MoveNext();
+            return ret;
+
+        }
+        private static Dictionary<int, object> BuildIntDictionary(IEnumerator<LexerToken> tokens, ParserState state, Dictionary<int, object> ret)
+        {
+            while (!(tokens.Current.Type == LexerToken.LexerTokenType.Operator && tokens.Current.Text == "]"))
+            {
+                if (tokens.Current.Type == LexerToken.LexerTokenType.Operator && tokens.Current.Text == ">")
+                    ConcateStream(tokens, state);
+                if (tokens.Current.Type != LexerToken.LexerTokenType.Integer_Literal)
+                    Unexpected("Integer", tokens.Current, state);
+                var key = int.Parse(tokens.Current.Text);
+                tokens.MoveNext();
+                ConsumeWhitespace(tokens, state);
+                if (tokens.Current.Text != ":")
+                    Unexpected(":", tokens.Current, state);
+                tokens.MoveNext();
+                var Ob = ConsumeObject(tokens, state);
+                ret.Add(key, Ob);
+
+            }
+            tokens.MoveNext();
+            return ret;
+
+        }
+
+        private static object BuildArrayOrDictionary(IEnumerator<LexerToken> tokens, ParserState state)
+        {
+            tokens.MoveNext();
+            ConsumeWhitespace(tokens, state);
+
+            if (IsIdentiferTokenType(tokens.Current))
+            {
+                var id = tokens.Current.Text;
+                tokens.MoveNext();
+                ConsumeWhitespace(tokens,state);
+                if (tokens.Current.Text == ":")
                 {
                     tokens.MoveNext();
-                    ConsumeWhitespace(tokens, state);
-                    var r = ReadReference(tokens, state);
-                    var txt=String.Empty;
-                    try
-                    {
-                        txt = AssetManager.ReadFile(r);
-                    } catch(Exception e)
-                    {
-                        throw new Exception($"Issue attempting to read file {r}");
-                    }
-                    var pre = BareE.Lexer.DefaultLexer.Tokenize(txt).GetEnumerator();
-                    var post = state.Asset;
-                    state.Asset = r;
-                    tokens = Join(pre , tokens, state,post).GetEnumerator();
-                    tokens.MoveNext();
-                    ConsumeWhitespace(tokens, state);
+                    var firistOb = ConsumeObject(tokens, state);
+                    var ret = new Dictionary<String, object>(StringComparer.InvariantCultureIgnoreCase);
+                    ret.Add(id, firistOb);
+                    return BuildStringDictionary(tokens, state, ret);
                 }
+                else
+                {
+                    tokens.MoveNext();
+                    return BuildArray(tokens, state, new List<object>() { id });
+                }
+            } 
+            if (tokens.Current.Type == LexerToken.LexerTokenType.Integer_Literal)
+            {
+                int id = int.Parse(tokens.Current.Text);
+                tokens.MoveNext();
+                ConsumeWhitespace(tokens, state);
+                if (tokens.Current.Text==":")
+                {
+                    tokens.MoveNext();
+                    var firstOb = ConsumeObject(tokens, state);
+                    var ret = new Dictionary<int, object>();
+                    ret.Add(id, firstOb);
+                    return BuildIntDictionary(tokens, state, ret);
+                }
+                else
+                {
+                    tokens.MoveNext();
+                    return BuildArray(tokens, state, new List<object>() { id });
+                }
+                
+            }
+                
+
+            return BuildArray(tokens, state);
+
+        }
+        private static object[] BuildArray(IEnumerator<LexerToken> tokens, ParserState state, List<object> started=null)
+        {
+//            tokens.MoveNext();
+            ConsumeWhitespace(tokens, state);
+            List<object> ret = started??new List<object>();
+            while (!(tokens.Current.Type == LexerToken.LexerTokenType.Operator && tokens.Current.Text == "]"))
+            {
+                if (tokens.Current.Type == LexerToken.LexerTokenType.Operator && tokens.Current.Text == ">")
+                    ConcateStream(tokens, state);
                 ret.Add(ConsumeObject(tokens, state));
                 ConsumeWhitespace(tokens, state);
                 if (tokens.Current.Type == LexerToken.LexerTokenType.Operator && tokens.Current.Text == ",")
@@ -340,7 +454,7 @@ namespace BareE.DataStructures
                                 return BuildAttributeCollection(tokens, state);
                                 break;
                             case "[":
-                                return (BuildArray(tokens, state));
+                                return (BuildArrayOrDictionary(tokens, state));
                                 break;
                             case "@":
                                 {
@@ -520,18 +634,9 @@ namespace BareE.DataStructures
                 tokens.Current.Text != "}")
             {
                 ConsumeWhitespace(tokens, state);
-                if (tokens.Current.Type==LexerToken.LexerTokenType.Operator && tokens.Current.Text==">")
-                {
-                    tokens.MoveNext();
-                    ConsumeWhitespace(tokens, state);
-                    var r = ReadString(tokens, state);
-                    var pre = BareE.Lexer.DefaultLexer.Tokenize(AssetManager.ReadFile(r)).GetEnumerator();
-                    var post = state.Asset;
-                    state.Asset = r;
-                    tokens = Join(pre, tokens, state, post).GetEnumerator();
-                    tokens.MoveNext();
-                    ConsumeWhitespace(tokens, state);
-                }
+                if (tokens.Current.Type == LexerToken.LexerTokenType.Operator && tokens.Current.Text == ">")
+                    ConcateStream(tokens, state);
+
                 if (tokens.Current.Type== LexerToken.LexerTokenType.Directive)
                 {
                     ConsumeDirective(tokens, state);

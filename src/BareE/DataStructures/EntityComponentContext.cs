@@ -7,6 +7,8 @@ using System.IO;
 using BareE.Components;
 using SixLabors.ImageSharp;
 using FFmpeg.AutoGen;
+using System.Collections;
+using Veldrid.MetalBindings;
 
 namespace BareE.DataStructures
 {
@@ -227,6 +229,7 @@ namespace BareE.DataStructures
                     v.SetValue(ret, arryObj);
                     continue;
                 }
+
                 v.SetValue(ret, AttributeAsObject(v.PropertyType, (object)src[v.Name]));
             }
             return ret;
@@ -265,7 +268,51 @@ namespace BareE.DataStructures
                 Vector2 v = (Vector2)src;
                 return new Point((int)v.X, (int)v.Y);
             }
+            if (t.IsGenericType && t.GetGenericTypeDefinition()== typeof(Dictionary<,>))
+            {
+                Type[] arguments = t.GetGenericArguments();
+                Type keyType = arguments[0];
+                Type valueType = arguments[1];
+                if (keyType==typeof(String))
+                    return AttributeCollectionAsStringDictionary(keyType, valueType, (Dictionary<String, Object>)src);
+                if (keyType==typeof(int))
+                    return AttributeCollectionAsIntDictionary(keyType, valueType, (Dictionary<int, Object>)src);
+                throw new Exception($"Unexpected Key Type {keyType.Name}");
+                //continue;
+            }
             return AttributeCollectionAs(t, (AttributeCollection)src);
+        }
+        private static object AttributeCollectionAsStringDictionary(Type kType, Type vTyle, Dictionary<String,object> dict)
+        {
+            var dType = typeof(Dictionary<,>).MakeGenericType(kType, vTyle);
+
+            var args = new object[] { StringComparer.CurrentCultureIgnoreCase };
+
+
+            var ret =   Activator.CreateInstance(dType, args);
+            foreach (KeyValuePair<String,object> kvp in dict)
+            {
+
+                dType.GetMethod("Add")
+                     //.MakeGenericMethod(kType, vTyle)
+                     .Invoke(ret, new object[] { kvp.Key, AttributeCollectionAs(vTyle, (AttributeCollection)kvp.Value) });
+                //ret.As  kvp.Key.As(kType)] = kvp.Value.As(vTyle);
+            }
+            return ret;
+        }
+        private static object AttributeCollectionAsIntDictionary(Type kType, Type vTyle, Dictionary<int, object> dict)
+        {
+            var dType = typeof(Dictionary<,>).MakeGenericType(kType, vTyle);
+            var ret = Activator.CreateInstance(dType);
+            foreach (KeyValuePair<int, object> kvp in dict)
+            {
+
+                dType.GetMethod("Add")
+                     //.MakeGenericMethod(kType, vTyle)
+                     .Invoke(ret, new object[] { kvp.Key, AttributeCollectionAs(vTyle, (AttributeCollection)kvp.Value) });
+                //ret.As  kvp.Key.As(kType)] = kvp.Value.As(vTyle);
+            }
+            return ret;
         }
         public static object AttributeAsArrayOf(Type t, object[] src)
         {

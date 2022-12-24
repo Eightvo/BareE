@@ -53,11 +53,12 @@ namespace BareE.EZRend.Flat
 
         public override DepthStencilStateDescription DepthStencilDescription
         {
-            get => new DepthStencilStateDescription(
+            get; set;
+        }= new DepthStencilStateDescription(
                         depthTestEnabled: true,
                         depthWriteEnabled: true,
                         comparisonKind: ComparisonKind.Less
                         );
-        }
+        
     }
 }

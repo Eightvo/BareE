@@ -47,26 +47,26 @@ namespace BareE.EZRend.Flat
 
     public class AdvSpriteBatchShader : InstancedMultiTextureShader<Float3_Float2, AdvSpriteInstanceData>
     {
-        public AdvSpriteBatchShader() : base("BareE.EZRend.Flat.AdvSpriteBatch.AdvSpriteBatch",1) {
+        public AdvSpriteBatchShader() : base("BareE.EZRend.Flat.AdvSpriteBatch.AdvSpriteBatch", 1)
+        {
             this.ColorTextureFilter = SamplerFilter.MinPoint_MagPoint_MipPoint;
-            
+
         }
 
 
-        public void AddSprite(RectangleF uvBox, Vector2 translation, float rotation,Vector4 PrimaryColor, Vector4 SecondaryColor, float scale=1.0f)
+        public void AddSprite(RectangleF uvBox, Vector2 translation, float rotation, Vector4 PrimaryColor, Vector4 SecondaryColor, float scale = 1.0f)
         {
             this.AddInstance(new AdvSpriteInstanceData(new Vector4(uvBox.Left, uvBox.Top, uvBox.Width, uvBox.Height), new Vector4(translation.X, translation.Y, rotation, scale), PrimaryColor, SecondaryColor));
         }
 
         public override DepthStencilStateDescription DepthStencilDescription
         {
-            get => new DepthStencilStateDescription(
+            get; set;
+        } = new DepthStencilStateDescription(
                         depthTestEnabled: false,
                         depthWriteEnabled: false,
                         comparisonKind: ComparisonKind.Always
                         );
-        }
 
-        
     }
 }

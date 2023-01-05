@@ -95,7 +95,11 @@ namespace BareE.DataStructures
                 return 0;
             return (_components[i].Count);
         }
-
+        public void RemoveComponent<T>(Entity e)
+        {
+            int i = ComponentTypeData[typeof(T)].CTypeID;
+            RemoveComponent(i, e);
+        }
         /// <summary>
         /// Remove a component from an Entity.
         /// </summary>

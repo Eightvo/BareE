@@ -38,6 +38,7 @@ namespace BareE.Systems
         private String cmdText = String.Empty;
 
         public bool IsShowingConsoleWindow = true;
+        public bool AllowConsoleClose = false;
         public bool IsShowingMainMenuBar = true;
         private bool cycleModeRequested;
         public void RefreshMainMenuBar() { root = null; }
@@ -292,7 +293,11 @@ namespace BareE.Systems
             CreditsWidget.Render(Instant, State, env, Target, cmds);
             if (!IsShowingConsoleWindow)
                 return;
-            ImGui.Begin($"Console");
+            if (AllowConsoleClose)
+                ImGui.Begin("Console", ref IsShowingConsoleWindow);
+            else 
+                ImGui.Begin($"Console");
+
             var cellSize = ImGui.CalcTextSize("W");
             ImGui.SetWindowSize(new Vector2(cellSize.X * 50, cellSize.Y * 30.5f), ImGuiCond.Appearing);
             //ImGui.SetWindowSize(new Vector2(500, 300f), ImGuiCond.Appearing);

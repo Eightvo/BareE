@@ -9,6 +9,7 @@ using SixLabors.ImageSharp;
 using FFmpeg.AutoGen;
 using System.Collections;
 using Veldrid.MetalBindings;
+using Newtonsoft.Json.Linq;
 
 namespace BareE.DataStructures
 {
@@ -229,7 +230,13 @@ namespace BareE.DataStructures
                     v.SetValue(ret, arryObj);
                     continue;
                 }
-
+                if (v.PropertyType.IsEnum)
+                {
+                    object o;
+                    if (Enum.TryParse(v.PropertyType, src[v.Name].ToString(), true, out o))
+                        v.SetValue(ret, o);
+                    continue;
+                }
                 v.SetValue(ret, AttributeAsObject(v.PropertyType, (object)src[v.Name]));
             }
             return ret;

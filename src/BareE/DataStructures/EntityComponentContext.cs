@@ -239,6 +239,37 @@ namespace BareE.DataStructures
                 }
                 v.SetValue(ret, AttributeAsObject(v.PropertyType, (object)src[v.Name]));
             }
+            foreach (var v in t.GetFields())
+            {
+                //if (!v.) continue;
+                if (src[v.Name] == null)
+                    continue;
+                if (v.FieldType.IsPrimitive)
+                {
+                    v.SetValue(ret, src[v.Name]);
+                    continue;
+                }
+                if (v.FieldType == typeof(String))
+                {
+                    v.SetValue(ret, src[v.Name]);
+                    continue;
+                }
+                if (v.FieldType.IsArray)
+                {
+                    var arryObj = AttributeAsArrayOf(v.FieldType.GetElementType(), (object[])src[v.Name]);
+
+                    v.SetValue(ret, arryObj);
+                    continue;
+                }
+                if (v.FieldType.IsEnum)
+                {
+                    object o;
+                    if (Enum.TryParse(v.FieldType, src[v.Name].ToString(), true, out o))
+                        v.SetValue(ret, o);
+                    continue;
+                }
+                v.SetValue(ret, AttributeAsObject(v.FieldType, (object)src[v.Name]));
+            }
             return ret;
         }
         public static object AttributeAsObject(Type t, object src)

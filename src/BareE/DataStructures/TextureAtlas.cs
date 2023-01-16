@@ -170,6 +170,7 @@ namespace BareE.DataStructures
         {
             get
             {
+                if (AtlasSheet == null) return new RectangleF(0, 0, 0, 0);
                 string key = query;
                 string subKey = String.Empty;
                 int dIndx = query.IndexOf('.');

@@ -50,7 +50,8 @@ namespace BareE.Harness
 
         public static void Main(String[] args)
         {
-            var engine = new BareE.Engine();
+
+             var engine = new BareE.Engine();
             
             var g = new TestGame(new GameState(), GameEnvironment.Load());
             engine.Run(g);

@@ -5,6 +5,7 @@ using BareE.EZRend.ModelShader.Color;
 using BareE.GameDev;
 using BareE.Messages;
 using BareE.Rendering;
+using BareE.Systems;
 
 using System;
 using System.Collections.Generic;
@@ -404,6 +405,11 @@ namespace BareE.Harness
             ImGuiNET.ImGui.InputFloat("TurnSpeed:", ref turnspeed);
             ImGuiNET.ImGui.InputFloat("Model Speed:", ref modelSpeed);
             ImGuiNET.ImGui.InputFloat("Model Turn Speed:", ref modelTurnSpeed);
+
+            if (ImGuiNET.ImGui.Button("Play Sound"))
+            {
+                State.Messages.EmitMsg<PlaySFX>(new PlaySFX() { Resource = "BareE.Harness.Assets.sfx.laser3.wav" });
+            }
 
             if (ImGuiNET.ImGui.Button("Next Turn"))
             {

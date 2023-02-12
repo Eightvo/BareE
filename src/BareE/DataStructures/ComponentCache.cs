@@ -72,7 +72,7 @@ namespace BareE.DataStructures
 
         private object SyncRoot = new object();
 
-        private Dictionary<int, Dictionary<int, object>> _components = new Dictionary<int, Dictionary<int, object>>();
+        private Dictionary<int, BinaryKeyValueTree<int, object>> _components = new Dictionary<int, BinaryKeyValueTree<int, object>>();
 
         /// <summary>
         /// Iterate all Components By Name.
@@ -93,7 +93,7 @@ namespace BareE.DataStructures
             int i = ComponentAliasMap[componentName].CTypeID;
             if (!_components.ContainsKey(i))
                 return 0;
-            return (_components[i].Count);
+            return (_components[i].Count());
         }
         public void RemoveComponent<T>(Entity e)
         {
@@ -115,7 +115,7 @@ namespace BareE.DataStructures
         {
             if (!_components.ContainsKey(componentID)) return;
             if (_components[componentID].ContainsKey(ent.Ideal))
-                _components[componentID].Add(-ent.Id, null);
+                _components[componentID].Insert(-ent.Id, null);
             if (!_components[componentID].ContainsKey(ent.Id)) return;
             _components[componentID].Remove(ent.Id);
         }
@@ -192,12 +192,12 @@ namespace BareE.DataStructures
         private void SetComponent(Entity e, object component, ComponentAttribute cAttrib)
         {
             if (!_components.ContainsKey(cAttrib.CTypeID))
-                _components.Add(cAttrib.CTypeID, new Dictionary<int, object>());
+                _components.Add(cAttrib.CTypeID, new BinaryKeyValueTree<int, object>(Comparer<int>.Default));
 
             if (_components[cAttrib.CTypeID].ContainsKey(-e.Id))
                 _components[cAttrib.CTypeID].Remove(-e.Id);
             if (!_components[cAttrib.CTypeID].ContainsKey(e.Id))
-                _components[cAttrib.CTypeID].Add(e.Id, component);
+                _components[cAttrib.CTypeID].Insert(e.Id, component);
             else
                 _components[cAttrib.CTypeID][e.Id] = component;
         }
@@ -215,7 +215,7 @@ namespace BareE.DataStructures
             if (mask)
             {
                 if (!_components[componentTypeId].ContainsKey(-e.Id))
-                    _components[componentTypeId].Add(-e.Id, mask);
+                    _components[componentTypeId].Insert(-e.Id, mask);
             }
             else
             {

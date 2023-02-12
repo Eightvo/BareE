@@ -38,7 +38,7 @@ namespace BareE.Systems
         SoundSink sfxSink;
         float currentVolume = 0.5f;
         bool allowSFX = true;
-
+        SoundStream pSFX=null;
         public bool doEmitSound(PlaySFX req, GameState state, Instant instant)
         {
             if (!allowSFX)
@@ -55,12 +55,14 @@ namespace BareE.Systems
 
             var mStr = new MemoryStream(soundboard[req.Resource].ToArray());
             var sfx = new SoundStream(mStr, sfxSink, false);
+            //pSFX = sfx;
             System.Threading.Tasks.Task.Run(() => 
             {
-                System.Threading.Thread.Sleep(100);
+                //System.Threading.Thread.Sleep(100);
                 sfx.Volume = (currentVolume * req.Volume==0?1:req.Volume);//Should be at most 1*1. Assume a sfx wouldn't be called if it were to be silent.
                 sfx.Play();
             });
+            
             
             return true;
         }

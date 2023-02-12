@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <PackageLicenseFile>License.md</PackageLicenseFile>
     <Copyright>Greg Freedline 2021</Copyright>
@@ -41,6 +41,7 @@
     <None Remove="Assets\Models\watercraftPack_003_DP.obj" />
     <None Remove="Assets\Music\Let_The_Battles_Begin.ogg" />
     <None Remove="Assets\Music\mysterygobrrrrr.ogg" />
+    <None Remove="Assets\sfx\laser3.wav" />
     <None Remove="Assets\sfx\sfx_movement_jump2.wav" />
     <None Remove="Assets\sfx\sfx_wpn_cannon1.wav" />
     <None Remove="Assets\sfx\sfx_wpn_cannon2.wav" />
@@ -90,6 +91,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Assets\Models\watercraftPack_003_DP.obj" />
+    <EmbeddedResource Include="Assets\sfx\laser3.wav">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Assets\sfx\sfx_movement_jump2.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -105,6 +109,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="SharpAudio.Codec" Version="1.0.53-beta" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0-preview.3.21201.4" />
   </ItemGroup>
 

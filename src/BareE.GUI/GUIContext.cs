@@ -139,7 +139,7 @@ namespace BareE.GUI
 
 
             GuiShader.Clear();
-            DrawStringTemp("ABC", new RectangleF(0, 0, 200, 200), 1, 12, "Neuton", new Vector4(1, 1, 1, 1));
+       //     DrawStringTemp("ABC", new RectangleF(0, 0, 200, 200), 1, 12, "Neuton", new Vector4(1, 1, 1, 1));
             EndVertSet(new Rectangle(0, 0, Resolution.Width, Resolution.Height));
 
             foreach (var widget in Widgets.OrderBy(x=>x.Value.ZIndex))

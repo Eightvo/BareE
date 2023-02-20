@@ -9,35 +9,35 @@ namespace BareE.Rendering
         {
             CameraSize = new Vector3(camWidth, camHeight, camDepth);
         }
-        Vector3 CameraPosition { get; set; }
+        public override Vector3 Position { get; set; }
         Vector3 CameraSize { get; set; }
-
+        //.//public override Vector3 Position { get => CameraPosition; set => base.Position = value; }
         public float BoundsLeft
         {
-            get { return CameraPosition.X - (CameraSize.X / 2.0f); }
+            get { return Position.X - (CameraSize.X / 2.0f); }
         }
         public float BoundsRight
         {
-            get { return CameraPosition.X + (CameraSize.X / 2.0f); }
+            get { return Position.X + (CameraSize.X / 2.0f); }
         }
         public float BoundsBottom
         {
-            get { return CameraPosition.Y - (CameraSize.Y / 2.0f); }
+            get { return Position.Y - (CameraSize.Y / 2.0f); }
         }
 
         public float BoundsTop
         {
-            get { return CameraPosition.Y + (CameraSize.Y / 2.0f); }
+            get { return Position.Y + (CameraSize.Y / 2.0f); }
         }
 
         public float BoundsNear
         {
-            get { return CameraPosition.Z; }
+            get { return Position.Z; }
         }
 
         public float BoundsFar
         {
-            get { return CameraPosition.Z + (CameraSize.Z); }
+            get { return Position.Z + (CameraSize.Z); }
         }
 
         public override Matrix4x4 CamMatrix
@@ -51,7 +51,7 @@ namespace BareE.Rendering
 
         public override void Move(Vector3 amount)
         {
-            CameraPosition += amount;
+            Position += amount;
         }
 
         public override void Pan(float v)
@@ -71,7 +71,7 @@ namespace BareE.Rendering
 
         public override void Set(Vector3 position, Vector3 lookat, Vector3 up)
         {
-            CameraPosition = position;
+            Position = position;
         }
 
         public override void Tilt(float v)

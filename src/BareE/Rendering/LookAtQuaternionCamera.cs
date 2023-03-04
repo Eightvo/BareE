@@ -10,8 +10,8 @@ namespace BareE.Rendering
             CameraSize = new Vector3(camWidth, camHeight, camDepth);
         }
         public override Vector3 Position { get; set; }
-        Vector3 CameraSize { get; set; }
-        //.//public override Vector3 Position { get => CameraPosition; set => base.Position = value; }
+        public Vector3 CameraSize { get; set; }
+        
         public float BoundsLeft
         {
             get { return Position.X - (CameraSize.X / 2.0f); }

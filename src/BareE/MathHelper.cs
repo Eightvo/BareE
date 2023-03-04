@@ -5,6 +5,11 @@ namespace BareE
 {
     public class MathHelper
     {
+        public static int Wrap(int value, int min, int max)
+        {
+            return (((value - min) % (max - min)) + (max - min)) % (max - min) + min;
+        }
+        
         public static float DegToRad(float deg)
         {
             return (float)(deg * (Math.PI / 180.0f));

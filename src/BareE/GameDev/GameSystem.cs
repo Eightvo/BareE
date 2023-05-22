@@ -39,7 +39,10 @@ namespace BareE.GameDev
         {
             
         }
+        public virtual void OnResize(Instant instant, GameState state, GameEnvironment env)
+        {
 
+        }
         public virtual bool HandleControllerAxisMotion(SDL_ControllerAxisEvent axisEvent)
         {
             return false;

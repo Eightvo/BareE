@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using BareE.Rendering;
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using SixLabors.ImageSharp;
@@ -173,7 +175,9 @@ namespace BareE.DataStructures
                 if (AtlasSheet == null) return new RectangleF(0, 0, 0, 0);
                 string key = query;
                 string subKey = String.Empty;
+                
                 int dIndx = query.IndexOf('.');
+                
                 if (dIndx > 0)
                 {
                     key = query.Substring(0, dIndx);
@@ -202,9 +206,49 @@ namespace BareE.DataStructures
         }
         public System.Numerics.Vector2 EstimateOriginalSize(float uvWidth, float uvHeight)
         {
-            var ogWidth = uvWidth*(float)AtlasSheet.Width;
+            var ogWidth = uvWidth* (float)AtlasSheet.Width;
             var ogHeight = uvHeight*(float)AtlasSheet.Height;
             return new System.Numerics.Vector2(ogWidth, ogHeight);
+        }
+        public System.Numerics.Vector2 ResizeForCamera(float uvWidth, float uvHeight, OrthographicCamera cam, Vector2 ScreenSize)
+        {
+            var ogWidth = uvWidth * (float)AtlasSheet.Width;
+            var ogHeight = uvHeight * (float)AtlasSheet.Height;
+            var graphicsUnitsPerPixel = cam.CameraSize.X / ScreenSize.X;
+            var camWidth = ogWidth * graphicsUnitsPerPixel;
+            var camHeight = ogHeight * graphicsUnitsPerPixel;
+            return new System.Numerics.Vector2(camWidth, camHeight);
+        }
+        /*
+        public RectangleF ResizeForCamera(RectangleF uvBox, OrthographicCamera cam, Vector2 ScreenSize)
+        {
+            var ogSize = EstimateOriginalSize(uvBox);
+            //ogSize has width in original pixels.
+            //We need to know how many graphical units (Orthocam) = that many pixels on screen.
+            //The orthocam display ScreenSize.Width pixels over cam.CameraSize.X graphical units.
+            //So.... we need ogSize.Width (Number of pixels)
+            // times:   graphical Units per pixel... 
+            var graphicsUnitsPerPixel = cam.CameraSize.X / ScreenSize.X;
+
+            var camWidth = ogSize.X * graphicsUnitsPerPixel;
+            var camHeight = ogSize.Y * graphicsUnitsPerPixel;
+
+
+            return new RectangleF(0, 0, camWidth, camHeight);
+        }
+        */
+        public Image<Rgba32> ExtractImage(String query)
+        {
+            return ExtractImage(this[query]);
+        }
+        public Image<Rgba32> ExtractImage(RectangleF uvBox)
+        {
+            int ogWidth = (int)(uvBox.Width* (float)AtlasSheet.Width);
+            int ogHeight = (int)(uvBox.Height * (float)AtlasSheet.Height);
+
+            int ogPosX = (int)(uvBox.X * (float)AtlasSheet.Width);
+            int ogPosY = (int)(uvBox.Y * (float)AtlasSheet.Height);
+            return AtlasSheet.Clone(x => x.Crop(new Rectangle(ogPosX, ogPosY, ogWidth, ogHeight)));
         }
 
         public class SpriteModel
@@ -358,7 +402,7 @@ namespace BareE.DataStructures
         {
             public String Name { get; set; }
 
-            [JsonConverter(typeof(PoingJsonConverter))]
+            [JsonConverter(typeof(PointJsonConverter))]
             public Point Off { get; set; }
         }
 
@@ -427,7 +471,7 @@ namespace BareE.DataStructures
             }
         }
 
-        public class PoingJsonConverter : JsonConverter
+        public class PointJsonConverter : JsonConverter
         {
             public override bool CanConvert(Type objectType)
             {

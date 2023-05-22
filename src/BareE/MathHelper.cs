@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace BareE
 {
-    public class MathHelper
+    public static class MathHelper
     {
         public static int Wrap(int value, int min, int max)
         {
@@ -70,7 +70,19 @@ namespace BareE
             var v = AngleToUnitVector(angle) * thrust;
             return new Vector2((float)Math.Round(v.X, 5), (float)Math.Round(v.Y, 5));
         }
-
+        
+        public static Vector4 Lerp(this Vector4 a, Vector4 b, float p)
+        {
+            return a + (b - a) * p;
+        }
+        public static Vector3 Lerp(this Vector3 a, Vector3 b, float p)
+        {
+            return a + (b - a) * p;
+        }
+        public static Vector2 Lerp(this Vector2 a, Vector2 b, float p)
+        {
+            return a + (b - a) * p;
+        }
     }
 
 }

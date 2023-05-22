@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using Veldrid.OpenGLBinding;
+
 using Box2 = Veldrid.Rectangle;
 
 namespace BareE.DataStructures
@@ -48,16 +50,18 @@ namespace BareE.DataStructures
                 Subspaces[0] = new SpatialPartion(filledArea, true);
 
                 Box2 unfilledRightSide = new Box2(Space.Left + footprint.Width, Space.Top, Space.Width - footprint.Width, footprint.Height);
-                if (unfilledRightSide.Width <= 0) unfilledRightSide.HasArea();
-                Subspaces[1] = new SpatialPartion(unfilledRightSide);
+                if (unfilledRightSide.HasArea())
+                    Subspaces[1] = new SpatialPartion(unfilledRightSide);
+                
 
                 Box2 unfilledBotSide = new Box2(Space.Left, Space.Top + footprint.Height, Space.Width, Space.Height - footprint.Height);
-                if (unfilledBotSide.Height <= 0) unfilledBotSide.HasArea();
-                Subspaces[2] = new SpatialPartion(unfilledBotSide);
+                if (unfilledBotSide.HasArea())
+                    Subspaces[2] = new SpatialPartion(unfilledBotSide);
                 return filledArea;
             }
             for (int i = 1; i < Subspaces.Length; i++)
             {
+                if (Subspaces[i] == null) continue;
                 Box2 result = Subspaces[i].AddRectangle(footprint);
                 if (result.HasArea()) return result;
             }
@@ -93,7 +97,10 @@ namespace BareE.DataStructures
             if (region.Subspaces != null)
             {
                 for (int i = 0; i < region.Subspaces.Length; i++)
+                {
+                    if (region.Subspaces[i] == null) continue;
                     regions.AddRange(region.Subspaces[i].GetFilledRegions(region.Subspaces[i]));
+                }
             }
             return regions;
         }

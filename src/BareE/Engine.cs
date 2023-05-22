@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using Veldrid.Sdl2;
 
+using Vulkan.Xlib;
+
 namespace BareE
 {
     public class Engine
@@ -130,8 +132,12 @@ namespace BareE
         {
             ActiveGame.Environment.Window.Width = ActiveGame.Environment.Window.Window.Width;
             ActiveGame.Environment.Window.Height= ActiveGame.Environment.Window.Window.Height;
+            ActiveGame.Environment.Window.Resolution = new Resolution(ActiveGame.Environment.Window.Window.Width, ActiveGame.Environment.Window.Window.Height);
+
             ActiveGame.Environment.Window.IGR.WindowResized(ActiveGame.Environment.Window.Window.Width, ActiveGame.Environment.Window.Window.Height);
+            ActiveGame.Environment.Resize(ActiveGame.Environment.Window.Window.Width, ActiveGame.Environment.Window.Window.Height);
             ActiveGame.State.Messages.EmitMsg<Messages.ChangeSetting>(new ChangeSetting() { Setting = "Resolution", Value =Newtonsoft.Json.JsonConvert.SerializeObject( new Vector2(ActiveGame.Environment.Window.Width, ActiveGame.Environment.Window.Height)) });
+            ActiveGame.Environment.Window.Device.ResizeMainWindow((uint)ActiveGame.Environment.Window.Window.Width, (uint)ActiveGame.Environment.Window.Window.Height);
         }
 
         private void HandleEvent(ref SDL_Event ev)

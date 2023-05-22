@@ -51,6 +51,9 @@
     <None Remove="Assets\Styles\Up.png" />
     <None Remove="BaseGuiShader\BaseGui.frag.spv" />
     <None Remove="BaseGuiShader\BaseGui.vert.spv" />
+    <None Remove="EZText\dos_8x8_font_white.png" />
+    <None Remove="EZText\EZText.frag.spv" />
+    <None Remove="EZText\EZText.vert.spv" />
     <None Remove="TextRendering\Text.frag.spv" />
     <None Remove="TextRendering\Text.vert.spv" />
     <None Include="..\..\License.md">
@@ -125,13 +128,21 @@
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\SimpleRpg.credits" />
     <EmbeddedResource Include="BaseGuiShader\BaseGui.frag.spv" />
     <EmbeddedResource Include="BaseGuiShader\BaseGui.vert.spv" />
+    <EmbeddedResource Include="EZText\dos_8x8_font_white.png" />
+    <EmbeddedResource Include="EZText\EZText.frag.spv">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EZText\EZText.vert.spv">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="TextRendering\Text.frag.spv" />
     <EmbeddedResource Include="TextRendering\Text.vert.spv" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="freetype" Version="2.8.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta17" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta19" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta14" />
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
@@ -151,6 +162,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Fonts\EduSABeginner-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Fonts\Inconsolata-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Fonts\Roboto-Regular.ttf">

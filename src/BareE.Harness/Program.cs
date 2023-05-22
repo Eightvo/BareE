@@ -1,6 +1,7 @@
 ﻿using BareE.Calculator;
 using BareE.DataStructures;
 using BareE.GameDev;
+using BareE.GUI.EZText;
 
 using SharpAudio;
 using SharpAudio.Codec;
@@ -50,6 +51,8 @@ namespace BareE.Harness
 
         public static void Main(String[] args)
         {
+
+            
 
              var engine = new BareE.Engine();
             

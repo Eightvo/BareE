@@ -105,6 +105,15 @@ namespace BareE.Harness
                 });
             }
 
+            if (IG.Button("EZ Text Test"))
+            {
+                State.Messages.EmitMsg<TransitionScene>(new TransitionScene()
+                {
+                    Preloaded = false,
+                    Scene = new EZFontTestScene(),
+                    State = new GameState()
+                });
+            }
             IG.End();
 
             if (_exceptions.Count>0)

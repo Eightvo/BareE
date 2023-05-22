@@ -251,7 +251,26 @@ namespace BareE.GameDev
         {
             return Load("BareE.GameDev.environmentdefault.json");
         }
+        internal void Resize(int newWidth, int newHeight)
+        {
+            LeftEyeBackBuffer = Util.CreateFramebuffer(Window.Device, (uint)newWidth, (uint)newHeight, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
+            LeftEyeBackBuffer.ColorTargets[0].Target.Name = "LeftEye Backbuffer Tex";
+            LeftEyeBackBuffer.Name = "LeftEye Backbuffer";
+            RightEyeBackBuffer = Util.CreateFramebuffer(Window.Device, (uint)newWidth, (uint)newHeight, PixelFormat.R8_G8_B8_A8_UNorm, TextureSampleCount.Count1);
+            RightEyeBackBuffer.ColorTargets[0].Target.Name = "RightEye Backbuffer Tex";
+            RightEyeBackBuffer.Name = "RightEye Backbuffer";
+            ScreenBackBuffer = Util.CreateFramebuffer(Window.Device, Window.Device.ResourceFactory.CreateTexture(new TextureDescription((uint)newWidth,
+                                       (uint)newHeight,
+                                       1, 1, 1,
+                                       PixelFormat.R8_G8_B8_A8_UNorm,
+                                       TextureUsage.RenderTarget | TextureUsage.Sampled,
+                                       TextureType.Texture2D,
+                                       PrefferedTextureCount)));
+            ScreenBackBuffer.Name = "Screen Backbuffer";
+            ScreenBackBuffer.ColorTargets[0].Target.Name = "Screen Backbuffer tex";
 
+
+        }
         public static GameEnvironment Load(String resource)
         {
             
@@ -290,10 +309,10 @@ namespace BareE.GameDev
 
             ret.Window.IGR = new ImGuiRenderer(ret.Window.Device, ret.HUDBackBuffer.OutputDescription, (int)ret.HUDBackBuffer.Width, (int)ret.HUDBackBuffer.Height);
             //var io = ImGuiNET.ImGui.GetIO();
-            ret.Window.Window.Resized += () => ret.Window.Device.MainSwapchain.Resize((uint)(ret.Window.Window.Width), (uint)(ret.Window.Window.Height));
-            ret.Window.Window.Resized += () => ret.Window.IGR.WindowResized(
-                (ret.Window.Window.Width), (ret.Window.Window.Height)
-                );
+            //ret.Window.Window.Resized += () => ret.Window.Device.MainSwapchain.Resize((uint)(ret.Window.Window.Width), (uint)(ret.Window.Window.Height));
+            //ret.Window.Window.Resized += () => ret.Window.IGR.WindowResized(
+            //    (ret.Window.Window.Width), (ret.Window.Window.Height)
+            //    );
 
             return ret;
         }

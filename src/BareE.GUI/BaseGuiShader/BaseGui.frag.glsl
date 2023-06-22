@@ -30,6 +30,7 @@ void main()
     vec4 pColor = (texture(sampler2D(Texture0,Sampler0), uv)*(1-t))
 		         +(texture(sampler2D(Texture1,Sampler1), uv)*(t));
 	pColor=pColor*color;
-	if (pColor.a==0) discard;
+	//if (pColor.a==0) discard;
 	FragColor=pColor;
+	//FragColor=vec4(0,1,1,1);
 }

@@ -2,14 +2,14 @@
 
 namespace BareE.GUI.TextRendering
 {
-    public enum FontType
+    public enum FontType_OLD
     {
         BitmapFont = 1,
         SignedDistanceFont = 2,
     }
-    public struct FontData
+    public struct FontData_OLD
     {
-        public FontType FontType { get; set; }
+        public FontType_OLD FontType { get; set; }
         public int LineHeight { get; set; }
         public int BaseLine { get; set; }
         public int TotalWidth { get; set; }

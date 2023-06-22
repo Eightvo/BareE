@@ -39,7 +39,7 @@ namespace BareE.Rendering
 
         private Sampler ColorTextureSampler;
         private TextureView ColorTextureView;
-        private Texture ColorTexture;
+        public Texture ColorTexture { get; private set; }
         private ResourceLayout ColorTextureLayout;
         private ResourceSet ColorTextureResourceSet;
         public SamplerFilter ColorTextureFilter = SamplerFilter.Anisotropic;

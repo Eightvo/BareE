@@ -126,9 +126,10 @@ namespace BareE.DataStructures
                 maxWidth = maxW;
 
             SpatialPartion layout = new SpatialPartion(new Veldrid.Rectangle(0, 0, maxWidth == 0 ? int.MaxValue : maxWidth, int.MaxValue));
+            var pad = AutoPad ? 1 : 0;
             foreach (var v in _Pages)
             {
-                v.Value.PageRect = layout.AddRectangle(new System.Drawing.Size(v.Value.src.Width+1, v.Value.src.Height+1));
+                v.Value.PageRect = layout.AddRectangle(new System.Drawing.Size(v.Value.src.Width+ pad, v.Value.src.Height+ pad));
             }
             layout.Crop();
             Image<Rgba32> newImage = new Image<Rgba32>((int)MathHelper.NxtPowerOfTwo(layout.Space.Width), (int)MathHelper.NxtPowerOfTwo(layout.Space.Height));

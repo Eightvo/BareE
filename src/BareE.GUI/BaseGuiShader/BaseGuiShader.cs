@@ -54,11 +54,10 @@ namespace BareE.GUI
 
         public override void Render(Framebuffer Trgt, CommandList cmds, ISceneDataProvider sceneData, Matrix4x4 camMat, Matrix4x4 ModelMatrix)
         {
-            //base.Render(Trgt, cmds, sceneData, camMat, ModelMatrix);
-            
             if (VertexBuffer == null) return;
             BaseRender(Trgt, cmds, sceneData, camMat, ModelMatrix);
-
+            //cmds.Draw((uint)verts.Count, 1, 0, 0);
+            
             var lst = 0;
             foreach(var vSet in vertSets)
             {
@@ -68,9 +67,6 @@ namespace BareE.GUI
                 cmds.SetScissorRect(0, (uint)Rect.X, (uint)Rect.Y, (uint)Rect.Width, (uint)Rect.Height);
                 cmds.Draw((uint)(End), 1, (uint)Start, 0);
                 lst = Start + End;
-                //cmds.Draw((uint)verts.Count, 1, 0, 0);
-                //cmds.Draw()
-                //cmds.Draw((uint)verts.Count);
             }
             if (verts.Count-lst>0)
             {

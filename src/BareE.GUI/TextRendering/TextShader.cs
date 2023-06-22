@@ -71,7 +71,7 @@ namespace BareE.GUI.TextRendering
     }
     public class TextShader : VertexTextureShader<TextVertex>
     {
-        FontData ActiveFont { get; set; }
+        FontData_OLD ActiveFont { get; set; }
         public Vector2 Resolution { get; set; }
 
         private bool SettingsDirty = true;
@@ -241,7 +241,7 @@ namespace BareE.GUI.TextRendering
 
         public void LoadFont(GraphicsDevice device, String resource, bool srgb = false)
         {
-            ActiveFont = Newtonsoft.Json.JsonConvert.DeserializeObject<FontData>(AssetManager.ReadFile(resource));
+            ActiveFont = Newtonsoft.Json.JsonConvert.DeserializeObject<FontData_OLD>(AssetManager.ReadFile(resource));
             var fontTextureFileName = System.IO.Path.ChangeExtension(resource, "png");
             var texture = AssetManager.LoadTexture(fontTextureFileName, device, true, srgb);
             var sett = Settings;

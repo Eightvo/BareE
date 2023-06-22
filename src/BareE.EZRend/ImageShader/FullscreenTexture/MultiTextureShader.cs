@@ -3,9 +3,11 @@ using BareE.Rendering;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 
 using Veldrid;
+using Veldrid.MetalBindings;
 
 namespace BareE.EZRend.ImageShader.FullscreenTexture
 {
@@ -326,6 +328,8 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
                         depthWriteEnabled: true,
                         comparisonKind: ComparisonKind.Less
                         );
+        public virtual SamplerAddressMode SampleAddressModeU { get; set; } = SamplerAddressMode.Clamp;
+        public virtual SamplerAddressMode SampleAddressModeV { get; set; } = SamplerAddressMode.Clamp;
         public override DepthStencilStateDescription DepthStencilDescription
         {
             get { return _depthStencilDesc; }
@@ -358,8 +362,8 @@ namespace BareE.EZRend.ImageShader.FullscreenTexture
 
                 var sDesc = new SamplerDescription()
                 {
-                    AddressModeU = SamplerAddressMode.Clamp,
-                    AddressModeV = SamplerAddressMode.Clamp,
+                    AddressModeU = SampleAddressModeU,
+                    AddressModeV = SampleAddressModeV,
                     Filter = ColorTextureFilter,
                     ComparisonKind = ComparisonKind.LessEqual,
                     MaximumAnisotropy = 4

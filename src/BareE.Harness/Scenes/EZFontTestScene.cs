@@ -23,7 +23,9 @@ namespace BareE.Harness.Scenes
     {
         BareE.GUI.EZText.EZText eztxt;
         ColoredLineShader lines;
-        String TestFontName;
+        String RobotoFont;
+        String NeutonFont;
+        String CookieFont;
 
         public override void Load(Instant Instant, GameState State, GameEnvironment Env)
         {
@@ -35,7 +37,9 @@ namespace BareE.Harness.Scenes
             eztxt.SetOutputDescription(Env.LeftEyeBackBuffer.OutputDescription);
             eztxt.CreateResources(Env.Window.Device);
 
-            TestFontName = eztxt.AddFont(Env.Window.Device, @"C:\AA_Main\Assets\Fonts\ttf\Roboto\Roboto-Regular.ttf", 10, 12, 14, 16);
+            RobotoFont = eztxt.AddFont(Env.Window.Device, @"C:\AA_Main\Assets\Fonts\ttf\Roboto\Roboto-Regular.ttf",8,10,12,16, 42);
+            NeutonFont = eztxt.AddFont(Env.Window.Device, @"C:\AA_Main\Assets\Fonts\ttf\Neuton\Neuton-Regular.ttf",  42);
+            CookieFont = eztxt.AddFont(Env.Window.Device, @"C:\AA_Main\Assets\Fonts\ttf\Cookie\Cookie-Regular.ttf", 42);
             eztxt.AddConsoleFont(Env.Window.Device);
 
             Env.WorldCamera = new OrthographicCamera(Env.Window.Resolution.Width, Env.Window.Resolution.Height, 1000);
@@ -45,17 +49,44 @@ namespace BareE.Harness.Scenes
         }
 
         Stopwatch watch = new Stopwatch();
+        Random rng = new Random();
+        Vector3 cl1;
+        Vector3 cl2;
+        Vector3 cl3;
+        Vector3 cl4;
+        Vector3 cl5;
+        Vector3 cl6;
+        Vector3 cl7;
+        int prevSec = -1;
         public override void Update(Instant Instant, GameState State, GameEnvironment Env)
         {
             eztxt.Clear();
-
-            eztxt.AddString("Console", 8, new Vector2(00, 0), $"{watch.Elapsed.TotalSeconds}", new Vector3(0,1,1));
+            var sec = (int)Math.Floor(watch.Elapsed.TotalSeconds);
+            if (sec != prevSec)
+            {
+                cl1 = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
+                cl2 = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
+                cl3 = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
+                cl4 = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
+                cl5 = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
+                cl6 = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
+                cl7 = new Vector3((float)rng.NextDouble(), (float)rng.NextDouble(), (float)rng.NextDouble());
+            }
+            prevSec = sec;
+            eztxt.AddString("Console",   8,  new Vector2(00, 0), $"{watch.Elapsed.TotalSeconds}", new Vector3(0,1,1));
+            eztxt.AddString(RobotoFont, 16,  new Vector2(0, 20), $"{RobotoFont} - 16pt: the quick brown fox jumped over the lazy dog. THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG?!", cl1);
+            eztxt.AddString(RobotoFont, 12,  new Vector2(0, 50), $"{RobotoFont} - 12pt: the quick brown fox jumped over the lazy dog. THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG?!", cl2);
+            eztxt.AddString(RobotoFont, 10,  new Vector2(0, 70), $"{RobotoFont} - 10pt: the quick brown fox jumped over the lazy dog. THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG?!", cl3);
+            eztxt.AddString(RobotoFont,  8,  new Vector2(0, 90), $"{RobotoFont} - 8pt: the quick brown fox jumped over the lazy dog. THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG?!" , cl4);
+            eztxt.AddString(RobotoFont, 42, new Vector2(0, 110), $"{RobotoFont} - 8pt: the quick brown fox jumped over the lazy dog. THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG?!" , cl5);
+            eztxt.AddString(NeutonFont, 42, new Vector2(0, 140), $"{NeutonFont} - 8pt: the quick brown fox jumped over the lazy dog. THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG?!" , cl6);
+            eztxt.AddString(CookieFont, 42, new Vector2(0, 170), $"{CookieFont} - 8pt: the quick brown fox jumped over the lazy dog. THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG?!" , cl7);
 
             var v = ImGuiNET.ImGui.GetIO().MousePos;
             v = new Vector2(v.X, Env.LeftEyeBackBuffer.ColorTargets[0].Target.Height-v.Y);
 
             eztxt.AddString("Console", 8, v, $"{(char)1}Mouse", new Vector3(1, 1, 0));
-            eztxt.AddString(TestFontName, 12, v+new Vector2(0,20), "Mouse", new Vector3(1, 1, 0));
+            eztxt.AddString(RobotoFont, 12, v + new Vector2(0, 20), "Mouse", new Vector3(1, 1, 0));
             eztxt.Update(Env.Window.Device);
 
             lines.Clear();

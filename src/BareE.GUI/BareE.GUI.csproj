@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/Eightvo/BareE</RepositoryUrl>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -26,6 +26,8 @@
     <None Remove="Assets\Styles\MinGui.Atlas" />
     <None Remove="Assets\Styles\minGui.credits" />
     <None Remove="Assets\Styles\MinGui.style" />
+    <None Remove="Assets\Styles\MinGui\HandClosed.png" />
+    <None Remove="Assets\Styles\MinGui\HandOpen.png" />
     <None Remove="Assets\Styles\OvalEmpty.png" />
     <None Remove="Assets\Styles\Oval_Checked.png" />
     <None Remove="Assets\Styles\Oval_Filled.png" />
@@ -37,17 +39,24 @@
     <None Remove="Assets\Styles\SimpleRPG\ArrowRight.png" />
     <None Remove="Assets\Styles\SimpleRPG\ArrowUp.png" />
     <None Remove="Assets\Styles\SimpleRPG\BasicFrame.png" />
+    <None Remove="Assets\Styles\SimpleRPG\BasicFrameRS.png" />
     <None Remove="Assets\Styles\SimpleRPG\BasicFrameWBkgrnd.png" />
     <None Remove="Assets\Styles\SimpleRPG\CloseIcon.png" />
     <None Remove="Assets\Styles\SimpleRPG\CollapseIcon.png" />
     <None Remove="Assets\Styles\SimpleRPG\CurveFrame.png" />
+    <None Remove="Assets\Styles\SimpleRPG\CurveFrameRS.png" />
     <None Remove="Assets\Styles\SimpleRPG\ExpandIcon.png" />
     <None Remove="Assets\Styles\SimpleRPG\GemFrame.png" />
+    <None Remove="Assets\Styles\SimpleRPG\GemFrameRS.png" />
     <None Remove="Assets\Styles\SimpleRPG\GemIcon.png" />
     <None Remove="Assets\Styles\SimpleRPG\ResizeIcon.png" />
+    <None Remove="Assets\Styles\SimpleRPG\SciFiFrame.png" />
+    <None Remove="Assets\Styles\SimpleRPG\SciFiFrameRS.png" />
+    <None Remove="Assets\Styles\SimpleRPG\SciFiSimpleFrame.png" />
     <None Remove="Assets\Styles\SimpleRPG\SimpleRpg.Atlas" />
     <None Remove="Assets\Styles\SimpleRPG\SimpleRpg.credits" />
     <None Remove="Assets\Styles\squareFrame.png" />
+    <None Remove="Assets\Styles\testPaperBorder.png" />
     <None Remove="Assets\Styles\Up.png" />
     <None Remove="BaseGuiShader\BaseGui.frag.spv" />
     <None Remove="BaseGuiShader\BaseGui.vert.spv" />
@@ -63,6 +72,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets\Styles\MinGui\HandClosed.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\HandOpen.png" />
     <EmbeddedResource Include="Assets\Styles\MinGui\MinGui.style">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -116,16 +127,23 @@
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\ArrowRight.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\ArrowUp.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\BasicFrame.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\BasicFrameRS.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\BasicFrameWBkgrnd.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\CloseIcon.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\CollapseIcon.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\CurveFrame.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\CurveFrameRS.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\ExpandIcon.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\GemFrame.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\GemFrameRS.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\GemIcon.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\ResizeIcon.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\SciFiFrame.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\SciFiFrameRS.png" />
+    <EmbeddedResource Include="Assets\Styles\SimpleRPG\SciFiSimpleFrame.png" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\SimpleRpg.Atlas" />
     <EmbeddedResource Include="Assets\Styles\SimpleRPG\SimpleRpg.credits" />
+    <EmbeddedResource Include="Assets\Styles\testPaperBorder.png" />
     <EmbeddedResource Include="BaseGuiShader\BaseGui.frag.spv" />
     <EmbeddedResource Include="BaseGuiShader\BaseGui.vert.spv" />
     <EmbeddedResource Include="EZText\dos_8x8_font_white.png" />

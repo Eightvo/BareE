@@ -95,8 +95,9 @@ namespace BareE.GUI.EZText
             //var bounds = glyphs.Bounds;
             var bounds = TextMeasurer.Measure("M", new TextOptions(font));
             var img = new Image<Rgba32>((int)Math.Ceiling(bounds.Width), (int)Math.Ceiling(bounds.Height));
-            img.Mutate(i => i.DrawText(new DrawingOptions() { GraphicsOptions = new GraphicsOptions() { Antialias = false}},text, font, Color.White, new PointF(0, 0)));
-            //img.Mutate(i => i.Draw(new DrawingOptions() { GraphicsOptions = new GraphicsOptions() { Antialias = true } }, Color.White, 1.0f, glyphs));
+            //img.Mutate(i => i.DrawText(new DrawingOptions() { GraphicsOptions = new GraphicsOptions() { Antialias = false}},text, font, Color.White, new PointF(0, 0)));
+            //            img.Mutate(i => i.Draw(new DrawingOptions() { GraphicsOptions = new GraphicsOptions() { Antialias = true }, ShapeOptions = new ShapeOptions() { IntersectionRule = IntersectionRule.OddEven } }, Brushes.Solid(Color.White), 1.0f, glyphs));
+            img.Mutate(i => i.Fill(new DrawingOptions() { GraphicsOptions = new GraphicsOptions() { Antialias = true } }, Color.White, glyphs));
             return img;
         }
 
@@ -108,7 +109,7 @@ namespace BareE.GUI.EZText
             foreach(var fontsizeInPts in fontSizes)
             {
                 var currentFont = new Font(fam, fontsizeInPts);
-                var fontKey = $"{currentFont.Name}_{fontsizeInPts}";
+                var fontKey = $"{fam.Name}_{fontsizeInPts}";
                 if (_knownFontSizeCominations.Contains(fontKey))
                     continue;
                 foreach (var ch in Alphabet)
@@ -118,7 +119,7 @@ namespace BareE.GUI.EZText
                     FontAtlas.Merge($"{fontKey}_{(int)ch}", charImage);
                 }
             }
-            FontAtlas.Build(1024,false);
+            FontAtlas.Build(1024,@"C:\TestData\afont.png");
             SetTexture(device, AssetManager.LoadTexture(FontAtlas.AtlasSheet, device, true, false));
 
             return fam.Name;

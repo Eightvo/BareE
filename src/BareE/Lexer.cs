@@ -418,7 +418,7 @@ namespace BareE
                 case '\'': ret = "'"; break;
                 default: throw new Exception("Unrecognized Escape Sequence");
             }
-            MoveNext(rdr);
+            //MoveNext(rdr);
             return ret;
         }
 

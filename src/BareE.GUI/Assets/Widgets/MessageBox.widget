@@ -1,54 +1,53 @@
 ﻿{
 	Resources:{
-	
-	//Styles can also be defined inline
-	//Styles should always contain a default
-		DefaultStyle:{
+		//Styles can also be defined inline
+		Styles:[
+			{
 			Type:Style,
 			Name:Default,
 			Src:{
-				MinGUiAtlas:{Name:MinGui, Type:"Atlas", Src:"BareE.GUI.Assets.Styles.MinGui.MinGui.Atlas"},
-				//SimpleRPGAtlas:{Name:SimpleRPG, Type:"Atlas", Src:"BareE.GUI.Assets.Styles.SimpleRPG.SimpleRpg.Atlas"},
-				NeutonFont:{"Name":"Neuton", Type:"Font", "Src":"BareE.Harness.Assets.Fonts.Bitmap.Neuton.Neuton.bff"},
+					MinGUiAtlas:{Name:MinGui, Type:"Atlas", Src:"BareE.GUI.Assets.Styles.MinGui.MinGui.Atlas"},
+					//SimpleRPGAtlas:{Name:SimpleRPG, Type:"Atlas", Src:"BareE.GUI.Assets.Styles.SimpleRPG.SimpleRpg.Atlas"},
+					NeutonFont:{"Name":"Neuton", Type:"Font", "Src":"BareE.Harness.Assets.Fonts.Bitmap.Neuton.Neuton.bff"},
 
-				CloseButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.close.png"},
-				/*
-				Does it need:
-				CloseButton-Offset-X:0,
-				CloseButton-Offset-Y:0,
-				*/
-				CollapseButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.Collapse.png"},
-				ExpandButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.Expand.png"},
-				ResizeButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.resize.png"},
-				Frame:{Sprite:"MinGui.NineFrame", Src:"BareE.GUI.Assets.Styles.MinGui.squareFrame.png"},
-				Titlebar:{Sprite:"MinGUi.NineFrame", Src:"BareE.GUI.Assets.Styles.MinGui.R2Frame.png"},
-				//Frame:{Sprite:"SimpleRPG.NineFrame", Src:"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png"},
-				//Titlebar:{Sprite:"SimpleRPG.NineFrame", Src:"BareE.GUI.Assets.Styles.SimpleRPG.GemFrame.png"},
+					CloseButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.close.png"},
+					/*
+					Does it need:
+					CloseButton-Offset-X:0,
+					CloseButton-Offset-Y:0,
+					*/
+					CollapseButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.Collapse.png"},
+					ExpandButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.Expand.png"},
+					ResizeButton:{Sprite:"MinGui.Glyph", Src:"BareE.GUI.Assets.Styles.MinGui.resize.png"},
+					Frame:{Sprite:"MinGui.NineFrame", Src:"BareE.GUI.Assets.Styles.MinGui.squareFrame.png"},
+					Titlebar:{Sprite:"MinGUi.NineFrame", Src:"BareE.GUI.Assets.Styles.MinGui.R2Frame.png"},
+					//Frame:{Sprite:"SimpleRPG.NineFrame", Src:"BareE.GUI.Assets.Styles.SimpleRPG.BasicFrame.png"},
+					//Titlebar:{Sprite:"SimpleRPG.NineFrame", Src:"BareE.GUI.Assets.Styles.SimpleRPG.GemFrame.png"},
 
-				Mouse_Cursor_Normal:{Src:"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", rect:<180,450,15,15>},
-				Mouse_Cursor_MouseDown:{Src:"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", rect:<198,450,15,15>},
+					Mouse_Cursor_Normal:{Src:"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", rect:<180,450,15,15>},
+					Mouse_Cursor_MouseDown:{Src:"BareE.GUI.Assets.Styles.KennyUI.UIpackSheet_transparent.png", rect:<198,450,15,15>},
 
-				
-				Text_Font_Normal:Neuton,
-				Text_Size_Normal:12,
-				Text_Color_Normal:Black,
-				Text_BackgroundColor_Normal:None,
-				
-				//Text-Color-Selected:White,
-				//Text-BackgroundColor-Selected:Black,
+					
+					Text_Font_Normal:Neuton,
+					Text_Size_Normal:12,
+					Text_Color_Normal:Black,
+					Text_BackgroundColor_Normal:None,
+					
+					//Text-Color-Selected:White,
+					//Text-BackgroundColor-Selected:Black,
 
-				Text_Font_Title:Neuton,
-				Text_Size_Title:16,
-				Text_Color_Title:White,
+					Text_Font_Title:Neuton,
+					Text_Size_Title:16,
+					Text_Color_Title:White,
 
-				Panel_Color_Normal_Active:White,
-				Panel_Color_Title_Active:CornflowerBlue,
-				Panel_Color_Normal_Inactive:Grey,
-				Panel_Color_Title_Inactive:CornflowerBlue,
+					Panel_Color_Normal_Active:White,
+					Panel_Color_Title_Active:CornflowerBlue,
+					Panel_Color_Normal_Inactive:Grey,
+					Panel_Color_Title_Inactive:CornflowerBlue,
 
+				}	
 			}
-
-		}
+		]
 
 	},
 	Root:{

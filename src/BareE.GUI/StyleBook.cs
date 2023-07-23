@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BareE.Rendering;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -7,17 +9,39 @@ using System.Threading.Tasks;
 
 namespace BareE.GUI
 {
+    public enum GUILayer
+    {
+        Base=0,
+        Window=1000,
+        FocusedWindow=2000
+    }
+    /// <summary>
+    /// </summary>
+    public enum RenderType
+    {
+        None,
+        Frame,
+        Banner,
+        Column,
+        Image,
+        Solid
+    }
     public enum StyleElement
     {
-        TitleFrame=1,
-        TitleFrameColor,
-        TitleFrameMarginVertical,
-        TitleFrameMarginHorizontal,
+        RenderType=1,
+        LayoutType,
 
-        InnerFrame,
-        InnerFrameColor,
-        InnerFrameMarginHorizontal,
-        InnerFrameMarginVertical,
+        TitleFrame,
+        TitleFrameColor,
+        TitleMarginVertical,
+        TitleMarginHorizontal,
+
+        Frame,
+        FrameColor,
+        MarginHorizontal,
+        MarginVertical,
+        PaddingHorizontal,
+        PadidingVertical,
 
         Font,
         FontSize,
@@ -30,54 +54,63 @@ namespace BareE.GUI
         CloseButton_Down,
         CloseButton_DownColor,
 
+        Scroll_Bottom,
+        Scroll_BottomColor,
+        Scroll_Top,
+        Scroll_TopColor,
+        Scroll_Left,
+        Scroll_LeftColor,
+        Scroll_Right,
+        Scroll_RightColor,
+        Scroll_Horizontal,
+        Scroll_HorizontalColor,
+        Scroll_Vertical,
+        Scroll_VerticalColor,
+        Scroll_HorizontalKnob,
+        Scroll_HorizontalKnobColor,
+        Scroll_VerticalKnob,
+        Scroll_VerticalKnobColor,
+
+
 
         MouseCursor_Normal,
         MouseCursor_NormalColor,
         MouseCursor_Down,
         MouseCursor_DownColor,
+        MouseCursor_OffsetX,
+        MouseCursor_OffsetY,
 
         ResizeButton_Normal,
-        ResizeButton_Hover,
-        ResizeButton_HoverDown,
+        ResizeButton_NormalColor,
 
-        Button_Normal,
-        Button_Hover,
-        Button_HoverDown,
 
-        MinButton_Normal,
-        MinButton_Hover,
-        MinButton_HoverDown,
+    }
+    public class StyleDefinition
+    {
+        Dictionary<String, object> _defs = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+        public bool ContainsKey(StyleElement element) { return ContainsKey(element.ToString()); }
+        public bool ContainsKey(String key) { return _defs.ContainsKey(key); }
 
-        MaxButton_Normal,
-        MaxButton_Hover,
-        MaxButton_HoverDown,
+        public object this[StyleElement element] { get { return this[element.ToString()]; } }
+        public object this[String elementName] { get { return _defs[elementName]; } }
+        public void Add(StyleElement element, object value) { Add(element.ToString(), value); }
+        public void Add(String elementName, object value) { _defs.Add(elementName, value); }
     }
     public class StyleBook
     {
-        private Dictionary<StyleElement, Stack<object>> _styles;
-        private Dictionary<String, Dictionary<StyleElement, object>> _styleDefs;
+        private Dictionary<String, StyleDefinition> _styleDefs;
         public StyleBook()
         {
-            _styles= new Dictionary<StyleElement, Stack<object>>();
-            _styleDefs = new Dictionary<string, Dictionary<StyleElement, object>>();
+            
+            _styleDefs = new Dictionary<string, StyleDefinition>();
         }
-        public void DefineStyle(String name, Dictionary<StyleElement, object> def)
+        public void DefineStyle(String name, StyleDefinition def)
         {
             if (!_styleDefs.ContainsKey(name))
                 _styleDefs.Add(name, def);
             else _styleDefs[name]= def; 
         }
-        public void PushStlye(StyleElement element, object style)
-        {
-            if (!_styles.ContainsKey(element)) _styles.Add(element, new Stack<object>());
-            _styles[element].Push(style);
-        }
-        public void PopStyle(StyleElement element)
-        {
-            if (!_styles.ContainsKey(element) || _styles[element].Count == 0) return;
-            _styles[element].Pop();
-        }
-        public object this[String StyleName, StyleElement element]
+        public object this[String StyleName, String element]
         {
             get
             {
@@ -86,17 +119,20 @@ namespace BareE.GUI
                 return _styleDefs[StyleName][element];
             }
         }
-
+        public object this[String StyleName, StyleElement element]
+        {
+            get
+            {
+                return this[StyleName, element.ToString()];
+            }
+        }
         public object this[StyleElement element]
         {
             get
             {
-                if (!_styles.ContainsKey(element))
-                    return this["Default", element];
-                if (_styles[element].Count <= 0)
-                    return this["Default", element];
-                return _styles[element].Peek();
+                return this["Default", element];
             }
         }
+       
     }
 }

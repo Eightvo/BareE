@@ -119,7 +119,7 @@ namespace BareE.GUI.EZText
                     FontAtlas.Merge($"{fontKey}_{(int)ch}", charImage);
                 }
             }
-            FontAtlas.Build(1024,@"C:\TestData\afont.png");
+            FontAtlas.Build(1024,false);
             SetTexture(device, AssetManager.LoadTexture(FontAtlas.AtlasSheet, device, true, false));
 
             return fam.Name;

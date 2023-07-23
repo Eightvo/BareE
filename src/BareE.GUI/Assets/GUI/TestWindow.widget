@@ -1,0 +1,27 @@
+{
+    Style:@"BareE.GUI.Assets.Styles.MinGui.MinGuiStyle.style"{StyleName:"D2"}
+    Gui:{
+        Style:"Fantasy",
+        Type:Window,
+        Position:<30,30>
+        Size:<200,200>,
+        Text:"Message",
+        AllowResize:False,
+        AllowDrag:False,
+        Children:[
+            {
+                Type:ScollableArea,
+                Children:[
+                    {
+                        Type:"Text",
+                        Font:"Default",
+                        FontSize:8,
+                        FontColor:<1,0,0,1>,
+                        Size:<400,0>,
+                        Text<"C:\\TestData\\RatsInTheWalls.txt"
+                    }
+                ]
+            }
+        ]
+    }
+}

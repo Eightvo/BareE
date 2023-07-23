@@ -28,6 +28,14 @@
     <None Remove="Assets\Styles\MinGui.style" />
     <None Remove="Assets\Styles\MinGui\HandClosed.png" />
     <None Remove="Assets\Styles\MinGui\HandOpen.png" />
+    <None Remove="Assets\Styles\MinGui\MinGuiStyle.style" />
+    <None Remove="Assets\Styles\MinGui\Scroll_Bottom.png" />
+    <None Remove="Assets\Styles\MinGui\Scroll_Horizontal.png" />
+    <None Remove="Assets\Styles\MinGui\Scroll_Knob.png" />
+    <None Remove="Assets\Styles\MinGui\Scroll_Left.png" />
+    <None Remove="Assets\Styles\MinGui\Scroll_Right.png" />
+    <None Remove="Assets\Styles\MinGui\Scroll_Top.png" />
+    <None Remove="Assets\Styles\MinGui\Scroll_Vertical.png" />
     <None Remove="Assets\Styles\OvalEmpty.png" />
     <None Remove="Assets\Styles\Oval_Checked.png" />
     <None Remove="Assets\Styles\Oval_Filled.png" />
@@ -100,6 +108,7 @@
     <EmbeddedResource Include="Assets\Styles\MinGui\minGui.credits">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\MinGui\MinGuiStyle.style" />
     <EmbeddedResource Include="Assets\Styles\MinGui\OvalEmpty.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -118,6 +127,13 @@
     <EmbeddedResource Include="Assets\Styles\MinGui\Right.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Assets\Styles\MinGui\Scroll_Bottom.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\Scroll_Horizontal.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\Scroll_Knob.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\Scroll_Left.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\Scroll_Right.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\Scroll_Top.png" />
+    <EmbeddedResource Include="Assets\Styles\MinGui\Scroll_Vertical.png" />
     <EmbeddedResource Include="Assets\Styles\MinGui\squareFrame.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -187,6 +203,12 @@
     </None>
     <None Update="Assets\Fonts\Roboto-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\GUI\TestWindow.widget">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\GUI\MessageBox.widget">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Styles\blueframe2.credits">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -1,0 +1,57 @@
+{
+            StyleName:Default
+            TitleFrame: "BareE.GUI.Assets.Styles.MinGui.R2Frame.png"
+            TitleFrameColor: <0.8, 0.8, 0.9, 1>
+            TitleFrameMarginHorizontal:5
+            TitleFrameMarginVertical:5
+            
+
+            InnerFrame: "BareE.GUI.Assets.Styles.MinGui.squareFrame.png"
+            InnerFrameColor: <0.8, 0.8, 0.9, 1>
+            InnerFrameMarginHorizontal: 3
+            InnerFrameMarginVertical: 3
+
+            Banner:"BareE.GUI.Assets.Styles.MinGui.squareFrame.png"
+            BannerColor:<0,0,0,1>
+
+            Font: "Default"
+            FontSize: 8
+            FontColor: <0, 0, 0, 1>
+
+            MouseCursor_Normal: "BareE.GUI.Assets.Styles.MinGui.HandOpen.png"
+            MouseCursor_NormalColor: <0.8, 0.9, 0.8, 1>
+            MouseCursor_Down: "BareE.GUI.Assets.Styles.MinGui.HandClosed.png"
+            MouseCursor_DownColor: <0.8, 0.9, 0.86, 1>
+
+
+            CloseButton_Normal: "BareE.GUI.Assets.Styles.MinGui.close.png"
+            CloseButton_Hover: "BareE.GUI.Assets.Styles.MinGui.close.png"
+            CloseButton_Down: "BareE.GUI.Assets.Styles.MinGui.close.png"
+            CloseButton_NormalColor: <1, 0, 0, 1>
+            CloseButton_HoverColor: <0.8, 0.1, 0.1, 1>
+            CloseButton_DownColor: <0.25, 0.25, 0.25, 1>
+
+            ResizeButton_Normal: "BareE.GUI.Assets.Styles.MinGui.resize.png"
+            ResizeButton_NormalColor: <0,0,0,1>
+
+            Scroll_Bottom: "BareE.GUI.Assets.Styles.MinGui.Scroll_Bottom.png"
+            Scroll_BottomColor: "#000000FF"
+            Scroll_Top: "BareE.GUI.Assets.Styles.MinGui.Scroll_Top.png"
+            Scroll_TopColor: "#000000FF"
+            Scroll_Left: "BareE.GUI.Assets.Styles.MinGui.Scroll_Left.png"
+            Scroll_LeftColor: "#000000FF"
+            Scroll_Right: "BareE.GUI.Assets.Styles.MinGui.Scroll_Right.png"
+            Scroll_RightColor: "#000000FF"
+            Scroll_Horizontal: "BareE.GUI.Assets.Styles.MinGui.Scroll_Horizontal.png"
+            Scroll_HorizontalColor: "#000000FF"
+            Scroll_Vertical: "BareE.GUI.Assets.Styles.MinGui.Scroll_Vertical.png"
+            Scroll_VerticalColor: "#000000FF"
+            Scroll_HorizontalKnob: "BareE.GUI.Assets.Styles.MinGui.Scroll_Knob.png"
+            Scroll_HorizontalKnobColor: <0, 0, 1, 1>
+            Scroll_VerticalKnob: "BareE.GUI.Assets.Styles.MinGui.Scroll_Knob.png"
+            Scroll_VerticalKnobColor: <0, 0, 1, 1>
+
+
+            MouseCursor_OffsetX: -8
+            MouseCursor_OffsetY: -8
+}

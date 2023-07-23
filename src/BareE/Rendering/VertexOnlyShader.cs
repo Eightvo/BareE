@@ -15,7 +15,7 @@ namespace BareE.Rendering
     public class VertexOnlyShader<V> : IRenderUnit
          where V : unmanaged, IProvideVertexLayoutDescription
     {
-        private static V VertexInstance = new V();
+        protected static V VertexInstance = new V();
         public VertexOverflowBehaviour VertexOverflowBehaviour = VertexOverflowBehaviour.EXPAND;
         public float VertexOverflowExpansionFactor { get; set; } = 0.5f;
         public int MaximumVerticies { get { return MaxVerts; } set { MaxVerts = value; MaxVertexCountDirty = true; } }

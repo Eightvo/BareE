@@ -1,0 +1,23 @@
+{
+    //Style:@"BareE.GUI.Assets.Styles.MinGui.MinGuiStyle.style"{StyleName:"D2"}
+    Gui:{
+        Style:"D2",
+        Type:Window,
+        Position:<30,30>
+        Size:<200,200>,
+        Text:"Message",
+        AllowResize:True,
+        AllowDrag:True,
+        Children:[
+            {
+                Type:Text,
+                Text:"What is your favorite food?"
+            },
+            {
+                Type:InputText,
+                Position:<0,20>,
+                Text:"<Hamburgers?>"
+            }
+        ]
+    }
+}

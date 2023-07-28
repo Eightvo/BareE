@@ -85,6 +85,19 @@
         "Src": "Mouse",
         "Type": "Axis",
         "Def": "Wheel"
+      },
+
+      {
+        "Alias": "Roll",
+        "Src": "KeyBoard",
+        "Type": "Axis",
+        "Def": "[Q][E]"
+      },
+      {
+        "Alias": "Boom",
+        "Src": "KeyBoard",
+        "Type": "Axis",
+        "Def": "[C][Space]"
       }
     ]
   },
@@ -108,6 +121,25 @@
         "src": "Keyboard",
         "Type": "Button",
         "Def": "O"
+      },
+
+      {
+        "Alias": "Key1",
+        "src": "Keyboard",
+        "Type": "Button",
+        "Def": "1"
+      },
+      {
+        "Alias": "Key2",
+        "src": "Keyboard",
+        "Type": "Button",
+        "Def": "2"
+      },
+      {
+        "Alias": "Key3",
+        "src": "Keyboard",
+        "Type": "Button",
+        "Def": "3"
       }
     ]
   }

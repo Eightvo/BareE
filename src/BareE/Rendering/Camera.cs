@@ -30,8 +30,8 @@ namespace BareE.Rendering
         public abstract void Set(Vector3 position, Vector3 lookat, Vector3 up);
 
         public virtual Vector3 Position { get; set; }
-        public virtual Vector3 Forward { get; }
-        public virtual Vector3 Up { get; }
+        public virtual Vector3 Forward { get; protected set; }
+        public virtual Vector3 Up { get; protected set; }
         /*
         public virtual Vector3 ToEyespace(Vector3 pt)
         {

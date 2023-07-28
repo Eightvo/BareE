@@ -19,7 +19,6 @@ namespace BareE.Harness
     {
         public static void Main(String[] args)
         {
-
             AttributeCollectionDeserializer.CreateLexer = createlexer;
 
 

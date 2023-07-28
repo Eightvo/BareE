@@ -78,6 +78,7 @@ namespace BareE.Harness
                                  State.Input["Dolly"] * -(Instant.TickDelta / (1000.0f / speed))));
             if (isMouseLook)
             {
+                System.Console.WriteLine($"{State.Input["Tilt"]}  {State.Input["Pitch"]}");
                 Env.WorldCamera.Pitch((State.Input.ReadOnce("Tilt")) * -(Instant.TickDelta / (1000.0f / turnspeed)));
                 Env.WorldCamera.Yaw((State.Input.ReadOnce("Pan")) * -(Instant.TickDelta / (1000.0f / turnspeed)));
             }

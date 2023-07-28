@@ -1,6 +1,8 @@
 ﻿using BareE.GameDev;
 using BareE.Messages;
 
+using SharpAudio;
+
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -15,6 +17,8 @@ namespace BareE
 {
     public class Engine
     {
+
+
         private Game ActiveGame;
 
         private GameEnvironment ActiveEnvironment

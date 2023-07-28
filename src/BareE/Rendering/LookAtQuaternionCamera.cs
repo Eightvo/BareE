@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace BareE.Rendering
 {
+
     public class OrthographicCamera : Camera
     {
         public OrthographicCamera(float camWidth, float camHeight, float camDepth)

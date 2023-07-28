@@ -10,13 +10,17 @@ namespace BareE.Rendering
         private Vector4 r1;
         private Vector4 r2;
         private Vector4 r3;
-
+        /// <summary>
+        /// Ambient Light Color
+        /// </summary>
         public Vector3 alc
         {
             get { return new Vector3(r0.X, r0.Y, r0.Z); }
             set { r0 = new Vector4(value, r0.W); }
         }
-
+        /// <summary>
+        /// Ambient Light Intensity
+        /// </summary>
         public float ali
         {
             get { return r0.W; }

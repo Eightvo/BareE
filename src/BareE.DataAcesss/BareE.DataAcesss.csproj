@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.0.1</Version>
+    <PackageOutputPath>$(OutputPath)..\..\BareE\bin\BareE.DataAcess)</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +15,5 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BareE.Log\BareE.Log.csproj" />
-  </ItemGroup>
 
 </Project>

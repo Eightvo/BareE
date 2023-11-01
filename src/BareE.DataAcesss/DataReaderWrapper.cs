@@ -54,7 +54,7 @@ namespace BareE.DataAcess
                     for (int i = 0; i < Reader.FieldCount; i++)
                         sb.AppendFormat("{0}{1}", i == 0 ? "" : ", ", Reader[i].ToString());
                     ResultsLog.Log(sb.ToString());
-                    ResultsLog.Log("Result {0}. More results may exist.", ReadCount);
+                    ResultsLog.Log($"Result {ReadCount}. More results may exist.");
                 }
             }
             return Success;

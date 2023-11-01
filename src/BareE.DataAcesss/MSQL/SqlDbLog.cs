@@ -5,6 +5,7 @@ using System.Text;
 
 namespace BareE.DataAcess.MSQL
 {
+    /*
     class DbLog:BareE.Log.LogBase
     {
         IDataAccessObject dao;
@@ -90,4 +91,5 @@ namespace BareE.DataAcess.MSQL
             throw new NotImplementedException();
         }
     }
+    */
 }

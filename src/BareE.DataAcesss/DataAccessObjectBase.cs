@@ -6,9 +6,55 @@ using System.Data;
 using BareE.Log;
 using BareE.DataAcess.Config;
 using BareE.DataAcess.Exceptions;
+using Org.BouncyCastle.Bcpg.Sig;
 
+namespace BareE.Log
+{
+    public enum LogMessageLevel
+    {
+        Critical=0,
+        Warning=1,
+        Message=2,
+        Trace=3
+    }
+    public interface ILog
+    {
+        public void Log(String message);
+        public void Log(string message, LogMessageLevel level);
+    }
+    public class NullLogger : ILog
+    {
+        public void Log(String message) { }
+        public void Log(String Message, LogMessageLevel level) { }
+    }
+    public class ConsoleLogger : ILog 
+    {
+        public void Log(String Message) { Log(Message, LogMessageLevel.Message); }
+        public void Log(String Message, LogMessageLevel level)
+        {
+            Console.WriteLine($"[{level}] {Message}");
+        }
+    }
+
+    public static class LogManager
+    {
+        public static Dictionary<String, ILog> _knownLoggers = new Dictionary<string, ILog>( StringComparer.CurrentCultureIgnoreCase);
+        public static ILog Get(String logname)
+        {
+            if (!_knownLoggers.ContainsKey(logname))
+                return new NullLogger();
+            return _knownLoggers[logname];
+        }
+        public static void RegisterLog(String logname, ILog log)
+        {
+            if (!_knownLoggers.ContainsKey(logname)) _knownLoggers.Add(logname, log);
+            else _knownLoggers[logname] = log;
+        }
+    }
+}
 namespace BareE.DataAcess
 {
+
     public abstract class DataAccessObjectBase : IDataAccessObject
     {
 

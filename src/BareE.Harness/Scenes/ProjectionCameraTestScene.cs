@@ -24,7 +24,7 @@ namespace BareE.Harness.Scenes
             Colors.CreateResources(Env.Window.Device);
             Colors.Update(Env.Window.Device);
 
-            Env.WorldCamera = new BareE.Rendering.ProspectiveCam(Vector3.Zero, -Vector3.UnitZ, Vector3.UnitY, Env.Window.Size, 0.1f, 100f, 45f); 
+            Env.WorldCamera = new BareE.Rendering.Perspective(Vector3.Zero, -Vector3.UnitZ, Vector3.UnitY, Env.Window.Size, 0.1f, 100f, 45f); 
             Env.WorldCamera.Set(new Vector3(0, 0, 4), -Vector3.UnitZ, Vector3.UnitY);
             //Env.WorldCamera.Move(new Vector3(0, 0, 4));
         }
@@ -198,7 +198,7 @@ namespace BareE.Harness.Scenes
         }
         public override void RenderHud(Instant Instant, GameState State, GameEnvironment Env, Framebuffer outbuffer, CommandList cmds)
         {
-            BareE.Rendering.ProspectiveCam cam = (BareE.Rendering.ProspectiveCam)Env.WorldCamera;
+            BareE.Rendering.Perspective cam = (BareE.Rendering.Perspective)Env.WorldCamera;
             ImGuiNET.ImGui.GetBackgroundDrawList().AddText(new Vector2(0, 0), ImGuiNET.ImGui.ColorConvertFloat4ToU32(new Vector4(0, 0, 0, 1)), $"{Env.WorldCamera.Position.X} {Env.WorldCamera.Position.Y} {Env.WorldCamera.Position.Z}");
             ImGuiNET.ImGui.GetBackgroundDrawList().AddText(new Vector2(0, 10), ImGuiNET.ImGui.ColorConvertFloat4ToU32(new Vector4(0, 0, 0, 1)), $"Pitch: {cam._Pitch} Yaw: {cam._Yaw} Roll: {cam._Roll}");
             ImGuiNET.ImGui.GetBackgroundDrawList().AddText(new Vector2(0, 20), ImGuiNET.ImGui.ColorConvertFloat4ToU32(new Vector4(0, 0, 0, 1)), $"Pitch: {(IgnorePitch ? "No" : "Yes")} Yaw: {(IgnoreYaw ? "No" : "Yes")} ");

@@ -37,7 +37,7 @@ namespace BareE.DataAcess
             //if (!String.IsNullOrEmpty(connConfig["Port"]))
             //    Options.Add("Port", connConfig["Port"]);
         }
-
+        
         public override string ConnectionString
         {
             get

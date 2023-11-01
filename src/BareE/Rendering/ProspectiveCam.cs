@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace BareE.Rendering
 {
-    public class ProspectiveCam : Camera
+    public class Perspective : Camera
     {
         public override Matrix4x4 CamMatrix
         {
@@ -27,7 +27,7 @@ namespace BareE.Rendering
 
         bool ConstrainPitch = true;
 
-        public ProspectiveCam(Vector3 cameraPos, Vector3 cameraForward, Vector3 cameraUp, Vector2 screenSize, float nearPlane, float farPlane, float fov)
+        public Perspective(Vector3 cameraPos, Vector3 cameraForward, Vector3 cameraUp, Vector2 screenSize, float nearPlane, float farPlane, float fov)
         {
             Position = cameraPos;
             Forward = cameraForward;

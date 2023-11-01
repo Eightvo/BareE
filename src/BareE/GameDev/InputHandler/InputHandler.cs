@@ -479,11 +479,12 @@ namespace BareE.GameDev
         private const int MouseWheelID = 1000;
         private const int MouseMoveXID = 1500;
         private const int MouseMoveYID = 1501;
-
+        
         internal void HandleMouseMove(SDL_MouseMotionEvent mEvent)
         {
             if (!AliasedControls.ContainsKey(InputSource.Mouse)) return;
             var MDelta = new Vector2(mEvent.xrel, mEvent.yrel);
+            Console.WriteLine($"{MDelta.X} {MDelta.Y}");
 
             if (Math.Abs(MDelta.X) > 0 && AliasedControls[InputSource.Mouse].ContainsKey(MouseMoveXID))
             {

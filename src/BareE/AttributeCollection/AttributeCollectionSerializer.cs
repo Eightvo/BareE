@@ -44,6 +44,7 @@ namespace BareE.DataStructures
         {
             DoWrite(o, wtr, settings, 0);
         }
+
         static void DoWrite(object o, System.IO.StreamWriter wtr, SerializationSettings settings, int indent)
         {
             if (o == null) { wtr.Write("null"); return; }

@@ -24,7 +24,7 @@ namespace BareE
             Operator = 128,
             Comment = 256,
             Directive = 512,
-            FreeForm=1024,
+            FreeForm = 1024,
             Unknown = 2048,
         }
     }

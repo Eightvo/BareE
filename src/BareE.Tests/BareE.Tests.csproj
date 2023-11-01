@@ -17,6 +17,7 @@
     <ProjectReference Include="..\BareE.EZRend\BareE.EZRend.csproj" />
     <ProjectReference Include="..\BareE.GUI\BareE.GUI.csproj" />
     <ProjectReference Include="..\BareE.Harness\BareE.Harness.csproj" />
+    <ProjectReference Include="..\BareE.RNG\BareE.RNG.csproj" />
     <ProjectReference Include="..\BareE.Transvoxel\BareE.Transvoxel.csproj" />
     <ProjectReference Include="..\BareE\BareE.csproj" />
   </ItemGroup>
